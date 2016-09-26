@@ -11,7 +11,7 @@ Software source code previously released under an open source license and then m
 
 ### About ###
 
-[TIFF](http://ngageoint.github.io/geopackage-tiff-java/) is a Java library for reading and writing Tagged Image File Format files. It was primarily created to provide license friendly TIFF functionality to Android applications. Although developed as part of the [GeoPackage Libraries](http://ngageoint.github.io/GeoPackage/), this library does not contain GeoPackage functionality and can be used separately.
+[TIFF](http://ngageoint.github.io/geopackage-tiff-java/) is a Java library for reading and writing Tagged Image File Format files. It was primarily created to provide license friendly TIFF functionality to Android applications. Although developed as part of the [GeoPackage Libraries](http://ngageoint.github.io/GeoPackage/), this library does not contain GeoPackage functionality and can be used separately.  Implementation is based on the [TIFF specification](https://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf) and this JavaScript implementation: https://github.com/constantinius/geotiff.js
 
 ### Usage ###
 
