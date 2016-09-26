@@ -105,6 +105,9 @@ public class TempTest {
 
 		fileDirectory.setWriteRasters(rasters);
 		fileDirectory.setCompression(TiffConstants.COMPRESSION_NO);
+		int rowsPerStrip = rasters.calculateRowsPerStrip(fileDirectory
+				.getPlanarConfiguration());
+		fileDirectory.setRowsPerStrip(rowsPerStrip);
 		byte[] tiffBytes = TiffWriter.writeTiffToBytes(tiffImage);
 
 		TIFFImage tiffImage4 = TiffReader.readTiff(tiffBytes, false);
@@ -115,6 +118,9 @@ public class TempTest {
 		fileDirectory.setWriteRasters(rasters);
 		fileDirectory
 				.setPlanarConfiguration(TiffConstants.PLANAR_CONFIGURATION_PLANAR);
+		int rowsPerStrip2 = rasters.calculateRowsPerStrip(fileDirectory
+				.getPlanarConfiguration());
+		fileDirectory.setRowsPerStrip(rowsPerStrip2);
 		byte[] tiffBytes2 = TiffWriter.writeTiffToBytes(tiffImage);
 
 		TIFFImage tiffImage5 = TiffReader.readTiff(tiffBytes2, false);

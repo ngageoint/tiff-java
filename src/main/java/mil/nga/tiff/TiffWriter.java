@@ -135,9 +135,15 @@ public class TiffWriter {
 		for (int i = 0; i < tiffImage.getFileDirectories().size(); i++) {
 			FileDirectory fileDirectory = tiffImage.getFileDirectories().get(i);
 
+			// Populate strip entries with placeholder values so the sizes come
+			// out correctly
+			populateStripEntries(fileDirectory);
+
 			// Track of the starting byte of this directory
 			int startOfDirectory = writer.size();
 			long afterDirectory = startOfDirectory + fileDirectory.size();
+			long afterValues = startOfDirectory
+					+ fileDirectory.sizeWithValues();
 
 			// Write the number of directory entries
 			writer.writeUnsignedShort(fileDirectory.numEntries());
@@ -148,6 +154,16 @@ public class TiffWriter {
 			long nextByte = afterDirectory;
 
 			List<Long> valueBytesCheck = new ArrayList<>();
+
+			// Write the raster bytes to temporary storage
+			if (fileDirectory.getStripOffsets() == null) {
+				throw new TiffException("Tiled images are not supported");
+			}
+			Rasters rasters = fileDirectory.getWriteRasters();
+			ByteWriter rasterWriter = new ByteWriter(writer.getByteOrder());
+			writeRasters(rasterWriter, fileDirectory, afterValues);
+			rasters.setWriteBytes(rasterWriter.getBytes());
+			rasterWriter.close();
 
 			// Write each entry
 			for (FileDirectoryEntry entry : fileDirectory.getEntries()) {
@@ -180,7 +196,9 @@ public class TiffWriter {
 				writeFillerBytes(writer, 4);
 			} else {
 				// Write the start address of the next file directory
-				writer.writeUnsignedInt(nextByte);
+				long nextFileDirectory = afterValues
+						+ rasters.getWriteBytes().length;
+				writer.writeUnsignedInt(nextFileDirectory);
 			}
 
 			// Write the external entry values
@@ -202,34 +220,43 @@ public class TiffWriter {
 									+ ", Actual: " + bytesWritten);
 				}
 			}
+
+			// Write the image bytes
+			writer.writeBytes(rasters.getWriteBytes());
 		}
 
-		writeRasters(writer, tiffImage);
 	}
 
 	/**
-	 * Write the TIFF image rasters
+	 * Populate the strip entry values with placeholder values for correct size
+	 * calculations
 	 * 
-	 * @param writer
-	 *            byte writer
-	 * @param tiffImage
-	 *            TIFF image
-	 * @throws IOException
+	 * @param fileDirectory
+	 *            file directory
 	 */
-	private static void writeRasters(ByteWriter writer, TIFFImage tiffImage)
-			throws IOException {
+	private static void populateStripEntries(FileDirectory fileDirectory) {
 
-		// Write each file directory raster
-		for (int i = 0; i < tiffImage.getFileDirectories().size(); i++) {
-			FileDirectory fileDirectory = tiffImage.getFileDirectories().get(i);
+		Rasters rasters = fileDirectory.getWriteRasters();
 
-			if (fileDirectory.getStripOffsets() == null) {
-				throw new TiffException("Tiled images are not supported");
-			}
-
-			writeRasters(writer, fileDirectory);
+		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
+		int stripsPerSample = (int) Math.ceil(fileDirectory.getImageHeight()
+				.doubleValue() / rowsPerStrip);
+		int strips = stripsPerSample;
+		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
+			strips *= rasters.getSamplesPerPixel();
 		}
 
+		List<Long> stripOffsets = new ArrayList<>();
+		List<Integer> stripByteCounts = new ArrayList<>();
+
+		// Set placeholder values
+		for (int strip = 0; strip < strips; strip++) {
+			stripOffsets.add(0l);
+			stripByteCounts.add(0);
+		}
+
+		fileDirectory.setStripOffsetsAsLongs(stripOffsets);
+		fileDirectory.setStripByteCounts(stripByteCounts);
 	}
 
 	/**
@@ -239,10 +266,12 @@ public class TiffWriter {
 	 *            byte writer
 	 * @param fileDirectory
 	 *            file directory
+	 * @param offset
+	 *            byte offset
 	 * @throws IOException
 	 */
 	private static void writeRasters(ByteWriter writer,
-			FileDirectory fileDirectory) throws IOException {
+			FileDirectory fileDirectory, long offset) throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
 
@@ -256,15 +285,19 @@ public class TiffWriter {
 		// Get the compression encoder
 		CompressionEncoder encoder = getEncoder(fileDirectory);
 
-		writeFillerBytes(writer, 1); // TODO temporary for align tiff file bytes
-
-		int stripsPerSample = fileDirectory.getStripOffsets().size();
+		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
+		int stripsPerSample = (int) Math.ceil(fileDirectory.getImageHeight()
+				.doubleValue() / rowsPerStrip);
+		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
-			stripsPerSample = stripsPerSample / rasters.getSamplesPerPixel();
+			strips *= rasters.getSamplesPerPixel();
 		}
 
+		List<Long> stripOffsets = new ArrayList<>();
+		List<Integer> stripByteCounts = new ArrayList<>();
+
 		// Write each strip
-		for (int strip = 0; strip < fileDirectory.getStripOffsets().size(); strip++) {
+		for (int strip = 0; strip < strips; strip++) {
 
 			int startingY;
 			Integer sample = null;
@@ -272,59 +305,60 @@ public class TiffWriter {
 				sample = strip / stripsPerSample;
 				startingY = strip % stripsPerSample;
 			} else {
-				startingY = strip * fileDirectory.getRowsPerStrip().intValue();
+				startingY = strip * rowsPerStrip;
 			}
 
-			// Write the block of bytes
-			ByteWriter blockWriter = new ByteWriter(writer.getByteOrder());
-			int bytesWritten = 0;
+			// Write the strip of bytes
+			ByteWriter stripWriter = new ByteWriter(writer.getByteOrder());
 
 			int endingY = startingY
 					+ fileDirectory.getRowsPerStrip().intValue();
 			for (int y = startingY; y < endingY; y++) {
+
+				ByteWriter rowWriter = new ByteWriter(writer.getByteOrder());
+
 				for (int x = 0; x < fileDirectory.getImageWidth().intValue(); x++) {
 
 					if (sample != null) {
 						Number value = rasters.getPixelSample(sample, x, y);
 						FieldType fieldType = sampleFieldTypes[sample];
-						writeValue(blockWriter, fieldType, value);
-						bytesWritten += fieldType.getBytes();
+						writeValue(rowWriter, fieldType, value);
 					} else {
 						Number[] values = rasters.getPixel(x, y);
 						for (int sampleIndex = 0; sampleIndex < values.length; sampleIndex++) {
 							Number value = values[sampleIndex];
 							FieldType fieldType = sampleFieldTypes[sampleIndex];
-							writeValue(blockWriter, fieldType, value);
-							bytesWritten += fieldType.getBytes();
+							writeValue(rowWriter, fieldType, value);
 						}
 					}
-
 				}
+
+				// Encode the bytes
+				byte[] rowBytes = rowWriter.getBytes();
+				rowWriter.close();
+				byte[] encodedRow = encoder.encodeBlock(rowBytes,
+						writer.getByteOrder());
+
+				// Write the row
+				stripWriter.writeBytes(encodedRow);
 			}
 
-			// Encode the bytes
-			byte[] block = blockWriter.getBytes();
-			blockWriter.close();
-			byte[] encodedBlock = encoder.encodeBlock(block,
-					writer.getByteOrder());
+			// Get and write the strip bytes
+			byte[] stripBytes = stripWriter.getBytes();
+			stripWriter.close();
+			writer.writeBytes(stripBytes);
 
-			Long byteCount = fileDirectory.getStripByteCounts().get(strip)
-					.longValue();
-			if (bytesWritten != byteCount) {
-				throw new TiffException(
-						"Bytes written does not match. Strip Byte Count: "
-								+ byteCount + ", Actual: " + bytesWritten);
-			}
-			Long offset = fileDirectory.getStripOffsets().get(strip)
-					.longValue();
-			if (offset != writer.size()) {
-				throw new TiffException("Strip offset does not match. Offset: "
-						+ offset + ", Actual: " + writer.size());
-			}
+			int bytesWritten = stripBytes.length;
+			stripByteCounts.add(bytesWritten);
 
-			// Write the encoded blocks
-			writer.writeBytes(encodedBlock);
+			stripOffsets.add(offset);
+			offset += bytesWritten;
+
 		}
+
+		fileDirectory.setStripOffsetsAsLongs(stripOffsets);
+		fileDirectory.setStripByteCounts(stripByteCounts);
+
 	}
 
 	/**

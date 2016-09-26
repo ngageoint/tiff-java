@@ -203,6 +203,7 @@ public class FileDirectory {
 	 *            file directory entry
 	 */
 	public void addEntry(FileDirectoryEntry entry) {
+		entries.remove(entry);
 		entries.add(entry);
 		fieldTagTypeMapping.put(entry.getFieldTag(), entry);
 	}
@@ -1496,7 +1497,8 @@ public class FileDirectory {
 	 * @return size in bytes
 	 */
 	public long sizeWithValues() {
-		long size = TiffConstants.IFD_HEADER_BYTES;
+		long size = TiffConstants.IFD_HEADER_BYTES
+				+ TiffConstants.IFD_OFFSET_BYTES;
 		for (FileDirectoryEntry entry : entries) {
 			size += entry.sizeWithValues();
 		}

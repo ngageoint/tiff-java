@@ -2,6 +2,7 @@ package mil.nga.tiff;
 
 import java.util.List;
 
+import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
@@ -40,6 +41,11 @@ public class Rasters {
 	 * Bits per sample
 	 */
 	private final List<Integer> bitsPerSample;
+
+	/**
+	 * Strip bytes for writing rasters
+	 */
+	private byte[] writeBytes;
 
 	/**
 	 * Constructor
@@ -476,6 +482,92 @@ public class Rasters {
 			throw new TiffException("Pixel sample out of bounds. sample: "
 					+ sample + ", samples per pixel: " + samplesPerPixel);
 		}
+	}
+
+	/**
+	 * Get the TIFF writing bytes
+	 * 
+	 * @return write bytes
+	 */
+	public byte[] getWriteBytes() {
+		return writeBytes;
+	}
+
+	/**
+	 * Set the TIFF writing bytes
+	 * 
+	 * @param writeBytes
+	 *            write bytes
+	 */
+	public void setWriteBytes(byte[] writeBytes) {
+		this.writeBytes = writeBytes;
+	}
+
+	/**
+	 * Calculate the rows per strip to write
+	 * 
+	 * @param planarConfiguration
+	 *            chunky or planar
+	 * @return rows per strip
+	 */
+	public int calculateRowsPerStrip(int planarConfiguration) {
+		return calculateRowsPerStrip(planarConfiguration,
+				TiffConstants.DEFAULT_MAX_BYTES_PER_STRIP);
+	}
+
+	/**
+	 * Calculate the rows per strip to write
+	 * 
+	 * @param planarConfiguration
+	 *            chunky or planar
+	 * @param maxBytesPerStrip
+	 *            attempted max bytes per strip
+	 * @return rows per strip
+	 */
+	public int calculateRowsPerStrip(int planarConfiguration,
+			int maxBytesPerStrip) {
+
+		Integer rowsPerStrip = null;
+
+		if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
+			int bitsPerPixel = 0;
+			for (int sampleBits : bitsPerSample) {
+				bitsPerPixel += sampleBits;
+			}
+			rowsPerStrip = rowsPerStrip(bitsPerPixel, maxBytesPerStrip);
+		} else {
+
+			for (int sampleBits : bitsPerSample) {
+				int rowsPerStripForSample = rowsPerStrip(sampleBits,
+						maxBytesPerStrip);
+				if (rowsPerStrip == null
+						|| rowsPerStripForSample < rowsPerStrip) {
+					rowsPerStrip = rowsPerStripForSample;
+				}
+			}
+		}
+
+		return rowsPerStrip;
+	}
+
+	/**
+	 * Get the rows per strip based upon the bits per pixel and max bytes per
+	 * strip
+	 * 
+	 * @param bitsPerPixel
+	 *            bits per pixel
+	 * @param maxBytesPerStrip
+	 *            max bytes per strip
+	 * @return rows per strip
+	 */
+	private int rowsPerStrip(int bitsPerPixel, int maxBytesPerStrip) {
+
+		int bytesPerPixel = (int) Math.ceil(bitsPerPixel / 8.0);
+		int bytesPerRow = bytesPerPixel * width;
+
+		int rowsPerStrip = Math.max(1, maxBytesPerStrip / bytesPerRow);
+
+		return rowsPerStrip;
 	}
 
 }

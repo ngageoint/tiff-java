@@ -36,11 +36,16 @@ public class TiffConstants {
 	 * Image File Directory offset to the next IFD bytes
 	 */
 	public static final int IFD_OFFSET_BYTES = 4;
-	
+
 	/**
 	 * Image File Directory entry bytes
 	 */
 	public static final int IFD_ENTRY_BYTES = 12;
+
+	/**
+	 * Default max bytes per strip when writing strips
+	 */
+	public static final int DEFAULT_MAX_BYTES_PER_STRIP = 8000;
 
 	// Compression constants
 	public static final int COMPRESSION_NO = 1;
