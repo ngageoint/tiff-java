@@ -1,5 +1,6 @@
 package mil.nga.tiff;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -368,6 +369,16 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set a single value bits per sample
+	 * 
+	 * @param bitsPerSample
+	 *            bits per sample
+	 */
+	public void setBitsPerSample(int bitsPerSample) {
+		setBitsPerSample(createSingleIntegerList(bitsPerSample));
+	}
+
+	/**
 	 * Get the max bits per sample
 	 * 
 	 * @return max bits per sample
@@ -443,6 +454,26 @@ public class FileDirectory {
 	 */
 	public void setStripOffsetsAsLongs(List<Long> stripOffsets) {
 		setUnsignedLongListEntryValue(FieldTagType.StripOffsets, stripOffsets);
+	}
+
+	/**
+	 * Set a single value strip offset
+	 * 
+	 * @param stripOffset
+	 *            strip offset
+	 */
+	public void setStripOffsets(int stripOffset) {
+		setStripOffsets(createSingleIntegerList(stripOffset));
+	}
+
+	/**
+	 * Set a single value strip offset
+	 * 
+	 * @param stripOffset
+	 *            strip offset
+	 */
+	public void setStripOffsets(long stripOffset) {
+		setStripOffsetsAsLongs(createSingleLongList(stripOffset));
 	}
 
 	/**
@@ -526,6 +557,26 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set a single value strip byte count
+	 * 
+	 * @param stripByteCount
+	 *            strip byte count
+	 */
+	public void setStripByteCounts(int stripByteCount) {
+		setStripByteCounts(createSingleIntegerList(stripByteCount));
+	}
+
+	/**
+	 * Set a single value strip byte count
+	 * 
+	 * @param stripByteCount
+	 *            strip byte count
+	 */
+	public void setStripByteCounts(long stripByteCount) {
+		setStripByteCountsAsLongs(createSingleLongList(stripByteCount));
+	}
+
+	/**
 	 * Get the x resolution
 	 * 
 	 * @return x resolution
@@ -545,6 +596,16 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set a single value x resolution
+	 * 
+	 * @param xResolution
+	 *            x resolution
+	 */
+	public void setXResolution(long xResolution) {
+		setXResolution(createSingleLongList(xResolution));
+	}
+
+	/**
 	 * Get the y resolution
 	 * 
 	 * @return y resolution
@@ -561,6 +622,16 @@ public class FileDirectory {
 	 */
 	public void setYResolution(List<Long> yResolution) {
 		setUnsignedLongListEntryValue(FieldTagType.YResolution, yResolution);
+	}
+
+	/**
+	 * Set a single value y resolution
+	 * 
+	 * @param yResolution
+	 *            y resolution
+	 */
+	public void setYResolution(long yResolution) {
+		setYResolution(createSingleLongList(yResolution));
 	}
 
 	/**
@@ -620,6 +691,16 @@ public class FileDirectory {
 	 */
 	public void setColorMap(List<Integer> colorMap) {
 		setUnsignedIntegerListEntryValue(FieldTagType.ColorMap, colorMap);
+	}
+
+	/**
+	 * Set a single value color map
+	 * 
+	 * @param colorMap
+	 *            color map
+	 */
+	public void setColorMap(int colorMap) {
+		setColorMap(createSingleIntegerList(colorMap));
 	}
 
 	/**
@@ -702,6 +783,16 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set a single value tile offset
+	 * 
+	 * @param tileOffset
+	 *            tile offset
+	 */
+	public void setTileOffsets(long tileOffset) {
+		setTileOffsets(createSingleLongList(tileOffset));
+	}
+
+	/**
 	 * Get the tile byte counts
 	 * 
 	 * @return tile byte counts
@@ -733,6 +824,26 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set a single value tile byte count
+	 * 
+	 * @param tileByteCount
+	 *            tile byte count
+	 */
+	public void setTileByteCounts(int tileByteCount) {
+		setTileByteCounts(createSingleIntegerList(tileByteCount));
+	}
+
+	/**
+	 * Set a single value tile byte count
+	 * 
+	 * @param tileByteCount
+	 *            tile byte count
+	 */
+	public void setTileByteCounts(long tileByteCount) {
+		setTileByteCountsAsLongs(createSingleLongList(tileByteCount));
+	}
+
+	/**
 	 * Get the sample format
 	 * 
 	 * @return sample format
@@ -750,6 +861,16 @@ public class FileDirectory {
 	public void setSampleFormat(List<Integer> sampleFormat) {
 		setUnsignedIntegerListEntryValue(FieldTagType.SampleFormat,
 				sampleFormat);
+	}
+
+	/**
+	 * Set a single value sample format
+	 * 
+	 * @param sampleFormat
+	 *            sample format
+	 */
+	public void setSampleFormat(int sampleFormat) {
+		setSampleFormat(createSingleIntegerList(sampleFormat));
 	}
 
 	/**
@@ -1477,6 +1598,32 @@ public class FileDirectory {
 			sum += values.get(i);
 		}
 		return sum;
+	}
+
+	/**
+	 * Create a single integer list with the value
+	 * 
+	 * @param value
+	 *            int value
+	 * @return single value list
+	 */
+	private List<Integer> createSingleIntegerList(int value) {
+		List<Integer> valueList = new ArrayList<>();
+		valueList.add(value);
+		return valueList;
+	}
+
+	/**
+	 * Create a single long list with the value
+	 * 
+	 * @param value
+	 *            long value
+	 * @return single value list
+	 */
+	private List<Long> createSingleLongList(long value) {
+		List<Long> valueList = new ArrayList<>();
+		valueList.add(value);
+		return valueList;
 	}
 
 	/**

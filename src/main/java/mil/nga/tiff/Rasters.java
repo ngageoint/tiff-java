@@ -1,5 +1,7 @@
 package mil.nga.tiff;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import mil.nga.tiff.util.TiffConstants;
@@ -134,6 +136,23 @@ public class Rasters {
 			List<Integer> bitsPerSample) {
 		this(width, height, samplesPerPixel, bitsPerSample,
 				new Number[samplesPerPixel][width * height]);
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param width
+	 *            width of pixels
+	 * @param height
+	 *            height of pixels
+	 * @param samplesPerPixel
+	 *            samples per pixel
+	 * @param bitsPerSample
+	 *            single sample bits per sample
+	 */
+	public Rasters(int width, int height, int samplesPerPixel, int bitsPerSample) {
+		this(width, height, samplesPerPixel, new ArrayList<Integer>(
+				Arrays.asList(bitsPerSample)));
 	}
 
 	/**
