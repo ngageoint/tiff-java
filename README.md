@@ -19,11 +19,53 @@ View the latest [Javadoc](http://ngageoint.github.io/geopackage-tiff-java/docs/a
 
 #### Read ####
 
-    //TODO
+```java
+
+//File input = ...
+//InputStream input = ...
+//byte[] input = ...
+//ByteReader input = ...
+
+TIFFImage tiffImage = TiffReader.readTiff(input);
+List<FileDirectory> directories = tiffImage.getFileDirectories()
+FileDirectory directory = directories.get(0);
+Rasters rasters = directory.readRasters();
+        
+```
 
 #### Write ####
 
-    //TODO
+```java
+
+int width = 256;
+int height = 256;
+int samplesPerPixel = 1;
+int bitsPerSample = 32;
+
+Rasters rasters = new Rasters(width, height, samplesPerPixel, bitsPerSample);
+
+int rowsPerStrip = rasters.calculateRowsPerStrip(TiffConstants.PLANAR_CONFIGURATION_CHUNKY);
+
+FileDirectory directory = new FileDirectory();
+directory.setImageWidth(width);
+directory.setImageHeight(height);
+directory.setBitsPerSample(bitsPerSample);
+directory.setCompression(TiffConstants.COMPRESSION_NO);
+directory.setPhotometricInterpretation(TiffConstants.PHOTOMETRIC_INTERPRETATION_BLACK_IS_ZERO);
+directory.setSamplesPerPixel(samplesPerPixel);
+directory.setRowsPerStrip(rowsPerStrip);
+directory.setPlanarConfiguration(TiffConstants.PLANAR_CONFIGURATION_CHUNKY);
+directory.setSampleFormat(TiffConstants.SAMPLE_FORMAT_FLOAT);
+directory.setWriteRasters(rasters);
+
+TIFFImage tiffImage = new TIFFImage();
+tiffImage.add(directory);
+byte[] bytes = TiffWriter.writeTiffToBytes(tiffImage);
+// or
+File file = ...
+TiffWriter.writeTiff(file, tiffImage);
+        
+```
 
 ### Installation ###
 
