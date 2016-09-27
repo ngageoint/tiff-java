@@ -43,11 +43,6 @@ public class Rasters {
 	private final List<Integer> bitsPerSample;
 
 	/**
-	 * Strip bytes for writing rasters
-	 */
-	private byte[] writeBytes;
-
-	/**
 	 * Constructor
 	 * 
 	 * @param width
@@ -482,25 +477,6 @@ public class Rasters {
 			throw new TiffException("Pixel sample out of bounds. sample: "
 					+ sample + ", samples per pixel: " + samplesPerPixel);
 		}
-	}
-
-	/**
-	 * Get the TIFF writing bytes
-	 * 
-	 * @return write bytes
-	 */
-	public byte[] getWriteBytes() {
-		return writeBytes;
-	}
-
-	/**
-	 * Set the TIFF writing bytes
-	 * 
-	 * @param writeBytes
-	 *            write bytes
-	 */
-	public void setWriteBytes(byte[] writeBytes) {
-		this.writeBytes = writeBytes;
 	}
 
 	/**

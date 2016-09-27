@@ -16,7 +16,7 @@ public class DeflateCompression implements CompressionDecoder,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] decodeBlock(byte[] block, ByteOrder byteOrder) {
+	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
 		throw new TiffException("Deflate decoder is not yet implemented");
 	}
 
@@ -24,7 +24,15 @@ public class DeflateCompression implements CompressionDecoder,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] encodeBlock(byte[] block, ByteOrder byteOrder) {
+	public boolean rowEncoding() {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
 		throw new TiffException("Deflate encoder is not yet implemented");
 	}
 

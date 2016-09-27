@@ -57,10 +57,10 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] decodeBlock(byte[] block, ByteOrder byteOrder) {
+	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
 
 		// Create the byte reader and decoded stream to write to
-		ByteReader reader = new ByteReader(block, byteOrder);
+		ByteReader reader = new ByteReader(bytes, byteOrder);
 		ByteArrayOutputStream decodedStream = new ByteArrayOutputStream();
 
 		// Initialize the table, starting position, and old code
@@ -273,7 +273,15 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] encodeBlock(byte[] block, ByteOrder byteOrder) {
+	public boolean rowEncoding() {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
 		throw new TiffException("LZW encoder is not yet implemented");
 	}
 

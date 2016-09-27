@@ -18,9 +18,9 @@ public class PackbitsCompression implements CompressionDecoder,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] decodeBlock(byte[] block, ByteOrder byteOrder) {
+	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
 
-		ByteReader reader = new ByteReader(block, byteOrder);
+		ByteReader reader = new ByteReader(bytes, byteOrder);
 
 		ByteArrayOutputStream decodedStream = new ByteArrayOutputStream();
 
@@ -50,7 +50,15 @@ public class PackbitsCompression implements CompressionDecoder,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] encodeBlock(byte[] block, ByteOrder byteOrder) {
+	public boolean rowEncoding() {
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
 		throw new TiffException("Packbits encoder is not yet implemented");
 	}
 

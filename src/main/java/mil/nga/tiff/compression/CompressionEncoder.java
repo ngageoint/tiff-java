@@ -3,21 +3,29 @@ package mil.nga.tiff.compression;
 import java.nio.ByteOrder;
 
 /**
- * Compression encoder interface
+ * Compression encoder interface. Encode either on a per row or block basis
  * 
  * @author osbornb
  */
 public interface CompressionEncoder {
 
 	/**
-	 * Encode the byte block
+	 * True to encode on a per row basis, false to encode on a per block / strip
+	 * basis
 	 * 
-	 * @param block
-	 *            block of bytes
+	 * @return true for row encoding
+	 */
+	public boolean rowEncoding();
+
+	/**
+	 * Encode the bytes
+	 * 
+	 * @param bytes
+	 *            bytes to encode
 	 * @param byteOrder
 	 *            byte order
 	 * @return encoded block of bytes
 	 */
-	public byte[] encodeBlock(byte[] block, ByteOrder byteOrder);
+	public byte[] encode(byte[] bytes, ByteOrder byteOrder);
 
 }

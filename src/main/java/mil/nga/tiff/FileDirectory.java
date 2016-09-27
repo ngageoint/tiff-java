@@ -1244,8 +1244,8 @@ public class FileDirectory {
 			}
 
 			reader.setNextByte(offset);
-			byte[] block = reader.readBytes(byteCount);
-			tileOrStrip = decoder.decodeBlock(block, reader.getByteOrder());
+			byte[] bytes = reader.readBytes(byteCount);
+			tileOrStrip = decoder.decode(bytes, reader.getByteOrder());
 
 			// Cache the data
 			if (cache != null) {

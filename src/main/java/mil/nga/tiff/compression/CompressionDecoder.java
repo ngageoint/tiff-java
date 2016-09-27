@@ -10,14 +10,14 @@ import java.nio.ByteOrder;
 public interface CompressionDecoder {
 
 	/**
-	 * Decode the byte block
+	 * Decode the bytes
 	 * 
-	 * @param block
-	 *            block of bytes
+	 * @param bytes
+	 *            bytes to decode
 	 * @param byteOrder
 	 *            byte order
-	 * @return decoded block of bytes
+	 * @return decoded bytes
 	 */
-	public byte[] decodeBlock(byte[] block, ByteOrder byteOrder);
+	public byte[] decode(byte[] bytes, ByteOrder byteOrder);
 
 }

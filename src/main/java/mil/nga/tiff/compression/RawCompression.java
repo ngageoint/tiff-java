@@ -13,16 +13,24 @@ public class RawCompression implements CompressionDecoder, CompressionEncoder {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] decodeBlock(byte[] block, ByteOrder byteOrder) {
-		return block;
+	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
+		return bytes;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public byte[] encodeBlock(byte[] block, ByteOrder byteOrder) {
-		return block;
+	public boolean rowEncoding() {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
+		return bytes;
 	}
 
 }
