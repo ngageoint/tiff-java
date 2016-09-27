@@ -115,7 +115,7 @@ public class FileDirectory {
 		setCache(cacheData);
 
 		// Determine if tiled
-		tiled = getStripOffsets() == null;
+		tiled = getRowsPerStrip() == null;
 
 		// Determine and validate the planar configuration
 		Integer pc = getPlanarConfiguration();
