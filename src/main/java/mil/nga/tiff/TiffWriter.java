@@ -303,7 +303,7 @@ public class TiffWriter {
 			Integer sample = null;
 			if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 				sample = strip / stripsPerSample;
-				startingY = strip % stripsPerSample;
+				startingY = (strip % stripsPerSample) * rowsPerStrip;
 			} else {
 				startingY = strip * rowsPerStrip;
 			}
