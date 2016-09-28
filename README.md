@@ -40,7 +40,7 @@ Rasters rasters = directory.readRasters();
 int width = 256;
 int height = 256;
 int samplesPerPixel = 1;
-List<Integer> bitsPerSample = new ArrayList<Integer>(Arrays.asList(32));
+int bitsPerSample = 32;
 
 Rasters rasters = new Rasters(width, height, samplesPerPixel, bitsPerSample);
 
@@ -55,7 +55,7 @@ directory.setPhotometricInterpretation(TiffConstants.PHOTOMETRIC_INTERPRETATION_
 directory.setSamplesPerPixel(samplesPerPixel);
 directory.setRowsPerStrip(rowsPerStrip);
 directory.setPlanarConfiguration(TiffConstants.PLANAR_CONFIGURATION_CHUNKY);
-directory.setSingleSampleFormat(TiffConstants.SAMPLE_FORMAT_FLOAT);
+directory.setSampleFormat(TiffConstants.SAMPLE_FORMAT_FLOAT);
 directory.setWriteRasters(rasters);
 
 // TODO write rasters

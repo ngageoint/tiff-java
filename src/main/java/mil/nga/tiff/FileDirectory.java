@@ -374,7 +374,7 @@ public class FileDirectory {
 	 * @param bitsPerSample
 	 *            bits per sample
 	 */
-	public void setSingleBitsPerSample(int bitsPerSample) {
+	public void setBitsPerSample(int bitsPerSample) {
 		setBitsPerSample(createSingleIntegerList(bitsPerSample));
 	}
 
@@ -462,7 +462,7 @@ public class FileDirectory {
 	 * @param stripOffset
 	 *            strip offset
 	 */
-	public void setSingleStripOffset(int stripOffset) {
+	public void setStripOffsets(int stripOffset) {
 		setStripOffsets(createSingleIntegerList(stripOffset));
 	}
 
@@ -472,7 +472,7 @@ public class FileDirectory {
 	 * @param stripOffset
 	 *            strip offset
 	 */
-	public void setSingleStripOffset(long stripOffset) {
+	public void setStripOffsets(long stripOffset) {
 		setStripOffsetsAsLongs(createSingleLongList(stripOffset));
 	}
 
@@ -562,7 +562,7 @@ public class FileDirectory {
 	 * @param stripByteCount
 	 *            strip byte count
 	 */
-	public void setSingleStripByteCount(int stripByteCount) {
+	public void setStripByteCounts(int stripByteCount) {
 		setStripByteCounts(createSingleIntegerList(stripByteCount));
 	}
 
@@ -572,7 +572,7 @@ public class FileDirectory {
 	 * @param stripByteCount
 	 *            strip byte count
 	 */
-	public void setSingleStripByteCount(long stripByteCount) {
+	public void setStripByteCounts(long stripByteCount) {
 		setStripByteCountsAsLongs(createSingleLongList(stripByteCount));
 	}
 
@@ -601,7 +601,7 @@ public class FileDirectory {
 	 * @param xResolution
 	 *            x resolution
 	 */
-	public void setSingleXResolution(long xResolution) {
+	public void setXResolution(long xResolution) {
 		setXResolution(createSingleLongList(xResolution));
 	}
 
@@ -630,7 +630,7 @@ public class FileDirectory {
 	 * @param yResolution
 	 *            y resolution
 	 */
-	public void setSingleYResolution(long yResolution) {
+	public void setYResolution(long yResolution) {
 		setYResolution(createSingleLongList(yResolution));
 	}
 
@@ -699,7 +699,7 @@ public class FileDirectory {
 	 * @param colorMap
 	 *            color map
 	 */
-	public void setSingleColorMap(int colorMap) {
+	public void setColorMap(int colorMap) {
 		setColorMap(createSingleIntegerList(colorMap));
 	}
 
@@ -788,7 +788,7 @@ public class FileDirectory {
 	 * @param tileOffset
 	 *            tile offset
 	 */
-	public void setSingleTileOffset(long tileOffset) {
+	public void setTileOffsets(long tileOffset) {
 		setTileOffsets(createSingleLongList(tileOffset));
 	}
 
@@ -829,7 +829,7 @@ public class FileDirectory {
 	 * @param tileByteCount
 	 *            tile byte count
 	 */
-	public void setSingleTileByteCount(int tileByteCount) {
+	public void setTileByteCounts(int tileByteCount) {
 		setTileByteCounts(createSingleIntegerList(tileByteCount));
 	}
 
@@ -839,7 +839,7 @@ public class FileDirectory {
 	 * @param tileByteCount
 	 *            tile byte count
 	 */
-	public void setSingleTileByteCount(long tileByteCount) {
+	public void setTileByteCounts(long tileByteCount) {
 		setTileByteCountsAsLongs(createSingleLongList(tileByteCount));
 	}
 
@@ -869,7 +869,7 @@ public class FileDirectory {
 	 * @param sampleFormat
 	 *            sample format
 	 */
-	public void setSingleSampleFormat(int sampleFormat) {
+	public void setSampleFormat(int sampleFormat) {
 		setSampleFormat(createSingleIntegerList(sampleFormat));
 	}
 
