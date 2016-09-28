@@ -17,12 +17,12 @@ public class Rasters {
 	/**
 	 * Values separated by sample
 	 */
-	private final Number[][] sampleValues;
+	private Number[][] sampleValues;
 
 	/**
 	 * Interleaved pixel sample values
 	 */
-	private final Number[] interleaveValues;
+	private Number[] interleaveValues;
 
 	/**
 	 * Width of pixels
@@ -102,21 +102,28 @@ public class Rasters {
 	public Rasters(int width, int height, int samplesPerPixel,
 			List<Integer> bitsPerSample, Number[][] sampleValues,
 			Number[] interleaveValues) {
-		if (sampleValues == null && interleaveValues == null) {
-			throw new TiffException(
-					"Results must be sample and/or interleave based");
-		}
 		this.width = width;
 		this.height = height;
 		this.samplesPerPixel = samplesPerPixel;
 		this.bitsPerSample = bitsPerSample;
 		this.sampleValues = sampleValues;
 		this.interleaveValues = interleaveValues;
+		validateValues();
 		for (int bits : bitsPerSample) {
 			if ((bits % 8) != 0) {
 				throw new TiffException("Sample bit-width of " + bits
 						+ " is not supported");
 			}
+		}
+	}
+
+	/**
+	 * Validate that either sample or interleave values exist
+	 */
+	private void validateValues() {
+		if (sampleValues == null && interleaveValues == null) {
+			throw new TiffException(
+					"Results must be sample and/or interleave based");
 		}
 	}
 
@@ -254,12 +261,34 @@ public class Rasters {
 	}
 
 	/**
+	 * Set the results stored by samples
+	 * 
+	 * @param sampleValues
+	 *            sample values
+	 */
+	public void setSampleValues(Number[][] sampleValues) {
+		this.sampleValues = sampleValues;
+		validateValues();
+	}
+
+	/**
 	 * Get the results stored as interleaved pixel samples
 	 * 
 	 * @return interleaved values
 	 */
 	public Number[] getInterleaveValues() {
 		return interleaveValues;
+	}
+
+	/**
+	 * Set the results stored as interleaved pixel samples
+	 * 
+	 * @param interleaveValues
+	 *            interleaved values
+	 */
+	public void setInterleaveValues(Number[] interleaveValues) {
+		this.interleaveValues = interleaveValues;
+		validateValues();
 	}
 
 	/**

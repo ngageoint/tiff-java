@@ -58,7 +58,12 @@ directory.setPlanarConfiguration(TiffConstants.PLANAR_CONFIGURATION_CHUNKY);
 directory.setSampleFormat(TiffConstants.SAMPLE_FORMAT_FLOAT);
 directory.setWriteRasters(rasters);
 
-// TODO write rasters
+for (int y = 0; y < height; y++) {
+	for (int x = 0; x < width; x++) {
+		float pixelValue = ...
+		rasters.setFirstPixelSample(x, y, pixelValue);
+	}
+}
 
 TIFFImage tiffImage = new TIFFImage();
 tiffImage.add(directory);
