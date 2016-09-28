@@ -15,7 +15,7 @@ Software source code previously released under an open source license and then m
 
 ### Usage ###
 
-View the latest [Javadoc](http://ngageoint.github.io/geopackage-tiff-java/docs/api/)
+Coming soon... ~~View the latest [Javadoc](http://ngageoint.github.io/geopackage-tiff-java/docs/api/)~~
 
 #### Read ####
 
@@ -76,7 +76,7 @@ TiffWriter.writeTiff(file, tiffImage);
 
 ### Installation ###
 
-Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga|tiff|1.0.0|jar) (JAR, POM, Source, Javadoc)
+Coming soon... ~~Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga|tiff|1.0.0|jar) (JAR, POM, Source, Javadoc)~~
 
     <dependency>
         <groupId>mil.nga</groupId>
