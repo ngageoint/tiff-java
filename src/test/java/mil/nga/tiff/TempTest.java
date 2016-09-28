@@ -4,6 +4,7 @@ import java.io.File;
 
 import mil.nga.tiff.util.TiffConstants;
 
+// TODO will be deleted
 public class TempTest {
 
 	public static void main(String[] args) throws Exception {
@@ -19,53 +20,20 @@ public class TempTest {
 				"/Users/osbornb/Documents/geotiff.js-master/test/data/lzw.tiff");
 
 		File file = stripped;
-
 		TIFFImage tiffImage = TiffReader.readTiff(file, false);
+
+		File file2 = packbits;
+		TIFFImage tiffImage2 = TiffReader.readTiff(file2, true);
+
+		File file3 = lzw;
+		TIFFImage tiffImage3 = TiffReader.readTiff(file3, true);
+
+		TiffTestUtils.compareTIFFImages(tiffImage, tiffImage2);
+		TiffTestUtils.compareTIFFImages(tiffImage, tiffImage3);
+
 		FileDirectory fileDirectory = tiffImage.getFileDirectory();
 		Rasters rasters = fileDirectory.readRasters();
 		Rasters rasters2 = fileDirectory.readInterleavedRasters();
-
-		File file2 = packbits;
-
-		TIFFImage tiffImage2 = TiffReader.readTiff(file2, true);
-		FileDirectory fileDirectory2 = tiffImage2.getFileDirectory();
-		Rasters rasters2_1 = fileDirectory2.readRasters();
-		Rasters rasters2_2 = fileDirectory2.readInterleavedRasters();
-
-		File file3 = lzw;
-
-		TIFFImage tiffImage3 = TiffReader.readTiff(file3, true);
-		FileDirectory fileDirectory3 = tiffImage3.getFileDirectory();
-		Rasters rasters3_1 = fileDirectory3.readRasters();
-		Rasters rasters3_2 = fileDirectory3.readInterleavedRasters();
-
-		for (int i = 0; i < rasters.getSampleValues().length; i++) {
-			for (int j = 0; j < rasters.getSampleValues()[i].length; j++) {
-				if (!rasters.getSampleValues()[i][j].equals(rasters2_1
-						.getSampleValues()[i][j])
-						|| !rasters.getSampleValues()[i][j].equals(rasters3_1
-								.getSampleValues()[i][j])) {
-					System.out.println("Compression values do not match");
-				}
-			}
-		}
-
-		for (int i = 0; i < rasters2.getInterleaveValues().length; i++) {
-			if (!rasters2.getInterleaveValues()[i].equals(rasters2_2
-					.getInterleaveValues()[i])
-					|| !rasters2.getInterleaveValues()[i].equals(rasters3_2
-							.getInterleaveValues()[i])) {
-				System.out.println("Compression values do not match");
-			}
-		}
-
-		if (rasters.getWidth() != fileDirectory.getImageWidth().intValue()) {
-			System.out.println("WIDTH");
-		}
-		if (rasters.getHeight() != fileDirectory.getImageHeight().intValue()) {
-			System.out.println("HEIGHT");
-		}
-
 		for (int y = 0; y < rasters.getHeight(); y++) {
 			for (int x = 0; x < rasters.getWidth(); x++) {
 				Number[] pixel = rasters.getPixel(x, y);
@@ -128,25 +96,12 @@ public class TempTest {
 		Rasters rasters5_1 = fileDirectory5.readRasters();
 		Rasters rasters5_2 = fileDirectory5.readInterleavedRasters();
 
-		for (int i = 0; i < rasters.getSampleValues().length; i++) {
-			for (int j = 0; j < rasters.getSampleValues()[i].length; j++) {
-				if (!rasters.getSampleValues()[i][j].equals(rasters4_1
-						.getSampleValues()[i][j])
-						|| !rasters.getSampleValues()[i][j].equals(rasters5_1
-								.getSampleValues()[i][j])) {
-					System.out.println("Compression values do not match");
-				}
-			}
-		}
-
-		for (int i = 0; i < rasters2.getInterleaveValues().length; i++) {
-			if (!rasters2.getInterleaveValues()[i].equals(rasters4_2
-					.getInterleaveValues()[i])
-					|| !rasters2.getInterleaveValues()[i].equals(rasters5_2
-							.getInterleaveValues()[i])) {
-				System.out.println("Compression values do not match");
-			}
-		}
+		TiffTestUtils.compareRastersSampleValues(rasters, rasters4_1);
+		TiffTestUtils.compareRastersInterleaveValues(rasters2, rasters4_2);
+		TiffTestUtils.compareRastersSampleValues(rasters, rasters5_1);
+		TiffTestUtils.compareRastersInterleaveValues(rasters2, rasters5_2);
+		// TiffTestUtils.compareTIFFImages(tiffImage, tiffImage4);
+		// TiffTestUtils.compareTIFFImages(tiffImage, tiffImage5);
 
 		System.out.println("DONE");
 	}
