@@ -261,7 +261,7 @@ public enum FieldTagType {
 	/**
 	 * Get the tag id
 	 * 
-	 * @return
+	 * @return tag id
 	 */
 	public int getId() {
 		return id;

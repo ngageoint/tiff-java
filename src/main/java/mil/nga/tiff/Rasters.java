@@ -218,7 +218,7 @@ public class Rasters {
 	/**
 	 * Get the height of pixels
 	 * 
-	 * @return
+	 * @return height
 	 */
 	public int getHeight() {
 		return height;

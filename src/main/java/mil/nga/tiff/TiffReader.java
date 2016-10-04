@@ -25,8 +25,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from a file
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param file
+	 *            TIFF file
 	 * @return TIFF image
 	 * @throws IOException
 	 */
@@ -37,8 +37,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from a file
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param file
+	 *            TIFF file
 	 * @param cache
 	 *            true to cache tiles and strips
 	 * @return TIFF image
@@ -54,8 +54,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from an input stream
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param stream
+	 *            TIFF input stream
 	 * @return TIFF image
 	 * @throws IOException
 	 */
@@ -66,8 +66,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from an input stream
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param stream
+	 *            TIFF input stream
 	 * @param cache
 	 *            true to cache tiles and strips
 	 * @return TIFF image
@@ -83,8 +83,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from the bytes
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param bytes
+	 *            TIFF bytes
 	 * @return TIFF image
 	 */
 	public static TIFFImage readTiff(byte[] bytes) {
@@ -94,8 +94,8 @@ public class TiffReader {
 	/**
 	 * Read a TIFF from the bytes
 	 * 
-	 * @param reader
-	 *            byte reader
+	 * @param bytes
+	 *            TIFF bytes
 	 * @param cache
 	 *            true to cache tiles and strips
 	 * @return TIFF image

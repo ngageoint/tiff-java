@@ -83,8 +83,6 @@ public class FileDirectory {
 	 *            file directory entries
 	 * @param reader
 	 *            TIFF file byte reader
-	 * @param cacheTiles
-	 *            true to cache tiles
 	 */
 	public FileDirectory(SortedSet<FileDirectoryEntry> entries,
 			ByteReader reader) {
@@ -361,7 +359,8 @@ public class FileDirectory {
 	/**
 	 * Set the bits per sample
 	 * 
-	 * @return bits per sample
+	 * @param bitsPerSample
+	 *            bits per sample
 	 */
 	public void setBitsPerSample(List<Integer> bitsPerSample) {
 		setUnsignedIntegerListEntryValue(FieldTagType.BitsPerSample,
