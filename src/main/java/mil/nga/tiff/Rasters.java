@@ -356,7 +356,7 @@ public class Rasters {
 	 * Get a pixel sample value
 	 * 
 	 * @param sample
-	 *            sample index (>= 0 && < {@link #samplesPerPixel})
+	 *            sample index (>= 0 && < {@link #getSamplesPerPixel()})
 	 * @param x
 	 *            x coordinate (>= 0 && < {@link #getWidth()})
 	 * @param y
@@ -387,7 +387,7 @@ public class Rasters {
 	 * Set a pixel vample value
 	 * 
 	 * @param sample
-	 *            sample index (>= 0 && < {@link #samplesPerPixel})
+	 *            sample index (>= 0 && < {@link #getSamplesPerPixel()})
 	 * @param x
 	 *            x coordinate (>= 0 && < {@link #getWidth()})
 	 * @param y
