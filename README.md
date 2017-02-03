@@ -27,7 +27,7 @@ View the latest [Javadoc](http://ngageoint.github.io/geopackage-tiff-java/docs/a
 //ByteReader input = ...
 
 TIFFImage tiffImage = TiffReader.readTiff(input);
-List<FileDirectory> directories = tiffImage.getFileDirectories()
+List<FileDirectory> directories = tiffImage.getFileDirectories();
 FileDirectory directory = directories.get(0);
 Rasters rasters = directory.readRasters();
         
