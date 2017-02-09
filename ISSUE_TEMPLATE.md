@@ -1,6 +1,6 @@
 Please fill out as much known and relevant information as possible.
 
-### Version Information:
+#### Version Information:
 
   * TIFF Java Version:
   * TIFF Java Source: (e.g. Central Repository, Release, Source Code Build)
@@ -32,7 +32,7 @@ Please fill out as much known and relevant information as possible.
 #### Relevant Code:
 
 ```java
-// Any code to reproduce the problem
+// Code to reproduce the problem?
 ```
 
 #### Test Files:
