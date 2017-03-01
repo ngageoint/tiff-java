@@ -2,8 +2,8 @@ package mil.nga.tiff.compression;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +41,12 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	/**
 	 * Table entries
 	 */
-	private List<Integer[]> table = new ArrayList<>();
+	private Map<Integer, Integer[]> table = new HashMap<>();
+
+	/**
+	 * Current max table code
+	 */
+	private int maxCode;
 
 	/**
 	 * Current byte length
@@ -99,10 +104,10 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 			} else {
 
 				// If already in the table
-				if (code < table.size()) {
+				Integer[] value = table.get(code);
+				if (value != null) {
 
 					// Write the code value
-					Integer[] value = table.get(code);
 					writeValue(decodedStream, value);
 
 					// Create new value and add to table
@@ -113,26 +118,15 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 
 				} else {
 
-					if (oldCode >= table.size()) {
-						throw new TiffException("Code not in the table, "
-								+ oldCode + ", Table Length: " + table.size()
-								+ ", Position: " + position);
-					}
-
 					// Create and write new value from old value
 					Integer[] oldValue = table.get(oldCode);
 					Integer[] newValue = concat(oldValue, oldValue[0]);
 					writeValue(decodedStream, newValue);
 
 					// Write value to the table
-					addToTable(newValue);
+					addToTable(code, newValue);
 					oldCode = code;
 				}
-			}
-
-			// Increase byte length if needed
-			if (table.size() >= Math.pow(2, byteLength) - 1) {
-				byteLength++;
 			}
 
 			// Get the next code
@@ -150,8 +144,9 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	private void initializeTable() {
 		table.clear();
 		for (int i = 0; i <= 257; i++) {
-			table.add(new Integer[] { i });
+			table.put(i, new Integer[] { i });
 		}
+		maxCode = 257;
 		byteLength = MIN_BITS;
 	}
 
@@ -159,19 +154,32 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * Check the byte length and increase if needed
 	 */
 	private void checkByteLength() {
-		if (table.size() >= Math.pow(2, byteLength)) {
+		if (maxCode >= Math.pow(2, byteLength) - 2) {
 			byteLength++;
 		}
 	}
 
 	/**
-	 * Add the value to the table
+	 * Add the code and value to the table
 	 * 
 	 * @param value
 	 *            value
 	 */
 	private void addToTable(Integer[] value) {
-		table.add(value);
+		addToTable(maxCode + 1, value);
+	}
+
+	/**
+	 * Add the code and value to the table
+	 * 
+	 * @param code
+	 *            code
+	 * @param value
+	 *            value
+	 */
+	private void addToTable(int code, Integer[] value) {
+		table.put(code, value);
+		maxCode = Math.max(maxCode, code);
 		checkByteLength();
 	}
 
