@@ -160,7 +160,7 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	}
 
 	/**
-	 * Add the code and value to the table
+	 * Add the value to the table
 	 * 
 	 * @param value
 	 *            value
