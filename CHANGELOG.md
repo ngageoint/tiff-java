@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.0.1 (TBD)
+## [1.0.1](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/1.0.1) (03-02-2017)
 
 * LZW Compression modified to handle non contiguous table codes
 
