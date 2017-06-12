@@ -1271,8 +1271,8 @@ public class FileDirectory {
 		FieldType fieldType = null;
 
 		List<Integer> sampleFormat = getSampleFormat();
-		int format = sampleFormat != null ? sampleFormat.get(sampleIndex)
-				: TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT;
+		int format = sampleFormat != null && sampleIndex < sampleFormat.size() ? sampleFormat
+				.get(sampleIndex) : TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT;
 		int bitsPerSample = getBitsPerSample().get(sampleIndex);
 		switch (format) {
 		case TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT:
