@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.0.2 (TBD)
+## [1.0.2](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/1.0.2) (06-12-2017)
 
 * Handle fewer SampleFormat values specified than SamplesPerPixel. Defaults to 1 (unsigned integer data)
 
