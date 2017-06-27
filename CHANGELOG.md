@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 1.0.4 (TBD)
+
+* TBD
+
 ## [1.0.3](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/1.0.3) (06-27-2017)
 
 * Handle writing file directory entry ASCII values ending with more than one null
