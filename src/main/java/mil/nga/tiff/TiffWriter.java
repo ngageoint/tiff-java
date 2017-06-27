@@ -591,8 +591,9 @@ public class TiffWriter {
 			case ASCII:
 				bytesWritten += writer.writeString((String) value);
 				if (bytesWritten < entry.getTypeCount()) {
-					writeFillerBytes(writer, 1);
-					bytesWritten++;
+					long fillerBytes = entry.getTypeCount() - bytesWritten;
+					writeFillerBytes(writer, fillerBytes);
+					bytesWritten += fillerBytes;
 				}
 				break;
 			case BYTE:
