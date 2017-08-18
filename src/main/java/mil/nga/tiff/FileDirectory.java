@@ -482,11 +482,13 @@ public class FileDirectory {
 	 */
 	public int getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
-		if (samplesPerPixel != null)
-			return samplesPerPixel;
+		if (samplesPerPixel == null) {
+			// if SamplesPerPixel tag is missing, use length of BitsPerSample
+			// list
+			samplesPerPixel = getBitsPerSample().size();
+		}
 
-		// if SamplesPerPixel tag is missing, use length of BitsPerSample list
-		return getBitsPerSample().size();
+		return samplesPerPixel;
 	}
 
 	/**

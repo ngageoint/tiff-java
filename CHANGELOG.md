@@ -6,7 +6,8 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.0.4 (TBD)
 
-* TBD
+* Rasters constructor support for multiple samples per pixel
+* Handle missing samples per pixel values by using length of bits per sample
 
 ## [1.0.3](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/1.0.3) (06-27-2017)
 

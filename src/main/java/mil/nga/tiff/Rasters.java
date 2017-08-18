@@ -1,7 +1,6 @@
 package mil.nga.tiff;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import mil.nga.tiff.util.TiffConstants;
@@ -145,10 +144,22 @@ public class Rasters {
 				new Number[samplesPerPixel][width * height]);
 	}
 
-	public static List<Integer> makeBitsPerSampleList(int samplesPerPixel, int bitsPerSample) {
+	/**
+	 * Make a bits per sample list where each samples of a pixel has the same
+	 * value
+	 * 
+	 * @param samplesPerPixel
+	 *            samples per pixel
+	 * @param bitsPerSample
+	 *            bits per sample for all samples of a pixel
+	 * @return bits per sample list
+	 */
+	public static List<Integer> makeBitsPerSampleList(int samplesPerPixel,
+			int bitsPerSample) {
 		List<Integer> bitsPerSampleList = new ArrayList<Integer>();
-		for (int i = 0; i < samplesPerPixel; ++i)
+		for (int i = 0; i < samplesPerPixel; ++i) {
 			bitsPerSampleList.add(bitsPerSample);
+		}
 		return bitsPerSampleList;
 	}
 
@@ -165,8 +176,8 @@ public class Rasters {
 	 *            bits per sample for all samples of a pixel
 	 */
 	public Rasters(int width, int height, int samplesPerPixel, int bitsPerSample) {
-		this(width, height, samplesPerPixel,
-				makeBitsPerSampleList(samplesPerPixel, bitsPerSample));
+		this(width, height, samplesPerPixel, makeBitsPerSampleList(
+				samplesPerPixel, bitsPerSample));
 	}
 
 	/**
