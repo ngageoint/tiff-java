@@ -93,7 +93,7 @@ public class TiffTestUtils {
 		TestCase.assertEquals(fileDirectory.getImageWidth(), rasters.getWidth());
 		TestCase.assertEquals(fileDirectory.getImageHeight(),
 				rasters.getHeight());
-		TestCase.assertEquals(fileDirectory.getSamplesPerPixel().intValue(),
+		TestCase.assertEquals(fileDirectory.getSamplesPerPixel(),
 				rasters.getSamplesPerPixel());
 		TestCase.assertEquals(fileDirectory.getBitsPerSample().size(), rasters
 				.getBitsPerSample().size());
