@@ -145,6 +145,13 @@ public class Rasters {
 				new Number[samplesPerPixel][width * height]);
 	}
 
+	public static List<Integer> makeBitsPerSampleList(int samplesPerPixel, int bitsPerSample) {
+		List<Integer> bitsPerSampleList = new ArrayList<Integer>();
+		for (int i = 0; i < samplesPerPixel; ++i)
+			bitsPerSampleList.add(bitsPerSample);
+		return bitsPerSampleList;
+	}
+
 	/**
 	 * Constructor
 	 * 
@@ -155,11 +162,11 @@ public class Rasters {
 	 * @param samplesPerPixel
 	 *            samples per pixel
 	 * @param bitsPerSample
-	 *            single sample bits per sample
+	 *            bits per sample for all samples of a pixel
 	 */
 	public Rasters(int width, int height, int samplesPerPixel, int bitsPerSample) {
-		this(width, height, samplesPerPixel, new ArrayList<Integer>(
-				Arrays.asList(bitsPerSample)));
+		this(width, height, samplesPerPixel,
+				makeBitsPerSampleList(samplesPerPixel, bitsPerSample));
 	}
 
 	/**
@@ -593,5 +600,4 @@ public class Rasters {
 
 		return rowsPerStrip;
 	}
-
 }
