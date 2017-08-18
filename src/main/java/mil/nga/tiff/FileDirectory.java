@@ -1440,7 +1440,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return integer value
 	 */
-	private Integer getIntegerEntryValue(FieldTagType fieldTagType) {
+	public Integer getIntegerEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
 
@@ -1452,7 +1452,7 @@ public class FileDirectory {
 	 * @param value
 	 *            unsigned integer value (16 bit)
 	 */
-	private void setUnsignedIntegerEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedIntegerEntryValue(FieldTagType fieldTagType,
 			int value) {
 		setEntryValue(fieldTagType, FieldType.SHORT, 1, value);
 	}
@@ -1464,7 +1464,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return number value
 	 */
-	private Number getNumberEntryValue(FieldTagType fieldTagType) {
+	public Number getNumberEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
 
@@ -1476,8 +1476,37 @@ public class FileDirectory {
 	 * @param value
 	 *            unsigned long value (32 bit)
 	 */
-	private void setUnsignedLongEntryValue(FieldTagType fieldTagType, long value) {
+	public void setUnsignedLongEntryValue(FieldTagType fieldTagType, long value) {
 		setEntryValue(fieldTagType, FieldType.LONG, 1, value);
+	}
+
+	/**
+	 * Get a string entry value for the field tag type
+	 *
+	 * @param fieldTagType
+	 *            field tag type
+	 * @return number value
+	 */
+	public String getStringEntryValue(FieldTagType fieldTagType) {
+		FileDirectoryEntry entry = fieldTagTypeMapping.get(fieldTagType);
+		if (entry != null) {
+			return ((ArrayList<String>) entry.getValues()).get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * Set string value for the field tag type
+	 *
+	 * @param fieldTagType
+	 * @param value
+	 */
+	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
+		List<String> values = new ArrayList<>();
+		values.add(value);
+		FileDirectoryEntry entry = new FileDirectoryEntry(fieldTagType,
+				FieldType.ASCII, value.length() + 1, values);
+		addEntry(entry);
 	}
 
 	/**
@@ -1487,7 +1516,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return integer list value
 	 */
-	private List<Integer> getIntegerListEntryValue(FieldTagType fieldTagType) {
+	public List<Integer> getIntegerListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
 
@@ -1497,7 +1526,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 * @param value
 	 */
-	private void setUnsignedIntegerListEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedIntegerListEntryValue(FieldTagType fieldTagType,
 			List<Integer> value) {
 		setEntryValue(fieldTagType, FieldType.SHORT, value.size(), value);
 	}
