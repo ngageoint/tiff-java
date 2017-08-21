@@ -272,14 +272,12 @@ public class TiffWriter {
 	 * 
 	 * @param fileDirectory
 	 *            file directory
-	 * @param strips
-	 *            number of strips
 	 */
 	private static void populateStripEntries(FileDirectory fileDirectory) {
 
 		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
-		int stripsPerSample = (int) Math.ceil(fileDirectory.getImageHeight()
-				.doubleValue() / rowsPerStrip);
+		int imageHeight = fileDirectory.getImageHeight().intValue();
+		int stripsPerSample = (imageHeight + rowsPerStrip - 1) / rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();

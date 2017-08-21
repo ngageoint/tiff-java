@@ -1133,13 +1133,10 @@ public class FileDirectory {
 		int tileWidth = getTileWidth().intValue();
 		int tileHeight = getTileHeight().intValue();
 
-		int minXTile = (int) Math
-				.floor(window.getMinX() / ((double) tileWidth));
-		int maxXTile = (int) Math.ceil(window.getMaxX() / ((double) tileWidth));
-		int minYTile = (int) Math.floor(window.getMinY()
-				/ ((double) tileHeight));
-		int maxYTile = (int) Math
-				.ceil(window.getMaxY() / ((double) tileHeight));
+		int minXTile = window.getMinX() / tileWidth;
+		int maxXTile = (window.getMaxX() + tileWidth - 1) / tileWidth;
+		int minYTile = window.getMinY() / tileHeight;
+		int maxYTile = (window.getMaxY() + tileHeight - 1) / tileHeight;
 
 		int windowWidth = window.getMaxX() - window.getMinX();
 
@@ -1338,10 +1335,12 @@ public class FileDirectory {
 
 		byte[] tileOrStrip = null;
 
-		int numTilesPerRow = (int) Math.ceil(getImageWidth().doubleValue()
-				/ getTileWidth().doubleValue());
-		int numTilesPerCol = (int) Math.ceil(getImageHeight().doubleValue()
-				/ getTileHeight().doubleValue());
+		int imageWidth = getImageWidth().intValue();
+		int imageHeight = getImageHeight().intValue();
+		int tileWidth = getTileWidth().intValue();
+		int tileHeight = getTileHeight().intValue();
+		int numTilesPerRow = (imageWidth + tileWidth - 1) / tileWidth;
+		int numTilesPerCol = (imageHeight + tileHeight - 1) / tileHeight;
 
 		int index = 0;
 		if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
