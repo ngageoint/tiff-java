@@ -1490,7 +1490,7 @@ public class FileDirectory {
 	public String getStringEntryValue(FieldTagType fieldTagType) {
 		String value = null;
 		List<String> values = getEntryValue(fieldTagType);
-		if (values != null) {
+		if (values != null && !values.isEmpty()) {
 			value = values.get(0);
 		}
 		return value;
