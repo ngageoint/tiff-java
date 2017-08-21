@@ -276,9 +276,8 @@ public class TiffWriter {
 	private static void populateStripEntries(FileDirectory fileDirectory) {
 
 		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
-		int stripsPerSample = (fileDirectory.getImageHeight().intValue()
-				+ rowsPerStrip - 1)
-				/ rowsPerStrip;
+		int imageHeight = fileDirectory.getImageHeight().intValue();
+		int stripsPerSample = (imageHeight + rowsPerStrip - 1) / rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();
