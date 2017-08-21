@@ -113,7 +113,7 @@ public class FileDirectory {
 		setCache(cacheData);
 
 		// Determine if tiled
-		tiled = getEntryValue(FieldTagType.RowsPerStrip) == null;
+		tiled = getRowsPerStrip() == null;
 
 		// Determine and validate the planar configuration
 		Integer pc = getPlanarConfiguration();
@@ -294,8 +294,8 @@ public class FileDirectory {
 	 * 
 	 * @return image width
 	 */
-	public int getImageWidth() {
-		return getNumberEntryValue(FieldTagType.ImageWidth).intValue();
+	public Number getImageWidth() {
+		return getNumberEntryValue(FieldTagType.ImageWidth);
 	}
 
 	/**
@@ -323,8 +323,8 @@ public class FileDirectory {
 	 * 
 	 * @return image height
 	 */
-	public int getImageHeight() {
-		return getNumberEntryValue(FieldTagType.ImageLength).intValue();
+	public Number getImageHeight() {
+		return getNumberEntryValue(FieldTagType.ImageLength);
 	}
 
 	/**
@@ -507,8 +507,8 @@ public class FileDirectory {
 	 * 
 	 * @return rows per strip
 	 */
-	public int getRowsPerStrip() {
-		return getNumberEntryValue(FieldTagType.RowsPerStrip).intValue();
+	public Number getRowsPerStrip() {
+		return getNumberEntryValue(FieldTagType.RowsPerStrip);
 	}
 
 	/**
@@ -714,8 +714,8 @@ public class FileDirectory {
 	 * 
 	 * @return tile width
 	 */
-	public int getTileWidth() {
-		return tiled ? getNumberEntryValue(FieldTagType.TileWidth).intValue()
+	public Number getTileWidth() {
+		return tiled ? getNumberEntryValue(FieldTagType.TileWidth)
 				: getImageWidth();
 	}
 
@@ -744,8 +744,8 @@ public class FileDirectory {
 	 * 
 	 * @return tile height
 	 */
-	public int getTileHeight() {
-		return tiled ? getNumberEntryValue(FieldTagType.TileLength).intValue()
+	public Number getTileHeight() {
+		return tiled ? getNumberEntryValue(FieldTagType.TileLength)
 				: getRowsPerStrip();
 	}
 
@@ -1062,8 +1062,8 @@ public class FileDirectory {
 	public Rasters readRasters(ImageWindow window, int[] samples,
 			boolean sampleValues, boolean interleaveValues) {
 
-		int width = getImageWidth();
-		int height = getImageHeight();
+		int width = getImageWidth().intValue();
+		int height = getImageHeight().intValue();
 
 		// Validate the image window
 		if (window.getMinX() < 0 || window.getMinY() < 0
@@ -1130,8 +1130,8 @@ public class FileDirectory {
 	 */
 	private void readRaster(ImageWindow window, int[] samples, Rasters rasters) {
 
-		int tileWidth = getTileWidth();
-		int tileHeight = getTileHeight();
+		int tileWidth = getTileWidth().intValue();
+		int tileHeight = getTileHeight().intValue();
 
 		int minXTile = window.getMinX() / tileWidth;
 		int maxXTile = (window.getMaxX() + tileWidth - 1) / tileWidth;
@@ -1335,10 +1335,12 @@ public class FileDirectory {
 
 		byte[] tileOrStrip = null;
 
-		int tileWidth = getTileWidth();
-		int tileHeight = getTileHeight();
-		int numTilesPerRow = (getImageWidth() + tileWidth - 1) / tileWidth;
-		int numTilesPerCol = (getImageHeight() + tileHeight - 1) / tileHeight;
+		int imageWidth = getImageWidth().intValue();
+		int imageHeight = getImageHeight().intValue();
+		int tileWidth = getTileWidth().intValue();
+		int tileHeight = getTileHeight().intValue();
+		int numTilesPerRow = (imageWidth + tileWidth - 1) / tileWidth;
+		int numTilesPerCol = (imageHeight + tileHeight - 1) / tileHeight;
 
 		int index = 0;
 		if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
