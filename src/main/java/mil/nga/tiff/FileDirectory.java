@@ -1488,11 +1488,12 @@ public class FileDirectory {
 	 * @return number value
 	 */
 	public String getStringEntryValue(FieldTagType fieldTagType) {
-		FileDirectoryEntry entry = fieldTagTypeMapping.get(fieldTagType);
-		if (entry != null) {
-			return ((ArrayList<String>) entry.getValues()).get(0);
+		String value = null;
+		List<String> values = getEntryValue(fieldTagType);
+		if (values != null) {
+			value = values.get(0);
 		}
-		return null;
+		return value;
 	}
 
 	/**
@@ -1504,9 +1505,7 @@ public class FileDirectory {
 	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
 		List<String> values = new ArrayList<>();
 		values.add(value);
-		FileDirectoryEntry entry = new FileDirectoryEntry(fieldTagType,
-				FieldType.ASCII, value.length() + 1, values);
-		addEntry(entry);
+		setEntryValue(fieldTagType, FieldType.ASCII, value.length() + 1, values);
 	}
 
 	/**
