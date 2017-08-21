@@ -174,7 +174,7 @@ public class TiffWriter {
 			List<Long> valueBytesCheck = new ArrayList<>();
 
 			// Write the raster bytes to temporary storage
-			if (fileDirectory.getRowsPerStrip() == null) {
+			if (fileDirectory.isTiled()) {
 				throw new TiffException("Tiled images are not supported");
 			}
 
@@ -259,7 +259,7 @@ public class TiffWriter {
 		}
 
 		// Populate the raster entries
-		if (fileDirectory.getRowsPerStrip() != null) {
+		if (!fileDirectory.isTiled()) {
 			populateStripEntries(fileDirectory);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -272,14 +272,12 @@ public class TiffWriter {
 	 * 
 	 * @param fileDirectory
 	 *            file directory
-	 * @param strips
-	 *            number of strips
 	 */
 	private static void populateStripEntries(FileDirectory fileDirectory) {
 
-		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
-		int stripsPerSample = (int) Math.ceil(fileDirectory.getImageHeight()
-				.doubleValue() / rowsPerStrip);
+		int rowsPerStrip = fileDirectory.getRowsPerStrip();
+		int stripsPerSample = (fileDirectory.getImageHeight() + rowsPerStrip - 1)
+				/ rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();
@@ -327,7 +325,7 @@ public class TiffWriter {
 		ByteWriter writer = new ByteWriter(byteOrder);
 
 		// Write the rasters
-		if (fileDirectory.getRowsPerStrip() != null) {
+		if (!fileDirectory.isTiled()) {
 			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
 					encoder);
 		} else {
@@ -364,8 +362,8 @@ public class TiffWriter {
 		Rasters rasters = fileDirectory.getWriteRasters();
 
 		// Get the row and strip counts
-		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
-		int maxY = fileDirectory.getImageHeight().intValue();
+		int rowsPerStrip = fileDirectory.getRowsPerStrip();
+		int maxY = fileDirectory.getImageHeight();
 		int stripsPerSample = (int) Math.ceil((double) maxY
 				/ (double) rowsPerStrip);
 		int strips = stripsPerSample;
@@ -397,7 +395,7 @@ public class TiffWriter {
 
 				ByteWriter rowWriter = new ByteWriter(writer.getByteOrder());
 
-				for (int x = 0; x < fileDirectory.getImageWidth().intValue(); x++) {
+				for (int x = 0; x < fileDirectory.getImageWidth(); x++) {
 
 					if (sample != null) {
 						Number value = rasters.getPixelSample(sample, x, y);

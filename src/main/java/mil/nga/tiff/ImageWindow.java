@@ -67,8 +67,8 @@ public class ImageWindow {
 	public ImageWindow(FileDirectory fileDirectory) {
 		this.minX = 0;
 		this.minY = 0;
-		this.maxX = fileDirectory.getImageWidth().intValue();
-		this.maxY = fileDirectory.getImageHeight().intValue();
+		this.maxX = fileDirectory.getImageWidth();
+		this.maxY = fileDirectory.getImageHeight();
 	}
 
 	/**
