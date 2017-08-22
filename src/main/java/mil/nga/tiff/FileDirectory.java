@@ -486,8 +486,9 @@ public class FileDirectory {
 			// if SamplesPerPixel tag is missing, try using length of
 			// BitsPerSample list
 			List<Integer> bitsPerSampleList = getBitsPerSample();
-			if (bitsPerSampleList != null)
+			if (bitsPerSampleList != null) {
 				samplesPerPixel = bitsPerSampleList.size();
+			}
 		}
 
 		return samplesPerPixel;
