@@ -480,12 +480,14 @@ public class FileDirectory {
 	 * 
 	 * @return samples per pixel
 	 */
-	public int getSamplesPerPixel() {
+	public Integer getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
-			// if SamplesPerPixel tag is missing, use length of BitsPerSample
-			// list
-			samplesPerPixel = getBitsPerSample().size();
+			// if SamplesPerPixel tag is missing, try using length of
+			// BitsPerSample list
+			List<Integer> bitsPerSampleList = getBitsPerSample();
+			if (bitsPerSampleList != null)
+				samplesPerPixel = bitsPerSampleList.size();
 		}
 
 		return samplesPerPixel;
@@ -1540,7 +1542,7 @@ public class FileDirectory {
 		Integer maxValue = null;
 		List<Integer> values = getIntegerListEntryValue(fieldTagType);
 		if (values != null) {
-			maxValue = Collections.max(getSampleFormat());
+			maxValue = Collections.max(values);
 		}
 		return maxValue;
 	}
