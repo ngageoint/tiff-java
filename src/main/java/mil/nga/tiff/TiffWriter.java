@@ -174,7 +174,7 @@ public class TiffWriter {
 			List<Long> valueBytesCheck = new ArrayList<>();
 
 			// Write the raster bytes to temporary storage
-			if (fileDirectory.getRowsPerStrip() == null) {
+			if (fileDirectory.isTiled()) {
 				throw new TiffException("Tiled images are not supported");
 			}
 
@@ -259,7 +259,7 @@ public class TiffWriter {
 		}
 
 		// Populate the raster entries
-		if (fileDirectory.getRowsPerStrip() != null) {
+		if (!fileDirectory.isTiled()) {
 			populateStripEntries(fileDirectory);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -325,7 +325,7 @@ public class TiffWriter {
 		ByteWriter writer = new ByteWriter(byteOrder);
 
 		// Write the rasters
-		if (fileDirectory.getRowsPerStrip() != null) {
+		if (!fileDirectory.isTiled()) {
 			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
 					encoder);
 		} else {
@@ -364,8 +364,7 @@ public class TiffWriter {
 		// Get the row and strip counts
 		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
 		int maxY = fileDirectory.getImageHeight().intValue();
-		int stripsPerSample = (int) Math.ceil((double) maxY
-				/ (double) rowsPerStrip);
+		int stripsPerSample = (maxY + rowsPerStrip - 1) / rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();
