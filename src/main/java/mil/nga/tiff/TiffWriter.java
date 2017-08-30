@@ -185,9 +185,9 @@ public class TiffWriter {
 			// Write each entry
 			for (FileDirectoryEntry entry : fileDirectory.getEntries()) {
 				writer.writeUnsignedShort(entry.getFieldTag().getId());
-				writer.writeUnsignedShort(entry.getFieldType().getValue());
+				writer.writeUnsignedShort(entry.getTagType().getValue());
 				writer.writeUnsignedInt(entry.getTypeCount());
-				long valueBytes = entry.getFieldType().getBytes()
+				long valueBytes = entry.getTagType().getBytes()
 						* entry.getTypeCount();
 				if (valueBytes > 4) {
 					// Write the value offset
@@ -228,7 +228,7 @@ public class TiffWriter {
 									+ writer.size());
 				}
 				int bytesWritten = writeValues(writer, entry);
-				long valueBytes = entry.getFieldType().getBytes()
+				long valueBytes = entry.getTagType().getBytes()
 						* entry.getTypeCount();
 				if (bytesWritten != valueBytes) {
 					throw new TiffException(
@@ -311,10 +311,10 @@ public class TiffWriter {
 		}
 
 		// Get the sample field types
-		FieldType[] sampleFieldTypes = new FieldType[rasters
+		TagType[] sampleTagTypes = new TagType[rasters
 				.getSamplesPerPixel()];
 		for (int sample = 0; sample < rasters.getSamplesPerPixel(); sample++) {
-			sampleFieldTypes[sample] = fileDirectory
+			sampleTagTypes[sample] = fileDirectory
 					.getFieldTypeForSample(sample);
 		}
 
@@ -326,7 +326,7 @@ public class TiffWriter {
 
 		// Write the rasters
 		if (!fileDirectory.isTiled()) {
-			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
+			writeStripRasters(writer, fileDirectory, offset, sampleTagTypes,
 					encoder);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -348,7 +348,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @param offset
 	 *            byte offset
-	 * @param sampleFieldTypes
+	 * @param sampleTagTypes
 	 *            sample field types
 	 * @param encoder
 	 *            compression encoder
@@ -356,7 +356,7 @@ public class TiffWriter {
 	 */
 	private static void writeStripRasters(ByteWriter writer,
 			FileDirectory fileDirectory, long offset,
-			FieldType[] sampleFieldTypes, CompressionEncoder encoder)
+			TagType[] sampleTagTypes, CompressionEncoder encoder)
 			throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
@@ -398,14 +398,14 @@ public class TiffWriter {
 
 					if (sample != null) {
 						Number value = rasters.getPixelSample(sample, x, y);
-						FieldType fieldType = sampleFieldTypes[sample];
-						writeValue(rowWriter, fieldType, value);
+						TagType tagType = sampleTagTypes[sample];
+						writeValue(rowWriter, tagType, value);
 					} else {
 						Number[] values = rasters.getPixel(x, y);
 						for (int sampleIndex = 0; sampleIndex < values.length; sampleIndex++) {
 							Number value = values[sampleIndex];
-							FieldType fieldType = sampleFieldTypes[sampleIndex];
-							writeValue(rowWriter, fieldType, value);
+							TagType tagType = sampleTagTypes[sampleIndex];
+							writeValue(rowWriter, tagType, value);
 						}
 					}
 				}
@@ -502,14 +502,14 @@ public class TiffWriter {
 	 * 
 	 * @param writer
 	 *            byte writer
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @throws IOException
 	 */
-	private static void writeValue(ByteWriter writer, FieldType fieldType,
+	private static void writeValue(ByteWriter writer, TagType tagType,
 			Number value) throws IOException {
 
-		switch (fieldType) {
+		switch (tagType) {
 		case BYTE:
 			writer.writeUnsignedByte(value.shortValue());
 			break;
@@ -536,7 +536,7 @@ public class TiffWriter {
 			break;
 		default:
 			throw new TiffException("Unsupported raster field type: "
-					+ fieldType);
+					+ tagType);
 		}
 
 	}
@@ -572,8 +572,8 @@ public class TiffWriter {
 		List<Object> valuesList = null;
 		if (entry.getTypeCount() == 1
 				&& !entry.getFieldTag().isArray()
-				&& !(entry.getFieldType() == FieldType.RATIONAL || entry
-						.getFieldType() == FieldType.SRATIONAL)) {
+				&& !(entry.getTagType() == TagType.RATIONAL || entry
+						.getTagType() == TagType.SRATIONAL)) {
 			valuesList = new ArrayList<>();
 			valuesList.add(entry.getValues());
 		} else {
@@ -584,7 +584,7 @@ public class TiffWriter {
 
 		for (Object value : valuesList) {
 
-			switch (entry.getFieldType()) {
+			switch (entry.getTagType()) {
 			case ASCII:
 				bytesWritten += writer.writeString((String) value);
 				if (bytesWritten < entry.getTypeCount()) {
@@ -636,7 +636,7 @@ public class TiffWriter {
 				break;
 			default:
 				throw new TiffException("Invalid field type: "
-						+ entry.getFieldType());
+						+ entry.getTagType());
 			}
 
 		}

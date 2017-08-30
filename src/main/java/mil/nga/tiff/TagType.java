@@ -1,11 +1,11 @@
 package mil.nga.tiff;
 
 /**
- * Field Types
+ * Tag Types according to http://www.fileformat.info/format/tiff/egff.htm#TIFF-DMYID.2.3
  * 
  * @author osbornb
  */
-public enum FieldType {
+public enum TagType {
 
 	/**
 	 * 8-bit unsigned integer
@@ -82,7 +82,7 @@ public enum FieldType {
 	 * @param bytes
 	 *            bytes per value
 	 */
-	private FieldType(int bytes) {
+	private TagType(int bytes) {
 		this.bytes = bytes;
 	}
 
@@ -111,8 +111,8 @@ public enum FieldType {
 	 *            field type number
 	 * @return field type
 	 */
-	public static FieldType getFieldType(int fieldType) {
-		return FieldType.values()[fieldType - 1];
+	public static TagType getFieldType(int fieldType) {
+		return TagType.values()[fieldType - 1];
 	}
 
 }

@@ -50,8 +50,8 @@ public class TiffFileTester {
 				System.out.println();
 				System.out.println(entry.getFieldTag() + " ("
 						+ entry.getFieldTag().getId() + ")");
-				System.out.println(entry.getFieldType() + " ("
-						+ entry.getFieldType().getBytes() + " bytes)");
+				System.out.println(entry.getTagType() + " ("
+						+ entry.getTagType().getBytes() + " bytes)");
 				System.out.println("Count: " + entry.getTypeCount());
 				System.out.println("Values: " + entry.getValues());
 			}
