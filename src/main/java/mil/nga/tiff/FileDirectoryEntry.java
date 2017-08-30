@@ -12,12 +12,12 @@ public class FileDirectoryEntry implements Comparable<FileDirectoryEntry> {
 	/**
 	 * Field Tag Type
 	 */
-	private final FieldTagType fieldTag;
+	private final TagName fieldTag;
 
 	/**
 	 * Field Type
 	 */
-	private final FieldType fieldType;
+	private final TagType tagType;
 
 	/**
 	 * Type Count
@@ -34,17 +34,17 @@ public class FileDirectoryEntry implements Comparable<FileDirectoryEntry> {
 	 * 
 	 * @param fieldTag
 	 *            field tag type
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @param typeCount
 	 *            type count
 	 * @param values
 	 *            values
 	 */
-	public FileDirectoryEntry(FieldTagType fieldTag, FieldType fieldType,
+	public FileDirectoryEntry(TagName fieldTag, TagType tagType,
 			long typeCount, Object values) {
 		this.fieldTag = fieldTag;
-		this.fieldType = fieldType;
+		this.tagType = tagType;
 		this.typeCount = typeCount;
 		this.values = values;
 	}
@@ -54,7 +54,7 @@ public class FileDirectoryEntry implements Comparable<FileDirectoryEntry> {
 	 * 
 	 * @return field tag type
 	 */
-	public FieldTagType getFieldTag() {
+	public TagName getFieldTag() {
 		return fieldTag;
 	}
 
@@ -63,8 +63,8 @@ public class FileDirectoryEntry implements Comparable<FileDirectoryEntry> {
 	 * 
 	 * @return field type
 	 */
-	public FieldType getFieldType() {
-		return fieldType;
+	public TagType getTagType() {
+		return tagType;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class FileDirectoryEntry implements Comparable<FileDirectoryEntry> {
 	 */
 	public long sizeOfValues() {
 		long size = 0;
-		long valueBytes = fieldType.getBytes() * typeCount;
+		long valueBytes = tagType.getBytes() * typeCount;
 		if (valueBytes > 4) {
 			size = valueBytes;
 		}

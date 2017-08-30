@@ -34,7 +34,7 @@ public class FileDirectory {
 	/**
 	 * Mapping between tags and entries
 	 */
-	private final Map<FieldTagType, FileDirectoryEntry> fieldTagTypeMapping = new HashMap<>();
+	private final Map<TagName, FileDirectoryEntry> fieldTagTypeMapping = new HashMap<>();
 
 	/**
 	 * Byte reader
@@ -263,12 +263,12 @@ public class FileDirectory {
 	/**
 	 * Get a file directory entry from the field tag type
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return file directory entry
 	 */
-	public FileDirectoryEntry get(FieldTagType fieldTagType) {
-		return fieldTagTypeMapping.get(fieldTagType);
+	public FileDirectoryEntry get(TagName tagName) {
+		return fieldTagTypeMapping.get(tagName);
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class FileDirectory {
 	 * 
 	 * @return field tag type mapping
 	 */
-	public Map<FieldTagType, FileDirectoryEntry> getFieldTagTypeMapping() {
+	public Map<TagName, FileDirectoryEntry> getFieldTagTypeMapping() {
 		return Collections.unmodifiableMap(fieldTagTypeMapping);
 	}
 
@@ -295,7 +295,7 @@ public class FileDirectory {
 	 * @return image width
 	 */
 	public Number getImageWidth() {
-		return getNumberEntryValue(FieldTagType.ImageWidth);
+		return getNumberTag(TagName.ImageWidth);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class FileDirectory {
 	 *            image width
 	 */
 	public void setImageWidth(int width) {
-		setUnsignedIntegerEntryValue(FieldTagType.ImageWidth, width);
+		setUnsignedIntegerTag(TagName.ImageWidth, width);
 	}
 
 	/**
@@ -315,7 +315,7 @@ public class FileDirectory {
 	 *            image width
 	 */
 	public void setImageWidthAsLong(long width) {
-		setUnsignedLongEntryValue(FieldTagType.ImageWidth, width);
+		setUnsignedLongTag(TagName.ImageWidth, width);
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class FileDirectory {
 	 * @return image height
 	 */
 	public Number getImageHeight() {
-		return getNumberEntryValue(FieldTagType.ImageLength);
+		return getNumberTag(TagName.ImageLength);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public class FileDirectory {
 	 *            image height
 	 */
 	public void setImageHeight(int height) {
-		setUnsignedIntegerEntryValue(FieldTagType.ImageLength, height);
+		setUnsignedIntegerTag(TagName.ImageLength, height);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class FileDirectory {
 	 *            image height
 	 */
 	public void setImageHeightAsLong(long height) {
-		setUnsignedLongEntryValue(FieldTagType.ImageLength, height);
+		setUnsignedLongTag(TagName.ImageLength, height);
 	}
 
 	/**
@@ -353,7 +353,7 @@ public class FileDirectory {
 	 * @return bits per sample
 	 */
 	public List<Integer> getBitsPerSample() {
-		return getIntegerListEntryValue(FieldTagType.BitsPerSample);
+		return getIntegerListTag(TagName.BitsPerSample);
 	}
 
 	/**
@@ -363,7 +363,7 @@ public class FileDirectory {
 	 *            bits per sample
 	 */
 	public void setBitsPerSample(List<Integer> bitsPerSample) {
-		setUnsignedIntegerListEntryValue(FieldTagType.BitsPerSample,
+		setUnsignedIntegerListTag(TagName.BitsPerSample,
 				bitsPerSample);
 	}
 
@@ -383,7 +383,7 @@ public class FileDirectory {
 	 * @return max bits per sample
 	 */
 	public Integer getMaxBitsPerSample() {
-		return getMaxIntegerEntryValue(FieldTagType.BitsPerSample);
+		return getMaxIntegerTag(TagName.BitsPerSample);
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class FileDirectory {
 	 * @return compression
 	 */
 	public Integer getCompression() {
-		return getIntegerEntryValue(FieldTagType.Compression);
+		return getIntegerTag(TagName.Compression);
 	}
 
 	/**
@@ -402,7 +402,7 @@ public class FileDirectory {
 	 *            compression
 	 */
 	public void setCompression(int compression) {
-		setUnsignedIntegerEntryValue(FieldTagType.Compression, compression);
+		setUnsignedIntegerTag(TagName.Compression, compression);
 	}
 
 	/**
@@ -411,7 +411,7 @@ public class FileDirectory {
 	 * @return photometric interpretation
 	 */
 	public Integer getPhotometricInterpretation() {
-		return getIntegerEntryValue(FieldTagType.PhotometricInterpretation);
+		return getIntegerTag(TagName.PhotometricInterpretation);
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class FileDirectory {
 	 *            photometric interpretation
 	 */
 	public void setPhotometricInterpretation(int photometricInterpretation) {
-		setUnsignedIntegerEntryValue(FieldTagType.PhotometricInterpretation,
+		setUnsignedIntegerTag(TagName.PhotometricInterpretation,
 				photometricInterpretation);
 	}
 
@@ -431,7 +431,7 @@ public class FileDirectory {
 	 * @return strip offsets
 	 */
 	public List<Number> getStripOffsets() {
-		return getNumberListEntryValue(FieldTagType.StripOffsets);
+		return getNumberListTag(TagName.StripOffsets);
 	}
 
 	/**
@@ -441,7 +441,7 @@ public class FileDirectory {
 	 *            strip offsets
 	 */
 	public void setStripOffsets(List<Integer> stripOffsets) {
-		setUnsignedIntegerListEntryValue(FieldTagType.StripOffsets,
+		setUnsignedIntegerListTag(TagName.StripOffsets,
 				stripOffsets);
 	}
 
@@ -452,7 +452,7 @@ public class FileDirectory {
 	 *            strip offsets
 	 */
 	public void setStripOffsetsAsLongs(List<Long> stripOffsets) {
-		setUnsignedLongListEntryValue(FieldTagType.StripOffsets, stripOffsets);
+		setUnsignedLongListTag(TagName.StripOffsets, stripOffsets);
 	}
 
 	/**
@@ -481,7 +481,7 @@ public class FileDirectory {
 	 * @return samples per pixel
 	 */
 	public Integer getSamplesPerPixel() {
-		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
+		Integer samplesPerPixel = getIntegerTag(TagName.SamplesPerPixel);
 		if (samplesPerPixel == null) {
 			// if SamplesPerPixel tag is missing, try using length of
 			// BitsPerSample list
@@ -501,7 +501,7 @@ public class FileDirectory {
 	 *            samples per pixel
 	 */
 	public void setSamplesPerPixel(int samplesPerPixel) {
-		setUnsignedIntegerEntryValue(FieldTagType.SamplesPerPixel,
+		setUnsignedIntegerTag(TagName.SamplesPerPixel,
 				samplesPerPixel);
 	}
 
@@ -511,7 +511,7 @@ public class FileDirectory {
 	 * @return rows per strip
 	 */
 	public Number getRowsPerStrip() {
-		return getNumberEntryValue(FieldTagType.RowsPerStrip);
+		return getNumberTag(TagName.RowsPerStrip);
 	}
 
 	/**
@@ -521,7 +521,7 @@ public class FileDirectory {
 	 *            rows per strip
 	 */
 	public void setRowsPerStrip(int rowsPerStrip) {
-		setUnsignedIntegerEntryValue(FieldTagType.RowsPerStrip, rowsPerStrip);
+		setUnsignedIntegerTag(TagName.RowsPerStrip, rowsPerStrip);
 	}
 
 	/**
@@ -531,7 +531,7 @@ public class FileDirectory {
 	 *            rows per strip
 	 */
 	public void setRowsPerStripAsLong(long rowsPerStrip) {
-		setUnsignedLongEntryValue(FieldTagType.RowsPerStrip, rowsPerStrip);
+		setUnsignedLongTag(TagName.RowsPerStrip, rowsPerStrip);
 	}
 
 	/**
@@ -540,7 +540,7 @@ public class FileDirectory {
 	 * @return strip byte counts
 	 */
 	public List<Number> getStripByteCounts() {
-		return getNumberListEntryValue(FieldTagType.StripByteCounts);
+		return getNumberListTag(TagName.StripByteCounts);
 	}
 
 	/**
@@ -550,7 +550,7 @@ public class FileDirectory {
 	 *            strip byte counts
 	 */
 	public void setStripByteCounts(List<Integer> stripByteCounts) {
-		setUnsignedIntegerListEntryValue(FieldTagType.StripByteCounts,
+		setUnsignedIntegerListTag(TagName.StripByteCounts,
 				stripByteCounts);
 	}
 
@@ -561,7 +561,7 @@ public class FileDirectory {
 	 *            strip byte counts
 	 */
 	public void setStripByteCountsAsLongs(List<Long> stripByteCounts) {
-		setUnsignedLongListEntryValue(FieldTagType.StripByteCounts,
+		setUnsignedLongListTag(TagName.StripByteCounts,
 				stripByteCounts);
 	}
 
@@ -591,7 +591,7 @@ public class FileDirectory {
 	 * @return x resolution
 	 */
 	public List<Long> getXResolution() {
-		return getLongListEntryValue(FieldTagType.XResolution);
+		return getLongListTag(TagName.XResolution);
 	}
 
 	/**
@@ -601,7 +601,7 @@ public class FileDirectory {
 	 *            x resolution
 	 */
 	public void setXResolution(List<Long> xResolution) {
-		setUnsignedLongListEntryValue(FieldTagType.XResolution, xResolution);
+		setUnsignedLongListTag(TagName.XResolution, xResolution);
 	}
 
 	/**
@@ -620,7 +620,7 @@ public class FileDirectory {
 	 * @return y resolution
 	 */
 	public List<Long> getYResolution() {
-		return getLongListEntryValue(FieldTagType.YResolution);
+		return getLongListTag(TagName.YResolution);
 	}
 
 	/**
@@ -630,7 +630,7 @@ public class FileDirectory {
 	 *            y resolution
 	 */
 	public void setYResolution(List<Long> yResolution) {
-		setUnsignedLongListEntryValue(FieldTagType.YResolution, yResolution);
+		setUnsignedLongListTag(TagName.YResolution, yResolution);
 	}
 
 	/**
@@ -649,7 +649,7 @@ public class FileDirectory {
 	 * @return planar configuration
 	 */
 	public Integer getPlanarConfiguration() {
-		return getIntegerEntryValue(FieldTagType.PlanarConfiguration);
+		return getIntegerTag(TagName.PlanarConfiguration);
 	}
 
 	/**
@@ -659,7 +659,7 @@ public class FileDirectory {
 	 *            planar configuration
 	 */
 	public void setPlanarConfiguration(int planarConfiguration) {
-		setUnsignedIntegerEntryValue(FieldTagType.PlanarConfiguration,
+		setUnsignedIntegerTag(TagName.PlanarConfiguration,
 				planarConfiguration);
 	}
 
@@ -669,7 +669,7 @@ public class FileDirectory {
 	 * @return resolution unit
 	 */
 	public Integer getResolutionUnit() {
-		return getIntegerEntryValue(FieldTagType.ResolutionUnit);
+		return getIntegerTag(TagName.ResolutionUnit);
 	}
 
 	/**
@@ -679,7 +679,7 @@ public class FileDirectory {
 	 *            resolution unit
 	 */
 	public void setResolutionUnit(int resolutionUnit) {
-		setUnsignedIntegerEntryValue(FieldTagType.ResolutionUnit,
+		setUnsignedIntegerTag(TagName.ResolutionUnit,
 				resolutionUnit);
 	}
 
@@ -689,7 +689,7 @@ public class FileDirectory {
 	 * @return color map
 	 */
 	public List<Integer> getColorMap() {
-		return getIntegerListEntryValue(FieldTagType.ColorMap);
+		return getIntegerListTag(TagName.ColorMap);
 	}
 
 	/**
@@ -699,7 +699,7 @@ public class FileDirectory {
 	 *            color map
 	 */
 	public void setColorMap(List<Integer> colorMap) {
-		setUnsignedIntegerListEntryValue(FieldTagType.ColorMap, colorMap);
+		setUnsignedIntegerListTag(TagName.ColorMap, colorMap);
 	}
 
 	/**
@@ -718,7 +718,7 @@ public class FileDirectory {
 	 * @return tile width
 	 */
 	public Number getTileWidth() {
-		return tiled ? getNumberEntryValue(FieldTagType.TileWidth)
+		return tiled ? getNumberTag(TagName.TileWidth)
 				: getImageWidth();
 	}
 
@@ -729,7 +729,7 @@ public class FileDirectory {
 	 *            tile width
 	 */
 	public void setTileWidth(int tileWidth) {
-		setUnsignedIntegerEntryValue(FieldTagType.TileWidth, tileWidth);
+		setUnsignedIntegerTag(TagName.TileWidth, tileWidth);
 	}
 
 	/**
@@ -739,7 +739,7 @@ public class FileDirectory {
 	 *            tile width
 	 */
 	public void setTileWidthAsLong(long tileWidth) {
-		setUnsignedLongEntryValue(FieldTagType.TileWidth, tileWidth);
+		setUnsignedLongTag(TagName.TileWidth, tileWidth);
 	}
 
 	/**
@@ -748,7 +748,7 @@ public class FileDirectory {
 	 * @return tile height
 	 */
 	public Number getTileHeight() {
-		return tiled ? getNumberEntryValue(FieldTagType.TileLength)
+		return tiled ? getNumberTag(TagName.TileLength)
 				: getRowsPerStrip();
 	}
 
@@ -759,7 +759,7 @@ public class FileDirectory {
 	 *            tile height
 	 */
 	public void setTileHeight(int tileHeight) {
-		setUnsignedIntegerEntryValue(FieldTagType.TileLength, tileHeight);
+		setUnsignedIntegerTag(TagName.TileLength, tileHeight);
 	}
 
 	/**
@@ -769,7 +769,7 @@ public class FileDirectory {
 	 *            tile height
 	 */
 	public void setTileHeightAsLong(long tileHeight) {
-		setUnsignedLongEntryValue(FieldTagType.TileLength, tileHeight);
+		setUnsignedLongTag(TagName.TileLength, tileHeight);
 	}
 
 	/**
@@ -778,7 +778,7 @@ public class FileDirectory {
 	 * @return tile offsets
 	 */
 	public List<Long> getTileOffsets() {
-		return getLongListEntryValue(FieldTagType.TileOffsets);
+		return getLongListTag(TagName.TileOffsets);
 	}
 
 	/**
@@ -788,7 +788,7 @@ public class FileDirectory {
 	 *            tile offsets
 	 */
 	public void setTileOffsets(List<Long> tileOffsets) {
-		setUnsignedLongListEntryValue(FieldTagType.TileOffsets, tileOffsets);
+		setUnsignedLongListTag(TagName.TileOffsets, tileOffsets);
 	}
 
 	/**
@@ -807,7 +807,7 @@ public class FileDirectory {
 	 * @return tile byte counts
 	 */
 	public List<Number> getTileByteCounts() {
-		return getNumberListEntryValue(FieldTagType.TileByteCounts);
+		return getNumberListTag(TagName.TileByteCounts);
 	}
 
 	/**
@@ -817,7 +817,7 @@ public class FileDirectory {
 	 *            tile byte counts
 	 */
 	public void setTileByteCounts(List<Integer> tileByteCounts) {
-		setUnsignedIntegerListEntryValue(FieldTagType.TileByteCounts,
+		setUnsignedIntegerListTag(TagName.TileByteCounts,
 				tileByteCounts);
 	}
 
@@ -828,7 +828,7 @@ public class FileDirectory {
 	 *            tile byte counts
 	 */
 	public void setTileByteCountsAsLongs(List<Long> tileByteCounts) {
-		setUnsignedLongListEntryValue(FieldTagType.TileByteCounts,
+		setUnsignedLongListTag(TagName.TileByteCounts,
 				tileByteCounts);
 	}
 
@@ -858,7 +858,7 @@ public class FileDirectory {
 	 * @return sample format
 	 */
 	public List<Integer> getSampleFormat() {
-		return getIntegerListEntryValue(FieldTagType.SampleFormat);
+		return getIntegerListTag(TagName.SampleFormat);
 	}
 
 	/**
@@ -868,7 +868,7 @@ public class FileDirectory {
 	 *            sample format
 	 */
 	public void setSampleFormat(List<Integer> sampleFormat) {
-		setUnsignedIntegerListEntryValue(FieldTagType.SampleFormat,
+		setUnsignedIntegerListTag(TagName.SampleFormat,
 				sampleFormat);
 	}
 
@@ -888,7 +888,7 @@ public class FileDirectory {
 	 * @return max sample format
 	 */
 	public Integer getMaxSampleFormat() {
-		return getMaxIntegerEntryValue(FieldTagType.SampleFormat);
+		return getMaxIntegerTag(TagName.SampleFormat);
 	}
 
 	/**
@@ -1146,14 +1146,14 @@ public class FileDirectory {
 		int bytesPerPixel = getBytesPerPixel();
 
 		int[] srcSampleOffsets = new int[samples.length];
-		FieldType[] sampleFieldTypes = new FieldType[samples.length];
+		TagType[] sampleTagTypes = new TagType[samples.length];
 		for (int i = 0; i < samples.length; i++) {
 			int sampleOffset = 0;
 			if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
 				sampleOffset = sum(getBitsPerSample(), 0, samples[i]) / 8;
 			}
 			srcSampleOffsets[i] = sampleOffset;
-			sampleFieldTypes[i] = getFieldTypeForSample(samples[i]);
+			sampleTagTypes[i] = getFieldTypeForSample(samples[i]);
 		}
 
 		for (int yTile = minYTile; yTile < maxYTile; yTile++) {
@@ -1191,7 +1191,7 @@ public class FileDirectory {
 
 							// Read the value
 							Number value = readValue(blockReader,
-									sampleFieldTypes[sampleIndex]);
+									sampleTagTypes[sampleIndex]);
 
 							if (rasters.hasInterleaveValues()) {
 								int windowCoordinate = (y + firstLine - window
@@ -1225,15 +1225,15 @@ public class FileDirectory {
 	 * 
 	 * @param reader
 	 *            byte reader
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @return value
 	 */
-	private Number readValue(ByteReader reader, FieldType fieldType) {
+	private Number readValue(ByteReader reader, TagType tagType) {
 
 		Number value = null;
 
-		switch (fieldType) {
+		switch (tagType) {
 		case BYTE:
 			value = reader.readUnsignedByte();
 			break;
@@ -1260,7 +1260,7 @@ public class FileDirectory {
 			break;
 		default:
 			throw new TiffException("Unsupported raster field type: "
-					+ fieldType);
+					+ tagType);
 		}
 
 		return value;
@@ -1273,9 +1273,9 @@ public class FileDirectory {
 	 *            sample index
 	 * @return field type
 	 */
-	public FieldType getFieldTypeForSample(int sampleIndex) {
+	public TagType getFieldTypeForSample(int sampleIndex) {
 
-		FieldType fieldType = null;
+		TagType tagType = null;
 
 		List<Integer> sampleFormat = getSampleFormat();
 		int format = sampleFormat != null && sampleIndex < sampleFormat.size() ? sampleFormat
@@ -1285,42 +1285,42 @@ public class FileDirectory {
 		case TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT:
 			switch (bitsPerSample) {
 			case 8:
-				fieldType = FieldType.BYTE;
+				tagType = TagType.BYTE;
 				break;
 			case 16:
-				fieldType = FieldType.SHORT;
+				tagType = TagType.SHORT;
 				break;
 			case 32:
-				fieldType = FieldType.LONG;
+				tagType = TagType.LONG;
 				break;
 			}
 			break;
 		case TiffConstants.SAMPLE_FORMAT_SIGNED_INT:
 			switch (bitsPerSample) {
 			case 8:
-				fieldType = FieldType.SBYTE;
+				tagType = TagType.SBYTE;
 				break;
 			case 16:
-				fieldType = FieldType.SSHORT;
+				tagType = TagType.SSHORT;
 				break;
 			case 32:
-				fieldType = FieldType.SLONG;
+				tagType = TagType.SLONG;
 				break;
 			}
 			break;
 		case TiffConstants.SAMPLE_FORMAT_FLOAT:
 			switch (bitsPerSample) {
 			case 32:
-				fieldType = FieldType.FLOAT;
+				tagType = TagType.FLOAT;
 				break;
 			case 64:
-				fieldType = FieldType.DOUBLE;
+				tagType = TagType.DOUBLE;
 				break;
 			}
 			break;
 		}
 
-		return fieldType;
+		return tagType;
 	}
 
 	/**
@@ -1438,60 +1438,60 @@ public class FileDirectory {
 	/**
 	 * Get an integer entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return integer value
 	 */
-	public Integer getIntegerEntryValue(FieldTagType fieldTagType) {
-		return getEntryValue(fieldTagType);
+	public Integer getIntegerTag(TagName tagName) {
+		return getTag(tagName);
 	}
 
 	/**
 	 * Set an unsigned integer entry value for the field tag type
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @param value
 	 *            unsigned integer value (16 bit)
 	 */
-	public void setUnsignedIntegerEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedIntegerTag(TagName tagName,
 			int value) {
-		setEntryValue(fieldTagType, FieldType.SHORT, 1, value);
+		setTag(tagName, TagType.SHORT, 1, value);
 	}
 
 	/**
 	 * Get an number entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return number value
 	 */
-	public Number getNumberEntryValue(FieldTagType fieldTagType) {
-		return getEntryValue(fieldTagType);
+	public Number getNumberTag(TagName tagName) {
+		return getTag(tagName);
 	}
 
 	/**
 	 * Set an unsigned long entry value for the field tag type
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @param value
 	 *            unsigned long value (32 bit)
 	 */
-	public void setUnsignedLongEntryValue(FieldTagType fieldTagType, long value) {
-		setEntryValue(fieldTagType, FieldType.LONG, 1, value);
+	public void setUnsignedLongTag(TagName tagName, long value) {
+		setTag(tagName, TagType.LONG, 1, value);
 	}
 
 	/**
 	 * Get a string entry value for the field tag type
 	 *
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return number value
 	 */
-	public String getStringEntryValue(FieldTagType fieldTagType) {
+	public String getStringTag(TagName tagName) {
 		String value = null;
-		List<String> values = getEntryValue(fieldTagType);
+		List<String> values = getTag(tagName);
 		if (values != null && !values.isEmpty()) {
 			value = values.get(0);
 		}
@@ -1501,47 +1501,47 @@ public class FileDirectory {
 	/**
 	 * Set string value for the field tag type
 	 *
-	 * @param fieldTagType
+	 * @param tagName
 	 * @param value
 	 */
-	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
+	public void setStringTag(TagName tagName, String value) {
 		List<String> values = new ArrayList<>();
 		values.add(value);
-		setEntryValue(fieldTagType, FieldType.ASCII, value.length() + 1, values);
+		setTag(tagName, TagType.ASCII, value.length() + 1, values);
 	}
 
 	/**
 	 * Get an integer list entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return integer list value
 	 */
-	public List<Integer> getIntegerListEntryValue(FieldTagType fieldTagType) {
-		return getEntryValue(fieldTagType);
+	public List<Integer> getIntegerListTag(TagName tagName) {
+		return getTag(tagName);
 	}
 
 	/**
 	 * Set an unsigned integer list of values for the field tag type
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 * @param value
 	 */
-	public void setUnsignedIntegerListEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedIntegerListTag(TagName tagName,
 			List<Integer> value) {
-		setEntryValue(fieldTagType, FieldType.SHORT, value.size(), value);
+		setTag(tagName, TagType.SHORT, value.size(), value);
 	}
 
 	/**
 	 * Get the max integer from integer list entry values
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return max integer value
 	 */
-	private Integer getMaxIntegerEntryValue(FieldTagType fieldTagType) {
+	public Integer getMaxIntegerTag(TagName tagName) {
 		Integer maxValue = null;
-		List<Integer> values = getIntegerListEntryValue(fieldTagType);
+		List<Integer> values = getIntegerListTag(tagName);
 		if (values != null) {
 			maxValue = Collections.max(values);
 		}
@@ -1551,47 +1551,47 @@ public class FileDirectory {
 	/**
 	 * Get a number list entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return long list value
 	 */
-	private List<Number> getNumberListEntryValue(FieldTagType fieldTagType) {
-		return getEntryValue(fieldTagType);
+	public List<Number> getNumberListTag(TagName tagName) {
+		return getTag(tagName);
 	}
 
 	/**
 	 * Get a long list entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return long list value
 	 */
-	private List<Long> getLongListEntryValue(FieldTagType fieldTagType) {
-		return getEntryValue(fieldTagType);
+	public List<Long> getLongListTag(TagName tagName) {
+		return getTag(tagName);
 	}
 
 	/**
 	 * Set an unsigned long list of values for the field tag type
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 * @param value
 	 */
-	private void setUnsignedLongListEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedLongListTag(TagName tagName,
 			List<Long> value) {
-		setEntryValue(fieldTagType, FieldType.LONG, value.size(), value);
+		setTag(tagName, TagType.LONG, value.size(), value);
 	}
 
 	/**
 	 * Get an entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
 	 * @return value
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T getEntryValue(FieldTagType fieldTagType) {
+	private <T> T getTag(TagName tagName) {
 		T value = null;
-		FileDirectoryEntry entry = fieldTagTypeMapping.get(fieldTagType);
+		FileDirectoryEntry entry = fieldTagTypeMapping.get(tagName);
 		if (entry != null) {
 			value = (T) entry.getValues();
 		}
@@ -1601,19 +1601,19 @@ public class FileDirectory {
 	/**
 	 * Create and set the entry value
 	 * 
-	 * @param fieldTagType
+	 * @param tagName
 	 *            field tag type
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @param typeCount
 	 *            type count
 	 * @param values
 	 *            entry values
 	 */
-	private void setEntryValue(FieldTagType fieldTagType, FieldType fieldType,
+	private void setTag(TagName tagName, TagType tagType,
 			long typeCount, Object values) {
-		FileDirectoryEntry entry = new FileDirectoryEntry(fieldTagType,
-				fieldType, typeCount, values);
+		FileDirectoryEntry entry = new FileDirectoryEntry(tagName,
+				tagType, typeCount, values);
 		addEntry(entry);
 	}
 
@@ -1643,7 +1643,7 @@ public class FileDirectory {
 	 *            int value
 	 * @return single value list
 	 */
-	private List<Integer> createSingleIntegerList(int value) {
+	static private List<Integer> createSingleIntegerList(int value) {
 		List<Integer> valueList = new ArrayList<>();
 		valueList.add(value);
 		return valueList;
@@ -1656,7 +1656,7 @@ public class FileDirectory {
 	 *            long value
 	 * @return single value list
 	 */
-	private List<Long> createSingleLongList(long value) {
+	static private List<Long> createSingleLongList(long value) {
 		List<Long> valueList = new ArrayList<>();
 		valueList.add(value);
 		return valueList;

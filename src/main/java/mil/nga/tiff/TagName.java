@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Field Tag Types
+ * Tag Names according to http://www.fileformat.info/format/tiff/egff.htm#X058-9-TIFF-TB-3
  * 
  * @author osbornb
  */
-public enum FieldTagType {
+public enum TagName {
 
 	Artist(315, false),
 
@@ -244,7 +244,7 @@ public enum FieldTagType {
 	 * @param array
 	 *            true if an array type
 	 */
-	private FieldTagType(int id, boolean array) {
+	private TagName(int id, boolean array) {
 		this.id = id;
 		this.array = array;
 	}
@@ -270,13 +270,13 @@ public enum FieldTagType {
 	/**
 	 * Mapping between ids and field tag types
 	 */
-	private static final Map<Integer, FieldTagType> idMapping = new HashMap<>();
+	private static final Map<Integer, TagName> idMapping = new HashMap<>();
 
 	/**
 	 * Load the id mapping
 	 */
 	static {
-		for (FieldTagType fieldTag : FieldTagType.values()) {
+		for (TagName fieldTag : TagName.values()) {
 			idMapping.put(fieldTag.getId(), fieldTag);
 		}
 	}
@@ -288,8 +288,8 @@ public enum FieldTagType {
 	 *            tag id
 	 * @return field tag type
 	 */
-	public static FieldTagType getById(int id) {
-		FieldTagType fieldTag = idMapping.get(id);
+	public static TagName getById(int id) {
+		TagName fieldTag = idMapping.get(id);
 		return fieldTag;
 	}
 

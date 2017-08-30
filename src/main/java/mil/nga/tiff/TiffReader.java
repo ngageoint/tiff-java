@@ -199,21 +199,21 @@ public class TiffReader {
 
 				// Read the field tag, field type, and type count
 				int fieldTagValue = reader.readUnsignedShort();
-				FieldTagType fieldTag = FieldTagType.getById(fieldTagValue);
+				TagName fieldTag = TagName.getById(fieldTagValue);
 				int fieldTypeValue = reader.readUnsignedShort();
-				FieldType fieldType = FieldType.getFieldType(fieldTypeValue);
+				TagType tagType = TagType.getFieldType(fieldTypeValue);
 				long typeCount = reader.readUnsignedInt();
 
 				// Save off the next byte to read location
 				int nextByte = reader.getNextByte();
 
 				// Read the field values
-				Object values = readFieldValues(reader, fieldTag, fieldType,
+				Object values = readFieldValues(reader, fieldTag, tagType,
 						typeCount);
 
 				// Create and add a file directory
 				FileDirectoryEntry entry = new FileDirectoryEntry(fieldTag,
-						fieldType, typeCount, values);
+						tagType, typeCount, values);
 				entries.add(entry);
 
 				// Restore the next byte to read location
@@ -239,29 +239,29 @@ public class TiffReader {
 	 *            byte reader
 	 * @param fieldTag
 	 *            field tag type
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @param typeCount
 	 *            type count
 	 * @return values
 	 */
 	private static Object readFieldValues(ByteReader reader,
-			FieldTagType fieldTag, FieldType fieldType, long typeCount) {
+			TagName fieldTag, TagType tagType, long typeCount) {
 
 		// If the value is larger and not stored inline, determine the offset
-		if (fieldType.getBytes() * typeCount > 4) {
+		if (tagType.getBytes() * typeCount > 4) {
 			int valueOffset = (int) reader.readUnsignedInt();
 			reader.setNextByte(valueOffset);
 		}
 
 		// Read the directory entry values
-		List<Object> valuesList = getValues(reader, fieldType, typeCount);
+		List<Object> valuesList = getValues(reader, tagType, typeCount);
 
 		// Get the single or array values
 		Object values = null;
 		if (typeCount == 1
 				&& !fieldTag.isArray()
-				&& !(fieldType == FieldType.RATIONAL || fieldType == FieldType.SRATIONAL)) {
+				&& !(tagType == TagType.RATIONAL || tagType == TagType.SRATIONAL)) {
 			values = valuesList.get(0);
 		} else {
 			values = valuesList;
@@ -275,20 +275,20 @@ public class TiffReader {
 	 * 
 	 * @param reader
 	 *            byte reader
-	 * @param fieldType
+	 * @param tagType
 	 *            field type
 	 * @param typeCount
 	 *            type count
 	 * @return values
 	 */
 	private static List<Object> getValues(ByteReader reader,
-			FieldType fieldType, long typeCount) {
+			TagType tagType, long typeCount) {
 
 		List<Object> values = new ArrayList<Object>();
 
 		for (int i = 0; i < typeCount; i++) {
 
-			switch (fieldType) {
+			switch (tagType) {
 			case ASCII:
 				try {
 					values.add(reader.readString(1));
@@ -330,13 +330,13 @@ public class TiffReader {
 				values.add(reader.readDouble());
 				break;
 			default:
-				throw new TiffException("Invalid field type: " + fieldType);
+				throw new TiffException("Invalid field type: " + tagType);
 			}
 
 		}
 
 		// If ASCII characters, combine the strings
-		if (fieldType == FieldType.ASCII) {
+		if (tagType == TagType.ASCII) {
 			List<Object> stringValues = new ArrayList<Object>();
 			StringBuilder stringValue = new StringBuilder();
 			for (Object value : values) {
