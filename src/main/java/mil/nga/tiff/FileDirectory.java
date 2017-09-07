@@ -1487,7 +1487,7 @@ public class FileDirectory {
 	 *
 	 * @param fieldTagType
 	 *            field tag type
-	 * @return number value
+	 * @return string value
 	 */
 	public String getStringEntryValue(FieldTagType fieldTagType) {
 		String value = null;
@@ -1502,7 +1502,9 @@ public class FileDirectory {
 	 * Set string value for the field tag type
 	 *
 	 * @param fieldTagType
+	 *            field tag type
 	 * @param value
+	 *            string value
 	 */
 	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
 		List<String> values = new ArrayList<>();
@@ -1539,7 +1541,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return max integer value
 	 */
-	private Integer getMaxIntegerEntryValue(FieldTagType fieldTagType) {
+	public Integer getMaxIntegerEntryValue(FieldTagType fieldTagType) {
 		Integer maxValue = null;
 		List<Integer> values = getIntegerListEntryValue(fieldTagType);
 		if (values != null) {
@@ -1555,7 +1557,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return long list value
 	 */
-	private List<Number> getNumberListEntryValue(FieldTagType fieldTagType) {
+	public List<Number> getNumberListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
 
@@ -1566,7 +1568,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @return long list value
 	 */
-	private List<Long> getLongListEntryValue(FieldTagType fieldTagType) {
+	public List<Long> getLongListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
 
@@ -1576,7 +1578,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 * @param value
 	 */
-	private void setUnsignedLongListEntryValue(FieldTagType fieldTagType,
+	public void setUnsignedLongListEntryValue(FieldTagType fieldTagType,
 			List<Long> value) {
 		setEntryValue(fieldTagType, FieldType.LONG, value.size(), value);
 	}

@@ -145,25 +145,6 @@ public class Rasters {
 	}
 
 	/**
-	 * Make a bits per sample list where each samples of a pixel has the same
-	 * value
-	 * 
-	 * @param samplesPerPixel
-	 *            samples per pixel
-	 * @param bitsPerSample
-	 *            bits per sample for all samples of a pixel
-	 * @return bits per sample list
-	 */
-	public static List<Integer> makeBitsPerSampleList(int samplesPerPixel,
-			int bitsPerSample) {
-		List<Integer> bitsPerSampleList = new ArrayList<Integer>();
-		for (int i = 0; i < samplesPerPixel; ++i) {
-			bitsPerSampleList.add(bitsPerSample);
-		}
-		return bitsPerSampleList;
-	}
-
-	/**
 	 * Constructor
 	 * 
 	 * @param width
@@ -611,4 +592,24 @@ public class Rasters {
 
 		return rowsPerStrip;
 	}
+
+	/**
+	 * Make a bits per sample list where each samples of a pixel has the same
+	 * value
+	 * 
+	 * @param samplesPerPixel
+	 *            samples per pixel
+	 * @param bitsPerSample
+	 *            bits per sample for all samples of a pixel
+	 * @return bits per sample list
+	 */
+	public static List<Integer> makeBitsPerSampleList(int samplesPerPixel,
+			int bitsPerSample) {
+		List<Integer> bitsPerSampleList = new ArrayList<Integer>();
+		for (int i = 0; i < samplesPerPixel; ++i) {
+			bitsPerSampleList.add(bitsPerSample);
+		}
+		return bitsPerSampleList;
+	}
+
 }
