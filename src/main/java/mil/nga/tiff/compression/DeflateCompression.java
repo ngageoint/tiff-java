@@ -1,6 +1,11 @@
 package mil.nga.tiff.compression;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import mil.nga.tiff.util.TiffException;
 
@@ -17,8 +22,25 @@ public class DeflateCompression implements CompressionDecoder,
 	 */
 	@Override
 	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
-		throw new TiffException("Deflate decoder is not yet implemented");
-	}
+        try {
+            Inflater inflater = new Inflater();   
+            inflater.setInput(bytes);  
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
+            byte[] buffer = new byte[1024];  
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+            byte[] output = outputStream.toByteArray();
+
+            return output;
+        } catch (IOException e) {
+            throw new TiffException("Failed close decoded byte stream", e);
+        } catch (DataFormatException e) {
+            throw new TiffException("Data format error while decoding stream", e);
+        }
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -33,7 +55,22 @@ public class DeflateCompression implements CompressionDecoder,
 	 */
 	@Override
 	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
-		throw new TiffException("Deflate encoder is not yet implemented");
-	}
+        try {
+            Deflater deflater = new Deflater();
+            deflater.setInput(bytes);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
+            deflater.finish();
+            byte[] buffer = new byte[1024];
+            while (!deflater.finished()) {
+                int count = deflater.deflate(buffer); // returns the generated code... index
+                outputStream.write(buffer, 0, count);
+            }
 
+            outputStream.close();
+            byte[] output = outputStream.toByteArray();
+            return output;
+        } catch (IOException e) {
+            throw new TiffException("Failed close encoded stream", e);
+        }
+     }
 }
