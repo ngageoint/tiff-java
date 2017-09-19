@@ -22,25 +22,25 @@ public class DeflateCompression implements CompressionDecoder,
 	 */
 	@Override
 	public byte[] decode(byte[] bytes, ByteOrder byteOrder) {
-        try {
-            Inflater inflater = new Inflater();   
-            inflater.setInput(bytes);  
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
-            byte[] buffer = new byte[1024];  
-            while (!inflater.finished()) {
-                int count = inflater.inflate(buffer);
-                outputStream.write(buffer, 0, count);
-            }
-            outputStream.close();
-            byte[] output = outputStream.toByteArray();
+		try {
+			Inflater inflater = new Inflater();
+			inflater.setInput(bytes);  
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
+			byte[] buffer = new byte[1024];  
+			while (!inflater.finished()) {
+				int count = inflater.inflate(buffer);
+				outputStream.write(buffer, 0, count);
+			}
+			outputStream.close();
+			byte[] output = outputStream.toByteArray();
 
-            return output;
-        } catch (IOException e) {
-            throw new TiffException("Failed close decoded byte stream", e);
-        } catch (DataFormatException e) {
-            throw new TiffException("Data format error while decoding stream", e);
-        }
-    }
+			return output;
+		} catch (IOException e) {
+			throw new TiffException("Failed close decoded byte stream", e);
+		} catch (DataFormatException e) {
+			throw new TiffException("Data format error while decoding stream", e);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -55,22 +55,22 @@ public class DeflateCompression implements CompressionDecoder,
 	 */
 	@Override
 	public byte[] encode(byte[] bytes, ByteOrder byteOrder) {
-        try {
-            Deflater deflater = new Deflater();
-            deflater.setInput(bytes);
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
-            deflater.finish();
-            byte[] buffer = new byte[1024];
-            while (!deflater.finished()) {
-                int count = deflater.deflate(buffer); // returns the generated code... index
-                outputStream.write(buffer, 0, count);
-            }
+		try {
+			Deflater deflater = new Deflater();
+			deflater.setInput(bytes);
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
+			deflater.finish();
+			byte[] buffer = new byte[1024];
+			while (!deflater.finished()) {
+				int count = deflater.deflate(buffer); // returns the generated code... index
+				outputStream.write(buffer, 0, count);
+			}
 
-            outputStream.close();
-            byte[] output = outputStream.toByteArray();
-            return output;
-        } catch (IOException e) {
-            throw new TiffException("Failed close encoded stream", e);
-        }
-     }
+			outputStream.close();
+			byte[] output = outputStream.toByteArray();
+			return output;
+		} catch (IOException e) {
+			throw new TiffException("Failed close encoded stream", e);
+		}
+	}
 }
