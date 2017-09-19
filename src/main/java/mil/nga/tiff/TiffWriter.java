@@ -489,6 +489,9 @@ public class TiffWriter {
 		case TiffConstants.COMPRESSION_PACKBITS:
 			encoder = new PackbitsCompression();
 			break;
+		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
+			throw new TiffException("PKZIP Deflate not supported for encoding. " +
+									"Use Adobe-style instead (COMPRESSION_DEFLATE)");
 		default:
 			throw new TiffException("Unknown compression method identifier: "
 					+ compression);
