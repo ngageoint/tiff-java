@@ -56,6 +56,7 @@ public class TiffConstants {
 	public static final int COMPRESSION_JPEG_OLD = 6;
 	public static final int COMPRESSION_JPEG_NEW = 7;
 	public static final int COMPRESSION_DEFLATE = 8;
+	@Deprecated
 	public static final int COMPRESSION_PKZIP_DEFLATE = 32946; // PKZIP-style Deflate encoding (Obsolete).
 	public static final int COMPRESSION_PACKBITS = 32773;
 
