@@ -5,7 +5,6 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.javafx.beans.annotations.NonNull;
 import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
@@ -758,7 +757,7 @@ public class Rasters {
 	 * @param fieldType Field type to be read
 	 * @return Sample form buffer
 	 */
-	private Number readSample(@NonNull ByteBuffer buffer, @NonNull FieldType fieldType) {
+	private Number readSample(ByteBuffer buffer, FieldType fieldType) {
 		Number sampleValue;
 
 		switch (fieldType) {
@@ -800,7 +799,7 @@ public class Rasters {
 	 * @param fieldType Field type to be written.
 	 * @param value Actual value to write.
 	 */
-	private void writeSample(@NonNull ByteBuffer buffer, @NonNull FieldType fieldType, @NonNull Number value) {
+	private void writeSample(ByteBuffer buffer, FieldType fieldType, Number value) {
 		switch (fieldType) {
 			case BYTE:
 			case SBYTE:
@@ -832,8 +831,8 @@ public class Rasters {
 	 * @param inBuffer A buffer to read from. @note Make sure buffer position is set.
 	 * @param fieldType Field type to be read.
 	 */
-	private void writeSample(@NonNull ByteBuffer outBuffer, @NonNull ByteBuffer inBuffer,
-							 @NonNull FieldType fieldType) {
+	private void writeSample(ByteBuffer outBuffer, ByteBuffer inBuffer,
+							 FieldType fieldType) {
 		switch (fieldType)
 		{
 			case BYTE:
