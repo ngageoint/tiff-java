@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.javafx.beans.annotations.NonNull;
 import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
@@ -211,36 +212,7 @@ public class Rasters {
 		}
 
 		buffer.position(bufferIndex);
-
-		switch (sampleFieldTypes[sampleIndex]) {
-		case BYTE:
-			buffer.put(value.byteValue());
-			break;
-		case SHORT:
-			buffer.putShort(value.shortValue());
-			break;
-		case LONG:
-			buffer.putInt(value.intValue());
-			break;
-		case SBYTE:
-			buffer.put(value.byteValue());
-			break;
-		case SSHORT:
-			buffer.putShort(value.shortValue());
-			break;
-		case SLONG:
-			buffer.putInt(value.intValue());
-			break;
-		case FLOAT:
-			buffer.putFloat(value.floatValue());
-			break;
-		case DOUBLE:
-			buffer.putDouble(value.doubleValue());
-			break;
-		default:
-			throw new TiffException("Unsupported raster field type: "
-					+ sampleFieldTypes[sampleIndex]);
-		}
+		writeSample(buffer, sampleFieldTypes[sampleIndex], value);
 	}
 
 	/**
@@ -259,38 +231,7 @@ public class Rasters {
 		}
 
 		buffer.position(index);
-		Number sampleValue;
-
-		switch (sampleFieldTypes[sampleIndex]) {
-			case BYTE:
-				sampleValue = (short)(buffer.get() & 0xff);
-				break;
-			case SHORT:
-				sampleValue = buffer.getShort() & 0xffff;
-				break;
-			case LONG:
-				sampleValue = buffer.getInt() & 0xffffffffL;
-				break;
-			case SBYTE:
-				sampleValue = buffer.get();
-				break;
-			case SSHORT:
-				sampleValue = buffer.getShort();
-				break;
-			case SLONG:
-				sampleValue = buffer.getInt();
-				break;
-			case FLOAT:
-				sampleValue = buffer.getFloat();
-				break;
-			case DOUBLE:
-				sampleValue = buffer.getDouble();
-				break;
-			default:
-				throw new TiffException("Unsupported raster field type: "
-						+ sampleFieldTypes[sampleIndex]);
-		}
-		return sampleValue;
+		return readSample(buffer, sampleFieldTypes[sampleIndex]);
 	}
 
 	/**
@@ -494,27 +435,7 @@ public class Rasters {
 			}
 			for (int i = 0; i < getWidth(); ++i) {
 				for (int j = 0; j < samplesPerPixel; ++j) {
-					switch (sampleFieldTypes[j])
-					{
-						case BYTE:
-						case SBYTE:
-							outBuffer.put(sampleValues[j].get());
-							break;
-						case SHORT:
-						case SSHORT:
-							outBuffer.putShort(sampleValues[j].getShort());
-							break;
-						case LONG:
-						case SLONG:
-							outBuffer.putInt(sampleValues[j].getInt());
-							break;
-						case FLOAT:
-							outBuffer.putFloat(sampleValues[j].getFloat());
-							break;
-						case DOUBLE:
-							outBuffer.putDouble(sampleValues[j].getDouble());
-							break;
-					}
+					writeSample(outBuffer, sampleValues[j], sampleFieldTypes[j]);
 				}
 			}
 		} else {
@@ -522,26 +443,7 @@ public class Rasters {
 
 			for (int i = 0; i < getWidth(); ++i) {
 				for (int j = 0; j < samplesPerPixel; ++j) {
-					switch (sampleFieldTypes[j]) {
-						case BYTE:
-						case SBYTE:
-							outBuffer.put(interleaveValues.get());
-							break;
-						case SHORT:
-						case SSHORT:
-							outBuffer.putShort(interleaveValues.getShort());
-							break;
-						case LONG:
-						case SLONG:
-							outBuffer.putInt(interleaveValues.getInt());
-							break;
-						case FLOAT:
-							outBuffer.putFloat(interleaveValues.getFloat());
-							break;
-						case DOUBLE:
-							outBuffer.putDouble(interleaveValues.getDouble());
-							break;
-					}
+					writeSample(outBuffer, interleaveValues, sampleFieldTypes[j]);
 				}
 			}
 		}
@@ -564,26 +466,7 @@ public class Rasters {
 		if (sampleValues != null) {
 			sampleValues[sample].position(y * getWidth() * sizeSample(sample));
 			for (int x = 0; x < getWidth(); ++x) {
-				switch (sampleFieldTypes[sample]) {
-					case BYTE:
-					case SBYTE:
-						outBuffer.put(sampleValues[sample].get());
-						break;
-					case SHORT:
-					case SSHORT:
-						outBuffer.putShort(sampleValues[sample].getShort());
-						break;
-					case LONG:
-					case SLONG:
-						outBuffer.putInt(sampleValues[sample].getInt());
-						break;
-					case FLOAT:
-						outBuffer.putFloat(sampleValues[sample].getFloat());
-						break;
-					case DOUBLE:
-						outBuffer.putDouble(sampleValues[sample].getDouble());
-						break;
-				}
+				writeSample(outBuffer, sampleValues[sample], sampleFieldTypes[sample]);
 			}
 		} else {
 			int sampleOffset = 0;
@@ -593,27 +476,7 @@ public class Rasters {
 
 			for (int i = 0; i < getWidth(); ++i) {
 				interleaveValues.position((y * getWidth() + i) * sizePixel() + sampleOffset);
-
-				switch (sampleFieldTypes[sample]) {
-					case BYTE:
-					case SBYTE:
-						outBuffer.put(interleaveValues.get());
-						break;
-					case SHORT:
-					case SSHORT:
-						outBuffer.putShort(interleaveValues.getShort());
-						break;
-					case LONG:
-					case SLONG:
-						outBuffer.putInt(interleaveValues.getInt());
-						break;
-					case FLOAT:
-						outBuffer.putFloat(interleaveValues.getFloat());
-						break;
-					case DOUBLE:
-						outBuffer.putDouble(interleaveValues.getDouble());
-						break;
-				}
+				writeSample(outBuffer, interleaveValues, sampleFieldTypes[sample]);
 			}
 		}
 
@@ -887,4 +750,112 @@ public class Rasters {
 		return bitsPerSampleList;
 	}
 
+
+	/**
+	 * Reads sample from given buffer
+	 *
+	 * @param buffer A buffer to read from. @note Make sure position is set.
+	 * @param fieldType Field type to be read
+	 * @return Sample form buffer
+	 */
+	private Number readSample(@NonNull ByteBuffer buffer, @NonNull FieldType fieldType) {
+		Number sampleValue;
+
+		switch (fieldType) {
+			case BYTE:
+				sampleValue = (short)(buffer.get() & 0xff);
+				break;
+			case SHORT:
+				sampleValue = buffer.getShort() & 0xffff;
+				break;
+			case LONG:
+				sampleValue = buffer.getInt() & 0xffffffffL;
+				break;
+			case SBYTE:
+				sampleValue = buffer.get();
+				break;
+			case SSHORT:
+				sampleValue = buffer.getShort();
+				break;
+			case SLONG:
+				sampleValue = buffer.getInt();
+				break;
+			case FLOAT:
+				sampleValue = buffer.getFloat();
+				break;
+			case DOUBLE:
+				sampleValue = buffer.getDouble();
+				break;
+			default:
+				throw new TiffException("Unsupported raster field type: " + fieldType);
+		}
+
+		return sampleValue;
+	}
+
+	/**
+	 * Writes sample into given buffer.
+	 *
+	 * @param buffer A buffer to write to. @note Make sure buffer position is set.
+	 * @param fieldType Field type to be written.
+	 * @param value Actual value to write.
+	 */
+	private void writeSample(@NonNull ByteBuffer buffer, @NonNull FieldType fieldType, @NonNull Number value) {
+		switch (fieldType) {
+			case BYTE:
+			case SBYTE:
+				buffer.put(value.byteValue());
+				break;
+			case SHORT:
+			case SSHORT:
+				buffer.putShort(value.shortValue());
+				break;
+			case LONG:
+			case SLONG:
+				buffer.putInt(value.intValue());
+				break;
+			case FLOAT:
+				buffer.putFloat(value.floatValue());
+				break;
+			case DOUBLE:
+				buffer.putDouble(value.doubleValue());
+				break;
+			default:
+				throw new TiffException("Unsupported raster field type: " + fieldType);
+		}
+	}
+
+	/**
+	 * Writes sample from input buffer to given output buffer.
+	 *
+	 * @param outBuffer A buffer to write to. @note Make sure buffer position is set.
+	 * @param inBuffer A buffer to read from. @note Make sure buffer position is set.
+	 * @param fieldType Field type to be read.
+	 */
+	private void writeSample(@NonNull ByteBuffer outBuffer, @NonNull ByteBuffer inBuffer,
+							 @NonNull FieldType fieldType) {
+		switch (fieldType)
+		{
+			case BYTE:
+			case SBYTE:
+				outBuffer.put(inBuffer.get());
+				break;
+			case SHORT:
+			case SSHORT:
+				outBuffer.putShort(inBuffer.getShort());
+				break;
+			case LONG:
+			case SLONG:
+				outBuffer.putInt(inBuffer.getInt());
+				break;
+			case FLOAT:
+				outBuffer.putFloat(inBuffer.getFloat());
+				break;
+			case DOUBLE:
+				outBuffer.putDouble(inBuffer.getDouble());
+				break;
+			default:
+				throw new TiffException("Unsupported raster field type: " + fieldType);
+		}
+	}
 }
