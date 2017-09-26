@@ -3,6 +3,7 @@ package mil.nga.tiff;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -391,28 +392,14 @@ public class TiffWriter {
 
 			int endingY = Math.min(startingY + rowsPerStrip, maxY);
 			for (int y = startingY; y < endingY; y++) {
-
-				ByteWriter rowWriter = new ByteWriter(writer.getByteOrder());
-
-				for (int x = 0; x < fileDirectory.getImageWidth().intValue(); x++) {
-
-					if (sample != null) {
-						Number value = rasters.getPixelSample(sample, x, y);
-						FieldType fieldType = sampleFieldTypes[sample];
-						writeValue(rowWriter, fieldType, value);
-					} else {
-						Number[] values = rasters.getPixel(x, y);
-						for (int sampleIndex = 0; sampleIndex < values.length; sampleIndex++) {
-							Number value = values[sampleIndex];
-							FieldType fieldType = sampleFieldTypes[sampleIndex];
-							writeValue(rowWriter, fieldType, value);
-						}
-					}
-				}
-
 				// Get the row bytes and encode if needed
-				byte[] rowBytes = rowWriter.getBytes();
-				rowWriter.close();
+				byte[] rowBytes = null;
+				if (sample != null) {
+					rowBytes = rasters.getSampleRow(y, sample, writer.getByteOrder());
+				} else {
+					rowBytes = rasters.getPixelRow(y, writer.getByteOrder());
+				}
+			
 				if (encoder.rowEncoding()) {
 					rowBytes = encoder.encode(rowBytes, writer.getByteOrder());
 				}

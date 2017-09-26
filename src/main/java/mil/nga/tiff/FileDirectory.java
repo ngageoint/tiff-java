@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import java.nio.ByteBuffer;
+
 import mil.nga.tiff.compression.CompressionDecoder;
 import mil.nga.tiff.compression.DeflateCompression;
 import mil.nga.tiff.compression.LZWCompression;
@@ -1100,20 +1102,35 @@ public class FileDirectory {
 		}
 
 		// Create the interleaved result array
-		Number[] interleave = null;
+		List<Integer> bitsPerSample = getBitsPerSample();
+		int bytesPerPixel = 0;
+		for (int i = 0; i < samplesPerPixel; ++i) {
+			bytesPerPixel += bitsPerSample.get(i) / 8;
+		}
+		ByteBuffer interleave = null;
 		if (interleaveValues) {
-			interleave = new Number[numPixels * samples.length];
+			interleave = ByteBuffer.allocate(numPixels * bytesPerPixel);
+			interleave.order(reader.getByteOrder());
 		}
 
 		// Create the sample indexed result double array
-		Number[][] sample = null;
+		ByteBuffer[] sample = null;
 		if (sampleValues) {
-			sample = new Number[samples.length][numPixels];
+			sample = new ByteBuffer[samplesPerPixel];
+			for (int i = 0; i < sample.length; ++i) {
+				sample[i] = ByteBuffer.allocate(numPixels * bitsPerSample.get(i) / 8);
+				sample[i].order(reader.getByteOrder());
+			}
+		}
+
+		FieldType[] sampleFieldTypes = new FieldType[samples.length];
+		for (int i = 0; i < samples.length; i++) {
+			sampleFieldTypes[i] = getFieldTypeForSample(samples[i]);
 		}
 
 		// Create the rasters results
 		Rasters rasters = new Rasters(windowWidth, windowHeight,
-				samplesPerPixel, getBitsPerSample(), sample, interleave);
+				samplesPerPixel, bitsPerSample, sampleFieldTypes, sample, interleave);
 
 		// Read the rasters
 		readRaster(window, samples, rasters);
@@ -1197,10 +1214,8 @@ public class FileDirectory {
 								int windowCoordinate = (y + firstLine - window
 										.getMinY())
 										* windowWidth
-										* samples.length
-										+ (x + firstCol - window.getMinX())
-										* samples.length + sampleIndex;
-								rasters.addToInterleave(windowCoordinate, value);
+										+ (x + firstCol - window.getMinX());
+								rasters.addToInterleave(windowCoordinate, value, sampleIndex);
 							}
 
 							if (rasters.hasSampleValues()) {
@@ -1209,8 +1224,7 @@ public class FileDirectory {
 										* windowWidth
 										+ x
 										+ firstCol - window.getMinX();
-								rasters.addToSample(sampleIndex,
-										windowCoordinate, value);
+								rasters.addToSample(sampleIndex, windowCoordinate, value);
 							}
 						}
 
