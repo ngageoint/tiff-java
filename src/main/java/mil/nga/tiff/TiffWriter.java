@@ -441,6 +441,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @return encoder
 	 */
+	@SuppressWarnings("deprecation")
 	private static CompressionEncoder getEncoder(FileDirectory fileDirectory) {
 
 		CompressionEncoder encoder = null;
@@ -450,6 +451,7 @@ public class TiffWriter {
 		if (compression == null) {
 			compression = TiffConstants.COMPRESSION_NO;
 		}
+
 		switch (compression) {
 		case TiffConstants.COMPRESSION_NO:
 			encoder = new RawCompression();
@@ -471,6 +473,7 @@ public class TiffWriter {
 			throw new TiffException("JPEG compression not supported: "
 					+ compression);
 		case TiffConstants.COMPRESSION_DEFLATE:
+		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
 			encoder = new DeflateCompression();
 			break;
 		case TiffConstants.COMPRESSION_PACKBITS:

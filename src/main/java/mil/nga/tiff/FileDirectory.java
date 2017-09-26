@@ -153,6 +153,7 @@ public class FileDirectory {
 			throw new TiffException("JPEG compression not supported: "
 					+ compression);
 		case TiffConstants.COMPRESSION_DEFLATE:
+		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
 			decoder = new DeflateCompression();
 			break;
 		case TiffConstants.COMPRESSION_PACKBITS:
