@@ -483,7 +483,7 @@ public class FileDirectory {
 	 * 
 	 * @return samples per pixel
 	 */
-	public Integer getSamplesPerPixel() {
+	public int getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
 			// if SamplesPerPixel tag is missing, try using length of
@@ -494,7 +494,7 @@ public class FileDirectory {
 			}
 		}
 
-		return samplesPerPixel;
+		return samplesPerPixel.intValue();
 	}
 
 	/**
