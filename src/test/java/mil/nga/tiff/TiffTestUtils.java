@@ -140,8 +140,8 @@ public class TiffTestUtils {
 				rasters2.getSampleValues().length);
 
 		for (int i = 0; i < rasters1.getSampleValues().length; i++) {
-			TestCase.assertEquals(rasters1.getSampleValues()[i].capacity() / rasters1.sizeSample(i),
-					rasters2.getSampleValues()[i].capacity()  / rasters2.sizeSample(i));
+			TestCase.assertEquals(rasters1.getSampleValues()[i].capacity() / rasters1.getSampleTypes()[i].byteSize,
+					rasters2.getSampleValues()[i].capacity()  / rasters2.getSampleTypes()[i].byteSize);
 
 			for (int x = 0; x < rasters1.getWidth(); ++x) {
 				for (int y = 0; y < rasters1.getHeight(); ++y) {

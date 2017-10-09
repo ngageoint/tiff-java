@@ -3,7 +3,6 @@ package mil.nga.tiff;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -312,11 +311,11 @@ public class TiffWriter {
 		}
 
 		// Get the sample field types
-		FieldType[] sampleFieldTypes = new FieldType[rasters
+		Rasters.SampleType[] sampleTypes = new Rasters.SampleType[rasters
 				.getSamplesPerPixel()];
 		for (int sample = 0; sample < rasters.getSamplesPerPixel(); sample++) {
-			sampleFieldTypes[sample] = fileDirectory
-					.getFieldTypeForSample(sample);
+			sampleTypes[sample] = fileDirectory
+					.getTypeForSample(sample);
 		}
 
 		// Get the compression encoder
@@ -327,7 +326,7 @@ public class TiffWriter {
 
 		// Write the rasters
 		if (!fileDirectory.isTiled()) {
-			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
+			writeStripRasters(writer, fileDirectory, offset, sampleTypes,
 					encoder);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -349,7 +348,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @param offset
 	 *            byte offset
-	 * @param sampleFieldTypes
+	 * @param sampleTypes
 	 *            sample field types
 	 * @param encoder
 	 *            compression encoder
@@ -357,7 +356,7 @@ public class TiffWriter {
 	 */
 	private static void writeStripRasters(ByteWriter writer,
 			FileDirectory fileDirectory, long offset,
-			FieldType[] sampleFieldTypes, CompressionEncoder encoder)
+			Rasters.SampleType[] sampleTypes, CompressionEncoder encoder)
 			throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
