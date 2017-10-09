@@ -483,17 +483,12 @@ public class FileDirectory {
 	 * 
 	 * @return samples per pixel
 	 */
-	public Integer getSamplesPerPixel() {
+	public int getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
-			// if SamplesPerPixel tag is missing, try using length of
-			// BitsPerSample list
-			List<Integer> bitsPerSampleList = getBitsPerSample();
-			if (bitsPerSampleList != null) {
-				samplesPerPixel = bitsPerSampleList.size();
-			}
+			// if SamplesPerPixel tag is missing, use default value defined by TIFF standard
+			return 1;
 		}
-
 		return samplesPerPixel;
 	}
 
