@@ -311,11 +311,11 @@ public class TiffWriter {
 		}
 
 		// Get the sample field types
-		FieldType[] sampleFieldTypes = new FieldType[rasters
+		Rasters.SampleType[] sampleTypes = new Rasters.SampleType[rasters
 				.getSamplesPerPixel()];
 		for (int sample = 0; sample < rasters.getSamplesPerPixel(); sample++) {
-			sampleFieldTypes[sample] = fileDirectory
-					.getFieldTypeForSample(sample);
+			sampleTypes[sample] = fileDirectory
+					.getTypeForSample(sample);
 		}
 
 		// Get the compression encoder
@@ -326,7 +326,7 @@ public class TiffWriter {
 
 		// Write the rasters
 		if (!fileDirectory.isTiled()) {
-			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
+			writeStripRasters(writer, fileDirectory, offset, sampleTypes,
 					encoder);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -348,7 +348,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @param offset
 	 *            byte offset
-	 * @param sampleFieldTypes
+	 * @param sampleTypes
 	 *            sample field types
 	 * @param encoder
 	 *            compression encoder
@@ -356,7 +356,7 @@ public class TiffWriter {
 	 */
 	private static void writeStripRasters(ByteWriter writer,
 			FileDirectory fileDirectory, long offset,
-			FieldType[] sampleFieldTypes, CompressionEncoder encoder)
+			Rasters.SampleType[] sampleTypes, CompressionEncoder encoder)
 			throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
@@ -391,28 +391,14 @@ public class TiffWriter {
 
 			int endingY = Math.min(startingY + rowsPerStrip, maxY);
 			for (int y = startingY; y < endingY; y++) {
-
-				ByteWriter rowWriter = new ByteWriter(writer.getByteOrder());
-
-				for (int x = 0; x < fileDirectory.getImageWidth().intValue(); x++) {
-
-					if (sample != null) {
-						Number value = rasters.getPixelSample(sample, x, y);
-						FieldType fieldType = sampleFieldTypes[sample];
-						writeValue(rowWriter, fieldType, value);
-					} else {
-						Number[] values = rasters.getPixel(x, y);
-						for (int sampleIndex = 0; sampleIndex < values.length; sampleIndex++) {
-							Number value = values[sampleIndex];
-							FieldType fieldType = sampleFieldTypes[sampleIndex];
-							writeValue(rowWriter, fieldType, value);
-						}
-					}
-				}
-
 				// Get the row bytes and encode if needed
-				byte[] rowBytes = rowWriter.getBytes();
-				rowWriter.close();
+				byte[] rowBytes = null;
+				if (sample != null) {
+					rowBytes = rasters.getSampleRow(y, sample, writer.getByteOrder());
+				} else {
+					rowBytes = rasters.getPixelRow(y, writer.getByteOrder());
+				}
+			
 				if (encoder.rowEncoding()) {
 					rowBytes = encoder.encode(rowBytes, writer.getByteOrder());
 				}
