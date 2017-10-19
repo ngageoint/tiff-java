@@ -1,5 +1,6 @@
 package mil.nga.tiff;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import java.nio.ByteBuffer;
 
 import mil.nga.tiff.compression.CompressionDecoder;
 import mil.nga.tiff.compression.DeflateCompression;
@@ -487,7 +486,7 @@ public class FileDirectory {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
 			// if SamplesPerPixel tag is missing, use default value defined by TIFF standard
-			return 1;
+			samplesPerPixel = 1;
 		}
 		return samplesPerPixel;
 	}
@@ -1097,7 +1096,7 @@ public class FileDirectory {
 			}
 		}
 
-		// Create the interleaved result array
+		// Create the interleaved result buffer
 		List<Integer> bitsPerSample = getBitsPerSample();
 		int bytesPerPixel = 0;
 		for (int i = 0; i < samplesPerPixel; ++i) {
@@ -1109,7 +1108,7 @@ public class FileDirectory {
 			interleave.order(reader.getByteOrder());
 		}
 
-		// Create the sample indexed result double array
+		// Create the sample indexed result buffer array
 		ByteBuffer[] sample = null;
 		if (sampleValues) {
 			sample = new ByteBuffer[samplesPerPixel];
@@ -1119,14 +1118,14 @@ public class FileDirectory {
 			}
 		}
 
-		Rasters.SampleType[] sampleTypes = new Rasters.SampleType[samples.length];
+		FieldType[] fieldTypes = new FieldType[samples.length];
 		for (int i = 0; i < samples.length; i++) {
-			sampleTypes[i] = getTypeForSample(samples[i]);
+			fieldTypes[i] = getFieldTypeForSample(samples[i]);
 		}
 
 		// Create the rasters results
 		Rasters rasters = new Rasters(windowWidth, windowHeight,
-										sampleTypes, sample, interleave);
+				fieldTypes, sample, interleave);
 
 		// Read the rasters
 		readRaster(window, samples, rasters);
@@ -1159,14 +1158,14 @@ public class FileDirectory {
 		int bytesPerPixel = getBytesPerPixel();
 
 		int[] srcSampleOffsets = new int[samples.length];
-		Rasters.SampleType[] sampleFieldTypes = new Rasters.SampleType[samples.length];
+		FieldType[] sampleFieldTypes = new FieldType[samples.length];
 		for (int i = 0; i < samples.length; i++) {
 			int sampleOffset = 0;
 			if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
 				sampleOffset = sum(getBitsPerSample(), 0, samples[i]) / 8;
 			}
 			srcSampleOffsets[i] = sampleOffset;
-			sampleFieldTypes[i] = getTypeForSample(samples[i]);
+			sampleFieldTypes[i] = getFieldTypeForSample(samples[i]);
 		}
 
 		for (int yTile = minYTile; yTile < maxYTile; yTile++) {
@@ -1211,7 +1210,7 @@ public class FileDirectory {
 										.getMinY())
 										* windowWidth
 										+ (x + firstCol - window.getMinX());
-								rasters.addToInterleave(windowCoordinate, value, sampleIndex);
+								rasters.addToInterleave(sampleIndex, windowCoordinate, value);
 							}
 
 							if (rasters.hasSampleValues()) {
@@ -1231,19 +1230,19 @@ public class FileDirectory {
 	}
 
 	/**
-	 * Read the value from the reader according to the sample type
+	 * Read the value from the reader according to the field type
 	 * 
 	 * @param reader
 	 *            byte reader
-	 * @param sampleType
-	 *            raster sample type
+	 * @param fieldType
+	 *            field type
 	 * @return value
 	 */
-	private Number readValue(ByteReader reader, Rasters.SampleType sampleType) {
+	private Number readValue(ByteReader reader, FieldType fieldType) {
 
 		Number value = null;
 
-		switch (sampleType) {
+		switch (fieldType) {
 		case BYTE:
 			value = reader.readUnsignedByte();
 			break;
@@ -1253,13 +1252,13 @@ public class FileDirectory {
 		case LONG:
 			value = reader.readUnsignedInt();
 			break;
-		case SIGNED_BYTE:
+		case SBYTE:
 			value = reader.readByte();
 			break;
-		case SIGNED_SHORT:
+		case SSHORT:
 			value = reader.readShort();
 			break;
-		case SIGNED_LONG:
+		case SLONG:
 			value = reader.readInt();
 			break;
 		case FLOAT:
@@ -1269,72 +1268,30 @@ public class FileDirectory {
 			value = reader.readDouble();
 			break;
 		default:
-			throw new TiffException("Unsupported raster sampleType type: "
-					+ sampleType);
+			throw new TiffException("Unsupported raster field type: "
+					+ fieldType);
 		}
 
 		return value;
 	}
 
 	/**
-	 * Get the raster sample type for the sample @see Rasters.SampleType
+	 * Get the field type for the sample
 	 *
 	 * @param sampleIndex
 	 *            sample index
-	 * @return Sample type
+	 * @return field type
 	 */
-	public Rasters.SampleType getTypeForSample(int sampleIndex) {
-
-		Rasters.SampleType sampleType = null;
+	public FieldType getFieldTypeForSample(int sampleIndex) {
 
 		List<Integer> sampleFormatList = getSampleFormat();
-		int format = sampleFormatList == null ? TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT
+		int sampleFormat = sampleFormatList == null ? TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT
 				: sampleFormatList.get(sampleIndex < sampleFormatList.size() ? sampleIndex : 0);
 		int bitsPerSample = getBitsPerSample().get(sampleIndex);
-		switch (format) {
-		case TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT:
-			switch (bitsPerSample) {
-			case 8:
-				sampleType = Rasters.SampleType.BYTE;
-				break;
-			case 16:
-				sampleType = Rasters.SampleType.SHORT;
-				break;
-			case 32:
-				sampleType = Rasters.SampleType.LONG;
-				break;
-			}
-			break;
-		case TiffConstants.SAMPLE_FORMAT_SIGNED_INT:
-			switch (bitsPerSample) {
-			case 8:
-				sampleType = Rasters.SampleType.SIGNED_BYTE;
-				break;
-			case 16:
-				sampleType = Rasters.SampleType.SIGNED_SHORT;
-				break;
-			case 32:
-				sampleType = Rasters.SampleType.SIGNED_LONG;
-				break;
-			}
-			break;
-		case TiffConstants.SAMPLE_FORMAT_FLOAT:
-			switch (bitsPerSample) {
-			case 32:
-				sampleType = Rasters.SampleType.FLOAT;
-				break;
-			case 64:
-				sampleType = Rasters.SampleType.DOUBLE;
-				break;
-			}
-			break;
-		}
+		
+		FieldType fieldType = FieldType.getFieldType(sampleFormat, bitsPerSample);
 
-		if (sampleType == null)
-			throw new TiffException("Unsupported sample type for format: " + format +
-									", and bits per sample: " + bitsPerSample);
-
-		return sampleType;
+		return fieldType;
 	}
 
 	/**

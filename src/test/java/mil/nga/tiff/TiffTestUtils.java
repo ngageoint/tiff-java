@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import junit.framework.TestCase;
 import mil.nga.tiff.util.TiffException;
@@ -140,8 +139,8 @@ public class TiffTestUtils {
 				rasters2.getSampleValues().length);
 
 		for (int i = 0; i < rasters1.getSampleValues().length; i++) {
-			TestCase.assertEquals(rasters1.getSampleValues()[i].capacity() / rasters1.getSampleTypes()[i].byteSize,
-					rasters2.getSampleValues()[i].capacity()  / rasters2.getSampleTypes()[i].byteSize);
+			TestCase.assertEquals(rasters1.getSampleValues()[i].capacity() / rasters1.getFieldTypes()[i].getBytes(),
+					rasters2.getSampleValues()[i].capacity()  / rasters2.getFieldTypes()[i].getBytes());
 
 			for (int x = 0; x < rasters1.getWidth(); ++x) {
 				for (int y = 0; y < rasters1.getHeight(); ++y) {

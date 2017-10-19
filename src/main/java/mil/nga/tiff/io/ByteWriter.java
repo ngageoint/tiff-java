@@ -26,7 +26,7 @@ public class ByteWriter {
 	 * Constructor
 	 */
 	public ByteWriter() {
-		this(ByteOrder.BIG_ENDIAN);
+		this(ByteOrder.nativeOrder());
 	}
 
 	/**

@@ -15,29 +15,6 @@ import mil.nga.tiff.util.TiffException;
  * @author osbornb
  */
 public class Rasters {
-	/**
-	 * Sample type for pixel
-	 */
-	public enum SampleType {
-		BYTE(1, TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT),		// 8 bits
-		SIGNED_BYTE(1, TiffConstants.SAMPLE_FORMAT_SIGNED_INT),	// 8 bits
-		SHORT(2, TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT),		// 16 bits
-		SIGNED_SHORT(2, TiffConstants.SAMPLE_FORMAT_SIGNED_INT),// 16 bits
-		LONG(4, TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT),		// 32 bits
-		SIGNED_LONG(4, TiffConstants.SAMPLE_FORMAT_SIGNED_INT),	// 32 bits
-		FLOAT(4, TiffConstants.SAMPLE_FORMAT_FLOAT)	,			// 32 bits
-		DOUBLE(8, TiffConstants.SAMPLE_FORMAT_FLOAT);			// 64 bits
-
-		SampleType(int byteSize, int sampleFormat) {
-			this.byteSize = byteSize;
-			this.sampleFormat = sampleFormat;
-		}
-
-		int bitSize() { return  byteSize * 8; }
-
-		final int byteSize;
-		final int sampleFormat;
-	}
 
 	/**
 	 * Values separated by sample
@@ -60,9 +37,9 @@ public class Rasters {
 	private final int height;
 
 	/**
-	 * Sample type for each sample.
+	 * Field type for each sample
 	 */
-	private final SampleType[] sampleTypes;
+	private final FieldType[] fieldTypes;
 
 	// Calculated values
 
@@ -72,12 +49,12 @@ public class Rasters {
 	private Integer pixelSize;
 
 	/**
-	 * @see getBitsPerSample()
+	 * @see #getBitsPerSample()
 	 */
 	private List<Integer> bitsPerSample;
 
 	/**
-	 * @see getSampleFormat()
+	 * @see #getSampleFormat()
 	 */
 	private List<Integer> sampleFormat;
 
@@ -88,13 +65,13 @@ public class Rasters {
 	 *            width of pixels
 	 * @param height
 	 *            height of pixels
-	 * @param sampleTypes
-	 *            Sample type for each sample
+	 * @param fieldTypes
+	 *            field type for each sample
 	 * @param sampleValues
-	 *            empty sample values double array
+	 *            empty sample values buffer array
 	 */
-	public Rasters(int width, int height, SampleType[] sampleTypes, ByteBuffer[] sampleValues) {
-		this(width, height, sampleTypes, sampleValues, null);
+	public Rasters(int width, int height, FieldType[] fieldTypes, ByteBuffer[] sampleValues) {
+		this(width, height, fieldTypes, sampleValues, null);
 	}
 
 	/**
@@ -104,13 +81,13 @@ public class Rasters {
 	 *            width of pixels
 	 * @param height
 	 *            height of pixels
-	 * @param sampleTypes
-	 *            Sample type for each sample
+	 * @param fieldTypes
+	 *            field type for each sample
 	 * @param interleaveValues
-	 *            empty interleaved values array
+	 *            empty interleaved values buffer
 	 */
-	public Rasters(int width, int height, SampleType[] sampleTypes, ByteBuffer interleaveValues) {
-		this(width, height, sampleTypes, null, interleaveValues);
+	public Rasters(int width, int height, FieldType[] fieldTypes, ByteBuffer interleaveValues) {
+		this(width, height, fieldTypes, null, interleaveValues);
 	}
 
 	/**
@@ -120,18 +97,18 @@ public class Rasters {
 	 *            width of pixels
 	 * @param height
 	 *            height of pixels
-	 * @param sampleTypes
-	 *            Sample type for each sample
+	 * @param fieldTypes
+	 *            Field type for each sample
 	 * @param sampleValues
-	 *            empty sample values double array
+	 *            empty sample values buffer array
 	 * @param interleaveValues
-	 *            empty interleaved values array
+	 *            empty interleaved values buffer
 	 */
-	public Rasters(int width, int height, SampleType[] sampleTypes, ByteBuffer[] sampleValues,
+	public Rasters(int width, int height, FieldType[] fieldTypes, ByteBuffer[] sampleValues,
 					ByteBuffer interleaveValues) {
 		this.width = width;
 		this.height = height;
-		this.sampleTypes = sampleTypes;
+		this.fieldTypes = fieldTypes;
 		this.sampleValues = sampleValues;
 		this.interleaveValues = interleaveValues;
 		validateValues();
@@ -140,16 +117,125 @@ public class Rasters {
 	/**
 	 *  Constructor
 	 *
-	 *  Creates Rasters object where given sample type used for each sample.
+	 *  Creates Rasters object where given field type used for each sample.
 	 *
 	 * @param width width of pixels
 	 * @param height height of pixels
 	 * @param samplesPerPixel number of samples per pixel
-	 * @param sampleType type of sample for each sample
+	 * @param fieldType type of field for each sample
 	 */
-	public Rasters(int width, int height, int samplesPerPixel, SampleType sampleType) {
-		this(width, height, createSampleTypeArray(samplesPerPixel, sampleType),
-				ByteOrder.nativeOrder());
+	public Rasters(int width, int height, int samplesPerPixel, FieldType fieldType) {
+		this(width, height, createFieldTypeArray(samplesPerPixel, fieldType));
+	}
+	
+	/**
+	 *  Constructor
+	 *
+	 *  Creates Rasters object where given field type used for each sample.
+	 *
+	 * @param width width of pixels
+	 * @param height height of pixels
+	 * @param samplesPerPixel number of samples per pixel
+	 * @param fieldType type of field for each sample
+	 * @param order byte order
+	 */
+	public Rasters(int width, int height, int samplesPerPixel, FieldType fieldType, ByteOrder order) {
+		this(width, height, createFieldTypeArray(samplesPerPixel, fieldType), order);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * Creates Rasters object where one bits per sample and sample format is provided for each sample
+	 * 
+	 * @param width width of pixels
+	 * @param height height of pixels
+	 * @param bitsPerSamples bits per samples
+	 * @param sampleFormats sample formats
+	 */
+	public Rasters(int width, int height, int[] bitsPerSamples, int[] sampleFormats) {
+		this(width, height, createFieldTypeArray(bitsPerSamples, sampleFormats));
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * Creates Rasters object where one bits per sample and sample format is provided for each sample
+	 * 
+	 * @param width width of pixels
+	 * @param height height of pixels
+	 * @param bitsPerSamples bits per samples
+	 * @param sampleFormats sample formats
+	 * @param order byte order
+	 */
+	public Rasters(int width, int height, int[] bitsPerSamples, int[] sampleFormats, ByteOrder order) {
+		this(width, height, createFieldTypeArray(bitsPerSamples, sampleFormats), order);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * Creates Rasters object where given bits per sample and sample format is used for each sample
+	 * 
+	 * @param width width of pixels
+	 * @param height height of pixels
+	 * @param samplesPerPixel number of samples per pixel
+	 * @param bitsPerSample bits per each sample
+	 * @param sampleFormat format for each sample
+	 */
+	public Rasters(int width, int height, int samplesPerPixel, int bitsPerSample, int sampleFormat) {
+		this(width, height, samplesPerPixel, FieldType.getFieldType(sampleFormat, bitsPerSample));
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * Creates Rasters object where given bits per sample and sample format is used for each sample
+	 * 
+	 * @param width width of pixels
+	 * @param height height of pixels
+	 * @param samplesPerPixel number of samples per pixel
+	 * @param bitsPerSample bits per each sample
+	 * @param sampleFormat format for each sample
+	 * @param order byte order
+	 */
+	public Rasters(int width, int height, int samplesPerPixel, int bitsPerSample, int sampleFormat, ByteOrder order) {
+		this(width, height, samplesPerPixel, FieldType.getFieldType(sampleFormat, bitsPerSample), order);
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param width
+	 *            width of pixels
+	 * @param height
+	 *            height of pixels
+	 * @param fieldTypes
+	 *            field types per sample
+	 */
+	public Rasters(int width, int height, FieldType[] fieldTypes) {
+		this(width, height, fieldTypes, ByteOrder.nativeOrder());
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param width
+	 *            width of pixels
+	 * @param height
+	 *            height of pixels
+	 * @param fieldTypes
+	 *            field types per sample
+	 * @param order
+	 *            byte order
+	 */
+	public Rasters(int width, int height, FieldType[] fieldTypes, ByteOrder order) {
+		this(width, height, fieldTypes, new ByteBuffer[fieldTypes.length]);
+		for (int i = 0; i < sampleValues.length; ++i) {
+			sampleValues[i] = ByteBuffer
+								.allocateDirect(width * height * fieldTypes[i].getBytes())
+								.order(order);
+		}
 	}
 
 	/**
@@ -163,34 +249,38 @@ public class Rasters {
 	}
 
 	/**
-	 * Helper method used to create {@link SampleType} array of given size and
-	 * filled with given values.
+	 * Create {@link FieldType} filled array for samples per pixel size
+	 * 
+	 * @param samplesPerPixel number of samples per pixel
+	 * @param fieldType type of field for each sample
+	 * @return field type array
 	 */
-	private static SampleType[] createSampleTypeArray(int size, SampleType sampleType) {
-		SampleType[] result = new SampleType[size];
-		Arrays.fill(result, sampleType);
+	private static FieldType[] createFieldTypeArray(int samplesPerPixel, FieldType fieldType) {
+		FieldType[] result = new FieldType[samplesPerPixel];
+		Arrays.fill(result, fieldType);
 		return result;
 	}
-
+	
 	/**
-	 * Constructor
+	 * Create {@link FieldType} array for the bits per samples and sample formats
 	 * 
-	 * @param width
-	 *            width of pixels
-	 * @param height
-	 *            height of pixels
-	 * @param sampleTypes
-	 *            Sample types per sample
+	 * @param bitsPerSamples bits per samples
+	 * @param sampleFormats sample formats
+	 * @return field type array
 	 */
-	public Rasters(int width, int height, SampleType[] sampleTypes, ByteOrder order) {
-		this(width, height, sampleTypes, new ByteBuffer[sampleTypes.length]);
-		for (int i = 0; i < sampleValues.length; ++i) {
-			sampleValues[i] = ByteBuffer
-								.allocateDirect(width * height * sampleTypes[i].byteSize)
-								.order(order);
+	private static FieldType[] createFieldTypeArray(int[] bitsPerSamples, int[] sampleFormats) {
+		if(bitsPerSamples.length != sampleFormats.length){
+			throw new TiffException(
+					"Equal number of bits per samples and sample formats expected. "
+					+ "Bits Per Samples: " + bitsPerSamples + ", Sample Formats: " + sampleFormats);
 		}
+		FieldType[] result = new FieldType[bitsPerSamples.length];
+		for(int i = 0; i < bitsPerSamples.length; i++){
+			result[i] = FieldType.getFieldType(sampleFormats[i], bitsPerSamples[i]);
+		}
+		return result;
 	}
-
+	
 	/**
 	 * True if the results are stored by samples
 	 * 
@@ -223,7 +313,7 @@ public class Rasters {
 		}
 
 		buffer.position(bufferIndex);
-		writeSample(buffer, sampleTypes[sampleIndex], value);
+		writeSample(buffer, fieldTypes[sampleIndex], value);
 	}
 
 	/**
@@ -242,7 +332,7 @@ public class Rasters {
 		}
 
 		buffer.position(index);
-		return readSample(buffer, sampleTypes[sampleIndex]);
+		return readSample(buffer, fieldTypes[sampleIndex]);
 	}
 
 	/**
@@ -257,21 +347,24 @@ public class Rasters {
 	 */
 	public void addToSample(int sampleIndex, int coordinate, Number value) {
 		updateSampleInByteBuffer(sampleValues[sampleIndex],
-				coordinate * sampleTypes[sampleIndex].byteSize, sampleIndex, value);
+				coordinate * fieldTypes[sampleIndex].getBytes(), sampleIndex, value);
 	}
 
 	/**
 	 * Add a value to the interleaved results
 	 * 
+	 * @param sampleIndex
+	 *            sample index
 	 * @param coordinate
 	 *            coordinate location
 	 * @param value
 	 *            value
 	 */
-	public void addToInterleave(int coordinate, Number value, int sampleIndex) {
+	public void addToInterleave(int sampleIndex, int coordinate, Number value) {
 		int bufferPos = coordinate * sizePixel();
-		for (int i = 0; i < sampleIndex; ++i)
-			bufferPos += sampleTypes[i].byteSize;
+		for (int i = 0; i < sampleIndex; ++i){
+			bufferPos += fieldTypes[i].getBytes();
+		}
 
 		updateSampleInByteBuffer(interleaveValues, bufferPos, sampleIndex, value);
 	}
@@ -309,7 +402,7 @@ public class Rasters {
 	 * @return samples per pixel
 	 */
 	public int getSamplesPerPixel() {
-		return sampleTypes.length;
+		return fieldTypes.length;
 	}
 
 	/**
@@ -318,15 +411,14 @@ public class Rasters {
 	 * @return bits per sample
 	 */
 	public List<Integer> getBitsPerSample() {
-		if (bitsPerSample != null) {
-			return bitsPerSample;
+		List<Integer> result = bitsPerSample;
+		if(result == null){
+			result = new ArrayList<>(fieldTypes.length);
+			for (FieldType fieldType : fieldTypes) {
+				result.add(fieldType.getBits());
+			}
+			bitsPerSample = result;
 		}
-
-		List<Integer> result = new ArrayList<>(sampleTypes.length);
-		for (SampleType sampleType : sampleTypes) {
-			result.add(sampleType.bitSize());
-		}
-		bitsPerSample = result;
 		return result;
 	}
 
@@ -335,22 +427,21 @@ public class Rasters {
 	 *
 	 * Returns list of sample types constants (SAMPLE_FORMAT_UNSIGNED_INT,
 	 * SAMPLE_FORMAT_SIGNED_INT or SAMPLE_FORMAT_FLOAT) for each sample in
-	 * sample list @see getSampleTypes(). @see {@link TiffConstants}
+	 * sample list @see getFieldTypes(). @see {@link TiffConstants}
 	 * @return list of sample type constants
 	 */
 	public List<Integer> getSampleFormat() {
-		if (sampleFormat != null) {
-			return sampleFormat;
+		List<Integer> result = sampleFormat;
+		if(result == null){
+			result = new ArrayList<>(fieldTypes.length);
+			for (FieldType fieldType : fieldTypes) {
+				result.add(FieldType.getSampleFormat(fieldType));
+			}
+			sampleFormat = result;
 		}
-
-		List<Integer> result = new ArrayList<>(sampleTypes.length);
-		for (SampleType sampleType : sampleTypes) {
-			result.add(sampleType.sampleFormat);
-		}
-		sampleFormat = result;
 		return result;
 	}
-
+	
 	/**
 	 * Get the results stored by samples
 	 * 
@@ -416,16 +507,16 @@ public class Rasters {
 
 		// Get the pixel values from each sample
 		if (sampleValues != null) {
-			int sampleIndex = getSampleIndexInWindow(x, y);
+			int sampleIndex = getSampleIndex(x, y);
 			for (int i = 0; i < getSamplesPerPixel(); i++) {
-				int bufferIndex = sampleIndex * sampleTypes[i].byteSize;
+				int bufferIndex = sampleIndex * fieldTypes[i].getBytes();
 				pixel[i] = getSampleFromByteBuffer(sampleValues[i], bufferIndex, i);
 			}
 		} else {
 			int interleaveIndex = getInterleaveIndex(x, y);
 			for (int i = 0; i < getSamplesPerPixel(); i++) {
 				pixel[i] = getSampleFromByteBuffer(interleaveValues, interleaveIndex, i);
-				interleaveIndex += sampleTypes[i].byteSize;
+				interleaveIndex += fieldTypes[i].getBytes();
 			}
 		}
 
@@ -450,14 +541,14 @@ public class Rasters {
 		// Set the pixel values from each sample
 		if (sampleValues != null) {
 			for (int i = 0; i < getSamplesPerPixel(); i++) {
-				int bufferIndex = getSampleIndexInWindow(x, y) * sampleTypes[i].byteSize;
+				int bufferIndex = getSampleIndex(x, y) * fieldTypes[i].getBytes();
 				updateSampleInByteBuffer(sampleValues[i], bufferIndex, i, values[i]);
 			}
 		} else {
-			int interleaveIndex = getSampleIndexInWindow(x, y) * sizePixel();
+			int interleaveIndex = getSampleIndex(x, y) * sizePixel();
 			for (int i = 0; i < getSamplesPerPixel(); i++) {
 				updateSampleInByteBuffer(interleaveValues, interleaveIndex, i, values[i]);
-				interleaveIndex += sampleTypes[i].byteSize;
+				interleaveIndex += fieldTypes[i].getBytes();
 			}
 		}
 	}
@@ -475,11 +566,11 @@ public class Rasters {
 
 		if (sampleValues != null) {
 			for (int i = 0; i < getSamplesPerPixel(); ++i) {
-				sampleValues[i].position(y * getWidth() * sampleTypes[i].byteSize);
+				sampleValues[i].position(y * getWidth() * fieldTypes[i].getBytes());
 			}
 			for (int i = 0; i < getWidth(); ++i) {
 				for (int j = 0; j < getSamplesPerPixel(); ++j) {
-					writeSample(outBuffer, sampleValues[j], sampleTypes[j]);
+					writeSample(outBuffer, sampleValues[j], fieldTypes[j]);
 				}
 			}
 		} else {
@@ -487,7 +578,7 @@ public class Rasters {
 
 			for (int i = 0; i < getWidth(); ++i) {
 				for (int j = 0; j < getSamplesPerPixel(); ++j) {
-					writeSample(outBuffer, interleaveValues, sampleTypes[j]);
+					writeSample(outBuffer, interleaveValues, fieldTypes[j]);
 				}
 			}
 		}
@@ -504,23 +595,23 @@ public class Rasters {
 	 * @return Byte array of sample row
 	 */
 	public byte[] getSampleRow(int y, int sample, ByteOrder newOrder) {
-		ByteBuffer outBuffer = ByteBuffer.allocate(getWidth() * sampleTypes[sample].byteSize);
+		ByteBuffer outBuffer = ByteBuffer.allocate(getWidth() * fieldTypes[sample].getBytes());
 		outBuffer.order(newOrder);
 
 		if (sampleValues != null) {
-			sampleValues[sample].position(y * getWidth() * sampleTypes[sample].byteSize);
+			sampleValues[sample].position(y * getWidth() * fieldTypes[sample].getBytes());
 			for (int x = 0; x < getWidth(); ++x) {
-				writeSample(outBuffer, sampleValues[sample], sampleTypes[sample]);
+				writeSample(outBuffer, sampleValues[sample], fieldTypes[sample]);
 			}
 		} else {
 			int sampleOffset = 0;
 			for (int i = 0; i < sample; ++i) {
-				sampleOffset += sampleTypes[sample].byteSize;
+				sampleOffset += fieldTypes[sample].getBytes();
 			}
 
 			for (int i = 0; i < getWidth(); ++i) {
 				interleaveValues.position((y * getWidth() + i) * sizePixel() + sampleOffset);
-				writeSample(outBuffer, interleaveValues, sampleTypes[sample]);
+				writeSample(outBuffer, interleaveValues, fieldTypes[sample]);
 			}
 		}
 
@@ -548,12 +639,13 @@ public class Rasters {
 
 		// Get the pixel sample
 		if (sampleValues != null) {
-			int bufferPos = getSampleIndexInWindow(x, y) * sampleTypes[sample].byteSize;
+			int bufferPos = getSampleIndex(x, y) * fieldTypes[sample].getBytes();
 			pixelSample = getSampleFromByteBuffer(sampleValues[sample], bufferPos, sample);
 		} else {
 			int bufferPos = getInterleaveIndex(x, y);
-			for (int i = 0; i < sample; i++)
-				bufferPos += sampleTypes[sample].byteSize;
+			for (int i = 0; i < sample; i++){
+				bufferPos += fieldTypes[sample].getBytes();
+			}
 
 			pixelSample = getSampleFromByteBuffer(interleaveValues, bufferPos, sample);
 		}
@@ -580,13 +672,13 @@ public class Rasters {
 
 		// Set the pixel sample
 		if (sampleValues != null) {
-			int sampleIndex = getSampleIndexInWindow(x, y) * sampleTypes[sample].byteSize;
+			int sampleIndex = getSampleIndex(x, y) * fieldTypes[sample].getBytes();
 			updateSampleInByteBuffer(sampleValues[sample], sampleIndex, sample, value);
 		}
 		if (interleaveValues != null) {
-			int interleaveIndex = getSampleIndexInWindow(x, y) * sizePixel();
+			int interleaveIndex = getSampleIndex(x, y) * sizePixel();
 			for (int i = 0; i < sample; ++i) {
-				interleaveIndex += sampleTypes[sample].byteSize;
+				interleaveIndex += fieldTypes[sample].getBytes();
 			}
 			updateSampleInByteBuffer(interleaveValues, interleaveIndex, sample, value);
 		}
@@ -622,7 +714,7 @@ public class Rasters {
 	}
 
 	/**
-	 * Get the sample index location in window
+	 * Get the sample index location
 	 * 
 	 * @param x
 	 *            x coordinate
@@ -630,7 +722,7 @@ public class Rasters {
 	 *            y coordinate
 	 * @return sample index
 	 */
-	public int getSampleIndexInWindow(int x, int y) {
+	public int getSampleIndex(int x, int y) {
 		return y * width + x;
 	}
 
@@ -668,7 +760,7 @@ public class Rasters {
 
 		int size = 0;
 		for (int i = 0; i < getSamplesPerPixel(); i++) {
-			size += sampleTypes[i].byteSize;
+			size += fieldTypes[i].getBytes();
 		}
 		pixelSize = size;
 		return size;
@@ -733,7 +825,7 @@ public class Rasters {
 		} else {
 
 			for (int sample = 0; sample < getSamplesPerPixel(); ++sample) {
-				int rowsPerStripForSample = rowsPerStrip(sampleTypes[sample].byteSize,
+				int rowsPerStripForSample = rowsPerStrip(fieldTypes[sample].getBytes(),
 						maxBytesPerStrip);
 				if (rowsPerStrip == null
 						|| rowsPerStripForSample < rowsPerStrip) {
@@ -768,13 +860,13 @@ public class Rasters {
 	 * Reads sample from given buffer
 	 *
 	 * @param buffer A buffer to read from. @note Make sure position is set.
-	 * @param sampleType Sample type to be read
-	 * @return Sample form buffer
+	 * @param fieldType field type to be read
+	 * @return Sample from buffer
 	 */
-	private Number readSample(ByteBuffer buffer, SampleType sampleType) {
+	private Number readSample(ByteBuffer buffer, FieldType fieldType) {
 		Number sampleValue;
 
-		switch (sampleType) {
+		switch (fieldType) {
 			case BYTE:
 				sampleValue = (short)(buffer.get() & 0xff);
 				break;
@@ -784,13 +876,13 @@ public class Rasters {
 			case LONG:
 				sampleValue = buffer.getInt() & 0xffffffffL;
 				break;
-			case SIGNED_BYTE:
+			case SBYTE:
 				sampleValue = buffer.get();
 				break;
-			case SIGNED_SHORT:
+			case SSHORT:
 				sampleValue = buffer.getShort();
 				break;
-			case SIGNED_LONG:
+			case SLONG:
 				sampleValue = buffer.getInt();
 				break;
 			case FLOAT:
@@ -800,7 +892,7 @@ public class Rasters {
 				sampleValue = buffer.getDouble();
 				break;
 			default:
-				throw new TiffException("Unsupported raster sample type: " + sampleType);
+				throw new TiffException("Unsupported raster field type: " + fieldType);
 		}
 
 		return sampleValue;
@@ -810,21 +902,21 @@ public class Rasters {
 	 * Writes sample into given buffer.
 	 *
 	 * @param buffer A buffer to write to. @note Make sure buffer position is set.
-	 * @param sampleType Sample type to be written.
+	 * @param fieldType field type to be written.
 	 * @param value Actual value to write.
 	 */
-	private void writeSample(ByteBuffer buffer, SampleType sampleType, Number value) {
-		switch (sampleType) {
+	private void writeSample(ByteBuffer buffer, FieldType fieldType, Number value) {
+		switch (fieldType) {
 			case BYTE:
-			case SIGNED_BYTE:
+			case SBYTE:
 				buffer.put(value.byteValue());
 				break;
 			case SHORT:
-			case SIGNED_SHORT:
+			case SSHORT:
 				buffer.putShort(value.shortValue());
 				break;
 			case LONG:
-			case SIGNED_LONG:
+			case SLONG:
 				buffer.putInt(value.intValue());
 				break;
 			case FLOAT:
@@ -834,7 +926,7 @@ public class Rasters {
 				buffer.putDouble(value.doubleValue());
 				break;
 			default:
-				throw new TiffException("Unsupported raster sample type: " + sampleType);
+				throw new TiffException("Unsupported raster field type: " + fieldType);
 		}
 	}
 
@@ -843,22 +935,21 @@ public class Rasters {
 	 *
 	 * @param outBuffer A buffer to write to. @note Make sure buffer position is set.
 	 * @param inBuffer A buffer to read from. @note Make sure buffer position is set.
-	 * @param sampleType Field type to be read.
+	 * @param fieldType Field type to be read.
 	 */
 	private void writeSample(ByteBuffer outBuffer, ByteBuffer inBuffer,
-							 SampleType sampleType) {
-		switch (sampleType)
-		{
+							 FieldType fieldType) {
+		switch (fieldType) {
 			case BYTE:
-			case SIGNED_BYTE:
+			case SBYTE:
 				outBuffer.put(inBuffer.get());
 				break;
 			case SHORT:
-			case SIGNED_SHORT:
+			case SSHORT:
 				outBuffer.putShort(inBuffer.getShort());
 				break;
 			case LONG:
-			case SIGNED_LONG:
+			case SLONG:
 				outBuffer.putInt(inBuffer.getInt());
 				break;
 			case FLOAT:
@@ -868,14 +959,17 @@ public class Rasters {
 				outBuffer.putDouble(inBuffer.getDouble());
 				break;
 			default:
-				throw new TiffException("Unsupported raster sample type: " + sampleType);
+				throw new TiffException("Unsupported raster field type: " + fieldType);
 		}
 	}
 
 	/**
-	 * Returns sample types
+	 * Returns field types
+	 * 
+	 * @return field types
 	 */
-	public SampleType[] getSampleTypes() {
-		return sampleTypes;
+	public FieldType[] getFieldTypes() {
+		return fieldTypes;
 	}
+	
 }
