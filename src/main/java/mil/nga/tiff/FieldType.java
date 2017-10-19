@@ -126,17 +126,20 @@ public enum FieldType {
 	public static FieldType getFieldType(int fieldType) {
 		return FieldType.values()[fieldType - 1];
 	}
-	
+
 	/**
 	 * Get the field type of the sample format and bits per sample
-	 * @param sampleFormat sample format
-	 * @param bitsPerSample bits per sample
+	 * 
+	 * @param sampleFormat
+	 *            sample format
+	 * @param bitsPerSample
+	 *            bits per sample
 	 * @return field type
 	 */
-	public static FieldType getFieldType(int sampleFormat, int bitsPerSample){
-		
+	public static FieldType getFieldType(int sampleFormat, int bitsPerSample) {
+
 		FieldType fieldType = null;
-		
+
 		switch (sampleFormat) {
 		case TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT:
 			switch (bitsPerSample) {
@@ -176,24 +179,27 @@ public enum FieldType {
 			break;
 		}
 
-		if (fieldType == null){
-			throw new TiffException("Unsupported field type for sample format: " + sampleFormat +
-									", bits per sample: " + bitsPerSample);
+		if (fieldType == null) {
+			throw new TiffException(
+					"Unsupported field type for sample format: " + sampleFormat
+							+ ", bits per sample: " + bitsPerSample);
 		}
-		
+
 		return fieldType;
 	}
-	
+
 	/**
 	 * Get the sample format of the field type
-	 * @param fieldType field type
+	 * 
+	 * @param fieldType
+	 *            field type
 	 * @return sample format
 	 */
-	public static int getSampleFormat(FieldType fieldType){
-		
+	public static int getSampleFormat(FieldType fieldType) {
+
 		int sampleFormat;
-		
-		switch(fieldType){
+
+		switch (fieldType) {
 		case BYTE:
 		case SHORT:
 		case LONG:
@@ -209,10 +215,11 @@ public enum FieldType {
 			sampleFormat = TiffConstants.SAMPLE_FORMAT_FLOAT;
 			break;
 		default:
-			throw new TiffException("Unsupported sample format for field type: " + fieldType);
+			throw new TiffException(
+					"Unsupported sample format for field type: " + fieldType);
 		}
-		
+
 		return sampleFormat;
 	}
-	
+
 }

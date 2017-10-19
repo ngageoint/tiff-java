@@ -344,8 +344,7 @@ public class TiffWriter {
 	 * @throws IOException
 	 */
 	private static void writeStripRasters(ByteWriter writer,
-			FileDirectory fileDirectory, long offset,
-			CompressionEncoder encoder)
+			FileDirectory fileDirectory, long offset, CompressionEncoder encoder)
 			throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
@@ -383,11 +382,12 @@ public class TiffWriter {
 				// Get the row bytes and encode if needed
 				byte[] rowBytes = null;
 				if (sample != null) {
-					rowBytes = rasters.getSampleRow(y, sample, writer.getByteOrder());
+					rowBytes = rasters.getSampleRow(y, sample,
+							writer.getByteOrder());
 				} else {
 					rowBytes = rasters.getPixelRow(y, writer.getByteOrder());
 				}
-			
+
 				if (encoder.rowEncoding()) {
 					rowBytes = encoder.encode(rowBytes, writer.getByteOrder());
 				}

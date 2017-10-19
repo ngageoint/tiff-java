@@ -139,12 +139,16 @@ public class TiffTestUtils {
 				rasters2.getSampleValues().length);
 
 		for (int i = 0; i < rasters1.getSampleValues().length; i++) {
-			TestCase.assertEquals(rasters1.getSampleValues()[i].capacity() / rasters1.getFieldTypes()[i].getBytes(),
-					rasters2.getSampleValues()[i].capacity()  / rasters2.getFieldTypes()[i].getBytes());
+			TestCase.assertEquals(
+					rasters1.getSampleValues()[i].capacity()
+							/ rasters1.getFieldTypes()[i].getBytes(),
+					rasters2.getSampleValues()[i].capacity()
+							/ rasters2.getFieldTypes()[i].getBytes());
 
 			for (int x = 0; x < rasters1.getWidth(); ++x) {
 				for (int y = 0; y < rasters1.getHeight(); ++y) {
-					compareNumbers(rasters1.getPixelSample(i, x, y), rasters2.getPixelSample(i, x, y), exactType);
+					compareNumbers(rasters1.getPixelSample(i, x, y),
+							rasters2.getPixelSample(i, x, y), exactType);
 				}
 			}
 		}
@@ -182,14 +186,15 @@ public class TiffTestUtils {
 
 		TestCase.assertNotNull(rasters1.getInterleaveValues());
 		TestCase.assertNotNull(rasters2.getInterleaveValues());
-		TestCase.assertEquals(rasters1.getInterleaveValues().capacity() / rasters1.sizePixel(),
-				rasters2.getInterleaveValues().capacity() / rasters2.sizePixel());
-
+		TestCase.assertEquals(rasters1.getInterleaveValues().capacity()
+				/ rasters1.sizePixel(), rasters2.getInterleaveValues()
+				.capacity() / rasters2.sizePixel());
 
 		for (int i = 0; i < rasters1.getSamplesPerPixel(); i++) {
 			for (int x = 0; x < rasters1.getWidth(); ++x) {
 				for (int y = 0; y < rasters1.getHeight(); ++y) {
-					compareNumbers(rasters1.getPixelSample(i, x, y), rasters2.getPixelSample(i, x, y), exactType);
+					compareNumbers(rasters1.getPixelSample(i, x, y),
+							rasters2.getPixelSample(i, x, y), exactType);
 				}
 			}
 		}

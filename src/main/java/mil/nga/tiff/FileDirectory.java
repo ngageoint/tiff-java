@@ -485,7 +485,8 @@ public class FileDirectory {
 	public int getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
-			// if SamplesPerPixel tag is missing, use default value defined by TIFF standard
+			// if SamplesPerPixel tag is missing, use default value defined by
+			// TIFF standard
 			samplesPerPixel = 1;
 		}
 		return samplesPerPixel;
@@ -1113,7 +1114,8 @@ public class FileDirectory {
 		if (sampleValues) {
 			sample = new ByteBuffer[samplesPerPixel];
 			for (int i = 0; i < sample.length; ++i) {
-				sample[i] = ByteBuffer.allocateDirect(numPixels * bitsPerSample.get(i) / 8);
+				sample[i] = ByteBuffer.allocateDirect(numPixels
+						* bitsPerSample.get(i) / 8);
 				sample[i].order(reader.getByteOrder());
 			}
 		}
@@ -1124,8 +1126,8 @@ public class FileDirectory {
 		}
 
 		// Create the rasters results
-		Rasters rasters = new Rasters(windowWidth, windowHeight,
-				fieldTypes, sample, interleave);
+		Rasters rasters = new Rasters(windowWidth, windowHeight, fieldTypes,
+				sample, interleave);
 
 		// Read the rasters
 		readRaster(window, samples, rasters);
@@ -1210,7 +1212,8 @@ public class FileDirectory {
 										.getMinY())
 										* windowWidth
 										+ (x + firstCol - window.getMinX());
-								rasters.addToInterleave(sampleIndex, windowCoordinate, value);
+								rasters.addToInterleave(sampleIndex,
+										windowCoordinate, value);
 							}
 
 							if (rasters.hasSampleValues()) {
@@ -1219,7 +1222,8 @@ public class FileDirectory {
 										* windowWidth
 										+ x
 										+ firstCol - window.getMinX();
-								rasters.addToSample(sampleIndex, windowCoordinate, value);
+								rasters.addToSample(sampleIndex,
+										windowCoordinate, value);
 							}
 						}
 
@@ -1286,10 +1290,13 @@ public class FileDirectory {
 
 		List<Integer> sampleFormatList = getSampleFormat();
 		int sampleFormat = sampleFormatList == null ? TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT
-				: sampleFormatList.get(sampleIndex < sampleFormatList.size() ? sampleIndex : 0);
+				: sampleFormatList
+						.get(sampleIndex < sampleFormatList.size() ? sampleIndex
+								: 0);
 		int bitsPerSample = getBitsPerSample().get(sampleIndex);
-		
-		FieldType fieldType = FieldType.getFieldType(sampleFormat, bitsPerSample);
+
+		FieldType fieldType = FieldType.getFieldType(sampleFormat,
+				bitsPerSample);
 
 		return fieldType;
 	}
