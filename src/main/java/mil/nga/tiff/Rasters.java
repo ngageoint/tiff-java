@@ -69,6 +69,7 @@ public class Rasters {
 	 *            field type for each sample
 	 * @param sampleValues
 	 *            empty sample values buffer array
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, FieldType[] fieldTypes,
 			ByteBuffer[] sampleValues) {
@@ -86,6 +87,7 @@ public class Rasters {
 	 *            field type for each sample
 	 * @param interleaveValues
 	 *            empty interleaved values buffer
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, FieldType[] fieldTypes,
 			ByteBuffer interleaveValues) {
@@ -105,6 +107,7 @@ public class Rasters {
 	 *            empty sample values buffer array
 	 * @param interleaveValues
 	 *            empty interleaved values buffer
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, FieldType[] fieldTypes,
 			ByteBuffer[] sampleValues, ByteBuffer interleaveValues) {
@@ -129,6 +132,7 @@ public class Rasters {
 	 *            number of samples per pixel
 	 * @param fieldType
 	 *            type of field for each sample
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int samplesPerPixel,
 			FieldType fieldType) {
@@ -150,6 +154,7 @@ public class Rasters {
 	 *            type of field for each sample
 	 * @param order
 	 *            byte order
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int samplesPerPixel,
 			FieldType fieldType, ByteOrder order) {
@@ -171,6 +176,7 @@ public class Rasters {
 	 *            bits per samples
 	 * @param sampleFormats
 	 *            sample formats
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int[] bitsPerSamples,
 			int[] sampleFormats) {
@@ -193,6 +199,7 @@ public class Rasters {
 	 *            sample formats
 	 * @param order
 	 *            byte order
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int[] bitsPerSamples,
 			int[] sampleFormats, ByteOrder order) {
@@ -216,6 +223,7 @@ public class Rasters {
 	 *            bits per each sample
 	 * @param sampleFormat
 	 *            format for each sample
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int samplesPerPixel,
 			int bitsPerSample, int sampleFormat) {
@@ -241,6 +249,7 @@ public class Rasters {
 	 *            format for each sample
 	 * @param order
 	 *            byte order
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, int samplesPerPixel,
 			int bitsPerSample, int sampleFormat, ByteOrder order) {
@@ -257,6 +266,7 @@ public class Rasters {
 	 *            height of pixels
 	 * @param fieldTypes
 	 *            field types per sample
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, FieldType[] fieldTypes) {
 		this(width, height, fieldTypes, ByteOrder.nativeOrder());
@@ -273,6 +283,7 @@ public class Rasters {
 	 *            field types per sample
 	 * @param order
 	 *            byte order
+	 * @since 2.0.0
 	 */
 	public Rasters(int width, int height, FieldType[] fieldTypes,
 			ByteOrder order) {
@@ -425,6 +436,7 @@ public class Rasters {
 	 *            coordinate location
 	 * @param value
 	 *            value
+	 * @since 2.0.0
 	 */
 	public void addToInterleave(int sampleIndex, int coordinate, Number value) {
 		int bufferPos = coordinate * sizePixel();
@@ -497,6 +509,7 @@ public class Rasters {
 	 * sample list @see getFieldTypes(). @see {@link TiffConstants}
 	 * 
 	 * @return list of sample type constants
+	 * @since 2.0.0
 	 */
 	public List<Integer> getSampleFormat() {
 		List<Integer> result = sampleFormat;
@@ -514,6 +527,7 @@ public class Rasters {
 	 * Get the results stored by samples
 	 * 
 	 * @return sample values
+	 * @since 2.0.0
 	 */
 	public ByteBuffer[] getSampleValues() {
 		for (int i = 0; i < sampleValues.length; ++i) {
@@ -527,6 +541,7 @@ public class Rasters {
 	 * 
 	 * @param sampleValues
 	 *            sample values
+	 * @since 2.0.0
 	 */
 	public void setSampleValues(ByteBuffer[] sampleValues) {
 		this.sampleValues = sampleValues;
@@ -540,6 +555,7 @@ public class Rasters {
 	 * Get the results stored as interleaved pixel samples
 	 * 
 	 * @return interleaved values
+	 * @since 2.0.0
 	 */
 	public ByteBuffer getInterleaveValues() {
 		interleaveValues.rewind();
@@ -551,6 +567,7 @@ public class Rasters {
 	 * 
 	 * @param interleaveValues
 	 *            interleaved values
+	 * @since 2.0.0
 	 */
 	public void setInterleaveValues(ByteBuffer interleaveValues) {
 		this.interleaveValues = interleaveValues;
@@ -634,6 +651,7 @@ public class Rasters {
 	 * @param newOrder
 	 *            Desired byte order of result byte array
 	 * @return Byte array of pixel row
+	 * @since 2.0.0
 	 */
 	public byte[] getPixelRow(int y, ByteOrder newOrder) {
 		ByteBuffer outBuffer = ByteBuffer.allocate(getWidth() * sizePixel());
@@ -672,6 +690,7 @@ public class Rasters {
 	 * @param newOrder
 	 *            Desired byte order of resulting byte array
 	 * @return Byte array of sample row
+	 * @since 2.0.0
 	 */
 	public byte[] getSampleRow(int y, int sample, ByteOrder newOrder) {
 		ByteBuffer outBuffer = ByteBuffer.allocate(getWidth()
@@ -1067,6 +1086,7 @@ public class Rasters {
 	 * Returns field types
 	 * 
 	 * @return field types
+	 * @since 2.0.0
 	 */
 	public FieldType[] getFieldTypes() {
 		return fieldTypes;

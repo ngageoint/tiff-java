@@ -111,6 +111,7 @@ public enum FieldType {
 	 * Get the number of bits per value
 	 * 
 	 * @return number of bits
+	 * @since 2.0.0
 	 */
 	public int getBits() {
 		return bytes * 8;
@@ -135,6 +136,7 @@ public enum FieldType {
 	 * @param bitsPerSample
 	 *            bits per sample
 	 * @return field type
+	 * @since 2.0.0
 	 */
 	public static FieldType getFieldType(int sampleFormat, int bitsPerSample) {
 
@@ -194,6 +196,7 @@ public enum FieldType {
 	 * @param fieldType
 	 *            field type
 	 * @return sample format
+	 * @since 2.0.0
 	 */
 	public static int getSampleFormat(FieldType fieldType) {
 

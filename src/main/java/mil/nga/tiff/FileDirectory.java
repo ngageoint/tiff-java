@@ -481,6 +481,7 @@ public class FileDirectory {
 	 * Get the samples per pixel
 	 * 
 	 * @return samples per pixel
+	 * @since 2.0.0
 	 */
 	public int getSamplesPerPixel() {
 		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
@@ -1419,6 +1420,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return integer value
+	 * @since 2.0.0
 	 */
 	public Integer getIntegerEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
@@ -1431,6 +1433,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @param value
 	 *            unsigned integer value (16 bit)
+	 * @since 2.0.0
 	 */
 	public void setUnsignedIntegerEntryValue(FieldTagType fieldTagType,
 			int value) {
@@ -1443,6 +1446,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return number value
+	 * @since 2.0.0
 	 */
 	public Number getNumberEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
@@ -1455,6 +1459,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @param value
 	 *            unsigned long value (32 bit)
+	 * @since 2.0.0
 	 */
 	public void setUnsignedLongEntryValue(FieldTagType fieldTagType, long value) {
 		setEntryValue(fieldTagType, FieldType.LONG, 1, value);
@@ -1466,6 +1471,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return string value
+	 * @since 2.0.0
 	 */
 	public String getStringEntryValue(FieldTagType fieldTagType) {
 		String value = null;
@@ -1483,6 +1489,7 @@ public class FileDirectory {
 	 *            field tag type
 	 * @param value
 	 *            string value
+	 * @since 2.0.0
 	 */
 	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
 		List<String> values = new ArrayList<>();
@@ -1496,6 +1503,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return integer list value
+	 * @since 2.0.0
 	 */
 	public List<Integer> getIntegerListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
@@ -1505,7 +1513,10 @@ public class FileDirectory {
 	 * Set an unsigned integer list of values for the field tag type
 	 * 
 	 * @param fieldTagType
+	 *            field tag type
 	 * @param value
+	 *            integer list value
+	 * @since 2.0.0
 	 */
 	public void setUnsignedIntegerListEntryValue(FieldTagType fieldTagType,
 			List<Integer> value) {
@@ -1518,6 +1529,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return max integer value
+	 * @since 2.0.0
 	 */
 	public Integer getMaxIntegerEntryValue(FieldTagType fieldTagType) {
 		Integer maxValue = null;
@@ -1534,6 +1546,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return long list value
+	 * @since 2.0.0
 	 */
 	public List<Number> getNumberListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
@@ -1545,6 +1558,7 @@ public class FileDirectory {
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return long list value
+	 * @since 2.0.0
 	 */
 	public List<Long> getLongListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
@@ -1554,7 +1568,10 @@ public class FileDirectory {
 	 * Set an unsigned long list of values for the field tag type
 	 * 
 	 * @param fieldTagType
+	 *            field tag type
 	 * @param value
+	 *            long list value
+	 * @since 2.0.0
 	 */
 	public void setUnsignedLongListEntryValue(FieldTagType fieldTagType,
 			List<Long> value) {
