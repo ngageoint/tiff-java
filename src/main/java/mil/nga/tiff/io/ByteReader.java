@@ -35,7 +35,7 @@ public class ByteReader {
 	 *            bytes
 	 */
 	public ByteReader(byte[] bytes) {
-		this(bytes, ByteOrder.BIG_ENDIAN);
+		this(bytes, ByteOrder.nativeOrder());
 	}
 
 	/**

@@ -4,9 +4,15 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 1.0.4 (TBD)
+## [2.0.0](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/2.0.0) (11-20-2017)
 
-* TBD
+* Rasters modified to use buffers in place of arrays
+* Deflate compression support
+* Additional Rasters constructor options
+* Handle missing samples per pixel with default value of 1
+* Public access to tiff tags
+* String Entry Value getter and setter
+* maven-gpg-plugin version 1.6
 
 ## [1.0.3](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/1.0.3) (06-27-2017)
 

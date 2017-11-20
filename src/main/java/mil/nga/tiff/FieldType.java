@@ -1,5 +1,8 @@
 package mil.nga.tiff;
 
+import mil.nga.tiff.util.TiffConstants;
+import mil.nga.tiff.util.TiffException;
+
 /**
  * Field Types
  * 
@@ -105,6 +108,16 @@ public enum FieldType {
 	}
 
 	/**
+	 * Get the number of bits per value
+	 * 
+	 * @return number of bits
+	 * @since 2.0.0
+	 */
+	public int getBits() {
+		return bytes * 8;
+	}
+
+	/**
 	 * Get the field type
 	 * 
 	 * @param fieldType
@@ -113,6 +126,103 @@ public enum FieldType {
 	 */
 	public static FieldType getFieldType(int fieldType) {
 		return FieldType.values()[fieldType - 1];
+	}
+
+	/**
+	 * Get the field type of the sample format and bits per sample
+	 * 
+	 * @param sampleFormat
+	 *            sample format
+	 * @param bitsPerSample
+	 *            bits per sample
+	 * @return field type
+	 * @since 2.0.0
+	 */
+	public static FieldType getFieldType(int sampleFormat, int bitsPerSample) {
+
+		FieldType fieldType = null;
+
+		switch (sampleFormat) {
+		case TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT:
+			switch (bitsPerSample) {
+			case 8:
+				fieldType = FieldType.BYTE;
+				break;
+			case 16:
+				fieldType = FieldType.SHORT;
+				break;
+			case 32:
+				fieldType = FieldType.LONG;
+				break;
+			}
+			break;
+		case TiffConstants.SAMPLE_FORMAT_SIGNED_INT:
+			switch (bitsPerSample) {
+			case 8:
+				fieldType = FieldType.SBYTE;
+				break;
+			case 16:
+				fieldType = FieldType.SSHORT;
+				break;
+			case 32:
+				fieldType = FieldType.SLONG;
+				break;
+			}
+			break;
+		case TiffConstants.SAMPLE_FORMAT_FLOAT:
+			switch (bitsPerSample) {
+			case 32:
+				fieldType = FieldType.FLOAT;
+				break;
+			case 64:
+				fieldType = FieldType.DOUBLE;
+				break;
+			}
+			break;
+		}
+
+		if (fieldType == null) {
+			throw new TiffException(
+					"Unsupported field type for sample format: " + sampleFormat
+							+ ", bits per sample: " + bitsPerSample);
+		}
+
+		return fieldType;
+	}
+
+	/**
+	 * Get the sample format of the field type
+	 * 
+	 * @param fieldType
+	 *            field type
+	 * @return sample format
+	 * @since 2.0.0
+	 */
+	public static int getSampleFormat(FieldType fieldType) {
+
+		int sampleFormat;
+
+		switch (fieldType) {
+		case BYTE:
+		case SHORT:
+		case LONG:
+			sampleFormat = TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT;
+			break;
+		case SBYTE:
+		case SSHORT:
+		case SLONG:
+			sampleFormat = TiffConstants.SAMPLE_FORMAT_SIGNED_INT;
+			break;
+		case FLOAT:
+		case DOUBLE:
+			sampleFormat = TiffConstants.SAMPLE_FORMAT_FLOAT;
+			break;
+		default:
+			throw new TiffException(
+					"Unsupported sample format for field type: " + fieldType);
+		}
+
+		return sampleFormat;
 	}
 
 }

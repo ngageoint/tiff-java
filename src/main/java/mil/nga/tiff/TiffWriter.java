@@ -174,7 +174,7 @@ public class TiffWriter {
 			List<Long> valueBytesCheck = new ArrayList<>();
 
 			// Write the raster bytes to temporary storage
-			if (fileDirectory.getRowsPerStrip() == null) {
+			if (fileDirectory.isTiled()) {
 				throw new TiffException("Tiled images are not supported");
 			}
 
@@ -259,7 +259,7 @@ public class TiffWriter {
 		}
 
 		// Populate the raster entries
-		if (fileDirectory.getRowsPerStrip() != null) {
+		if (!fileDirectory.isTiled()) {
 			populateStripEntries(fileDirectory);
 		} else {
 			throw new TiffException("Tiled images are not supported");
@@ -272,14 +272,12 @@ public class TiffWriter {
 	 * 
 	 * @param fileDirectory
 	 *            file directory
-	 * @param strips
-	 *            number of strips
 	 */
 	private static void populateStripEntries(FileDirectory fileDirectory) {
 
 		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
-		int stripsPerSample = (int) Math.ceil(fileDirectory.getImageHeight()
-				.doubleValue() / rowsPerStrip);
+		int imageHeight = fileDirectory.getImageHeight().intValue();
+		int stripsPerSample = (imageHeight + rowsPerStrip - 1) / rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();
@@ -312,14 +310,6 @@ public class TiffWriter {
 					"File Directory Writer Rasters is required to create a TIFF");
 		}
 
-		// Get the sample field types
-		FieldType[] sampleFieldTypes = new FieldType[rasters
-				.getSamplesPerPixel()];
-		for (int sample = 0; sample < rasters.getSamplesPerPixel(); sample++) {
-			sampleFieldTypes[sample] = fileDirectory
-					.getFieldTypeForSample(sample);
-		}
-
 		// Get the compression encoder
 		CompressionEncoder encoder = getEncoder(fileDirectory);
 
@@ -327,9 +317,8 @@ public class TiffWriter {
 		ByteWriter writer = new ByteWriter(byteOrder);
 
 		// Write the rasters
-		if (fileDirectory.getRowsPerStrip() != null) {
-			writeStripRasters(writer, fileDirectory, offset, sampleFieldTypes,
-					encoder);
+		if (!fileDirectory.isTiled()) {
+			writeStripRasters(writer, fileDirectory, offset, encoder);
 		} else {
 			throw new TiffException("Tiled images are not supported");
 		}
@@ -350,15 +339,12 @@ public class TiffWriter {
 	 *            file directory
 	 * @param offset
 	 *            byte offset
-	 * @param sampleFieldTypes
-	 *            sample field types
 	 * @param encoder
 	 *            compression encoder
 	 * @throws IOException
 	 */
 	private static void writeStripRasters(ByteWriter writer,
-			FileDirectory fileDirectory, long offset,
-			FieldType[] sampleFieldTypes, CompressionEncoder encoder)
+			FileDirectory fileDirectory, long offset, CompressionEncoder encoder)
 			throws IOException {
 
 		Rasters rasters = fileDirectory.getWriteRasters();
@@ -366,8 +352,7 @@ public class TiffWriter {
 		// Get the row and strip counts
 		int rowsPerStrip = fileDirectory.getRowsPerStrip().intValue();
 		int maxY = fileDirectory.getImageHeight().intValue();
-		int stripsPerSample = (int) Math.ceil((double) maxY
-				/ (double) rowsPerStrip);
+		int stripsPerSample = (maxY + rowsPerStrip - 1) / rowsPerStrip;
 		int strips = stripsPerSample;
 		if (fileDirectory.getPlanarConfiguration() == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
 			strips *= fileDirectory.getSamplesPerPixel();
@@ -394,28 +379,15 @@ public class TiffWriter {
 
 			int endingY = Math.min(startingY + rowsPerStrip, maxY);
 			for (int y = startingY; y < endingY; y++) {
-
-				ByteWriter rowWriter = new ByteWriter(writer.getByteOrder());
-
-				for (int x = 0; x < fileDirectory.getImageWidth().intValue(); x++) {
-
-					if (sample != null) {
-						Number value = rasters.getPixelSample(sample, x, y);
-						FieldType fieldType = sampleFieldTypes[sample];
-						writeValue(rowWriter, fieldType, value);
-					} else {
-						Number[] values = rasters.getPixel(x, y);
-						for (int sampleIndex = 0; sampleIndex < values.length; sampleIndex++) {
-							Number value = values[sampleIndex];
-							FieldType fieldType = sampleFieldTypes[sampleIndex];
-							writeValue(rowWriter, fieldType, value);
-						}
-					}
+				// Get the row bytes and encode if needed
+				byte[] rowBytes = null;
+				if (sample != null) {
+					rowBytes = rasters.getSampleRow(y, sample,
+							writer.getByteOrder());
+				} else {
+					rowBytes = rasters.getPixelRow(y, writer.getByteOrder());
 				}
 
-				// Get the row bytes and encode if needed
-				byte[] rowBytes = rowWriter.getBytes();
-				rowWriter.close();
 				if (encoder.rowEncoding()) {
 					rowBytes = encoder.encode(rowBytes, writer.getByteOrder());
 				}
@@ -457,6 +429,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @return encoder
 	 */
+	@SuppressWarnings("deprecation")
 	private static CompressionEncoder getEncoder(FileDirectory fileDirectory) {
 
 		CompressionEncoder encoder = null;
@@ -466,6 +439,7 @@ public class TiffWriter {
 		if (compression == null) {
 			compression = TiffConstants.COMPRESSION_NO;
 		}
+
 		switch (compression) {
 		case TiffConstants.COMPRESSION_NO:
 			encoder = new RawCompression();
@@ -487,6 +461,7 @@ public class TiffWriter {
 			throw new TiffException("JPEG compression not supported: "
 					+ compression);
 		case TiffConstants.COMPRESSION_DEFLATE:
+		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
 			encoder = new DeflateCompression();
 			break;
 		case TiffConstants.COMPRESSION_PACKBITS:
@@ -498,50 +473,6 @@ public class TiffWriter {
 		}
 
 		return encoder;
-	}
-
-	/**
-	 * Write the value according to the field type
-	 * 
-	 * @param writer
-	 *            byte writer
-	 * @param fieldType
-	 *            field type
-	 * @throws IOException
-	 */
-	private static void writeValue(ByteWriter writer, FieldType fieldType,
-			Number value) throws IOException {
-
-		switch (fieldType) {
-		case BYTE:
-			writer.writeUnsignedByte(value.shortValue());
-			break;
-		case SHORT:
-			writer.writeUnsignedShort(value.intValue());
-			break;
-		case LONG:
-			writer.writeUnsignedInt(value.longValue());
-			break;
-		case SBYTE:
-			writer.writeByte(value.byteValue());
-			break;
-		case SSHORT:
-			writer.writeShort(value.shortValue());
-			break;
-		case SLONG:
-			writer.writeInt(value.intValue());
-			break;
-		case FLOAT:
-			writer.writeFloat(value.floatValue());
-			break;
-		case DOUBLE:
-			writer.writeDouble(value.doubleValue());
-			break;
-		default:
-			throw new TiffException("Unsupported raster field type: "
-					+ fieldType);
-		}
-
 	}
 
 	/**

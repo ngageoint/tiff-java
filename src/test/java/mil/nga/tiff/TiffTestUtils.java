@@ -93,7 +93,7 @@ public class TiffTestUtils {
 		TestCase.assertEquals(fileDirectory.getImageWidth(), rasters.getWidth());
 		TestCase.assertEquals(fileDirectory.getImageHeight(),
 				rasters.getHeight());
-		TestCase.assertEquals(fileDirectory.getSamplesPerPixel().intValue(),
+		TestCase.assertEquals(fileDirectory.getSamplesPerPixel(),
 				rasters.getSamplesPerPixel());
 		TestCase.assertEquals(fileDirectory.getBitsPerSample().size(), rasters
 				.getBitsPerSample().size());
@@ -139,11 +139,17 @@ public class TiffTestUtils {
 				rasters2.getSampleValues().length);
 
 		for (int i = 0; i < rasters1.getSampleValues().length; i++) {
-			TestCase.assertEquals(rasters1.getSampleValues()[i].length,
-					rasters2.getSampleValues()[i].length);
-			for (int j = 0; j < rasters2.getSampleValues()[i].length; j++) {
-				compareNumbers(rasters1.getSampleValues()[i][j],
-						rasters2.getSampleValues()[i][j], exactType);
+			TestCase.assertEquals(
+					rasters1.getSampleValues()[i].capacity()
+							/ rasters1.getFieldTypes()[i].getBytes(),
+					rasters2.getSampleValues()[i].capacity()
+							/ rasters2.getFieldTypes()[i].getBytes());
+
+			for (int x = 0; x < rasters1.getWidth(); ++x) {
+				for (int y = 0; y < rasters1.getHeight(); ++y) {
+					compareNumbers(rasters1.getPixelSample(i, x, y),
+							rasters2.getPixelSample(i, x, y), exactType);
+				}
 			}
 		}
 	}
@@ -180,12 +186,17 @@ public class TiffTestUtils {
 
 		TestCase.assertNotNull(rasters1.getInterleaveValues());
 		TestCase.assertNotNull(rasters2.getInterleaveValues());
-		TestCase.assertEquals(rasters1.getInterleaveValues().length,
-				rasters2.getInterleaveValues().length);
+		TestCase.assertEquals(rasters1.getInterleaveValues().capacity()
+				/ rasters1.sizePixel(), rasters2.getInterleaveValues()
+				.capacity() / rasters2.sizePixel());
 
-		for (int i = 0; i < rasters1.getInterleaveValues().length; i++) {
-			compareNumbers(rasters1.getInterleaveValues()[i],
-					rasters2.getInterleaveValues()[i], exactType);
+		for (int i = 0; i < rasters1.getSamplesPerPixel(); i++) {
+			for (int x = 0; x < rasters1.getWidth(); ++x) {
+				for (int y = 0; y < rasters1.getHeight(); ++y) {
+					compareNumbers(rasters1.getPixelSample(i, x, y),
+							rasters2.getPixelSample(i, x, y), exactType);
+				}
+			}
 		}
 	}
 
