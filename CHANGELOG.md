@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 2.0.0 (TBD)
+## [2.0.0](https://github.com/ngageoint/geopackage-tiff-java/releases/tag/2.0.0) (11-20-2017)
 
 * Rasters modified to use buffers in place of arrays
 * Deflate compression support
