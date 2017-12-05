@@ -6,17 +6,17 @@
 	<version>2.0.1</version>
 	<packaging>jar</packaging>
 	<name>Tagged Image File Format</name>
-	<url>https://github.com/ngageoint/geopackage-tiff-java</url>
+	<url>https://github.com/ngageoint/tiff-java</url>
 	<description>Library for reading and writing TIFF (Tagged Image File Format) files</description>
 	<scm>
-		<url>git@github.com:ngageoint/geopackage-tiff-java.git</url>
-		<connection>scm:git:git@github.com:ngageoint/geopackage-tiff-java.git</connection>
-		<developerConnection>scm:git:git@github.com:ngageoint/geopackage-tiff-java.git</developerConnection>
+		<url>git@github.com:ngageoint/tiff-java.git</url>
+		<connection>scm:git:git@github.com:ngageoint/tiff-java.git</connection>
+		<developerConnection>scm:git:git@github.com:ngageoint/tiff-java.git</developerConnection>
 	</scm>
 	<licenses>
 		<license>
 			<name>The MIT License (MIT)</name>
-			<url>https://github.com/ngageoint/geopackage-tiff-java/blob/master/LICENSE.txt</url>
+			<url>https://github.com/ngageoint/tiff-java/blob/master/LICENSE.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
