@@ -200,8 +200,16 @@ public class TiffReader {
 				// Read the field tag, field type, and type count
 				int fieldTagValue = reader.readUnsignedShort();
 				FieldTagType fieldTag = FieldTagType.getById(fieldTagValue);
+				if (fieldTag == null) {
+					throw new TiffException("Unknown field tag value " + fieldTagValue);
+				}
+
 				int fieldTypeValue = reader.readUnsignedShort();
 				FieldType fieldType = FieldType.getFieldType(fieldTypeValue);
+				if (fieldType == null) {
+					throw new TiffException("Unknown field type value " + fieldTypeValue);
+				}
+
 				long typeCount = reader.readUnsignedInt();
 
 				// Save off the next byte to read location
