@@ -156,6 +156,26 @@ public enum FieldTagType {
 
 	YPosition(287, false),
 
+	// JPEG
+
+	JPEGProc(512, false),
+
+	JPEGInterchangeFormat(513, false),
+
+	JPEGInterchangeFormatLength(514, false),
+
+	JPEGRestartInterval(515, false),
+
+	JPEGLosslessPredictors(517, true),
+
+	JPEGPointTransforms(518, true),
+
+	JPEGQTables(519, true),
+
+	JPEGDCTables(520, true),
+
+	JPEGACTables(521, true),
+
 	// EXIF
 
 	ApertureValue(37378, false),
