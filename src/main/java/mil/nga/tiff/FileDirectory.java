@@ -15,6 +15,7 @@ import mil.nga.tiff.compression.DeflateCompression;
 import mil.nga.tiff.compression.LZWCompression;
 import mil.nga.tiff.compression.PackbitsCompression;
 import mil.nga.tiff.compression.RawCompression;
+import mil.nga.tiff.compression.UnsupportedCompression;
 import mil.nga.tiff.io.ByteReader;
 import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
@@ -136,21 +137,24 @@ public class FileDirectory {
 			decoder = new RawCompression();
 			break;
 		case TiffConstants.COMPRESSION_CCITT_HUFFMAN:
-			throw new TiffException("CCITT Huffman compression not supported: "
+			decoder = new UnsupportedCompression("CCITT Huffman compression not supported: "
 					+ compression);
+			break;
 		case TiffConstants.COMPRESSION_T4:
-			throw new TiffException("T4-encoding compression not supported: "
+			decoder = new UnsupportedCompression("T4-encoding compression not supported: "
 					+ compression);
 		case TiffConstants.COMPRESSION_T6:
-			throw new TiffException("T6-encoding compression not supported: "
+			decoder = new UnsupportedCompression("T6-encoding compression not supported: "
 					+ compression);
+			break;
 		case TiffConstants.COMPRESSION_LZW:
 			decoder = new LZWCompression();
 			break;
 		case TiffConstants.COMPRESSION_JPEG_OLD:
 		case TiffConstants.COMPRESSION_JPEG_NEW:
-			throw new TiffException("JPEG compression not supported: "
+			decoder = new UnsupportedCompression("JPEG compression not supported: "
 					+ compression);
+			break;
 		case TiffConstants.COMPRESSION_DEFLATE:
 		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
 			decoder = new DeflateCompression();
@@ -159,7 +163,7 @@ public class FileDirectory {
 			decoder = new PackbitsCompression();
 			break;
 		default:
-			throw new TiffException("Unknown compression method identifier: "
+			decoder = new UnsupportedCompression("Unknown compression method identifier: "
 					+ compression);
 		}
 	}
