@@ -3,6 +3,8 @@ package mil.nga.tiff;
 import java.io.File;
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
 /**
@@ -16,6 +18,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data tiled
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsTiled() throws IOException {
@@ -36,6 +39,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as int 32
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsInt32() throws IOException {
@@ -56,6 +60,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as unsigned int 32
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsUInt32() throws IOException {
@@ -76,6 +81,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as float 32
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsFloat32() throws IOException {
@@ -97,6 +103,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as float 64
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsFloat64() throws IOException {
@@ -118,6 +125,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data compressed as LZW
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsLzw() throws IOException {
@@ -137,6 +145,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data compressed as Packbits
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsPackbits() throws IOException {
@@ -157,6 +166,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as interleaved
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsInterleave() throws IOException {
@@ -177,6 +187,7 @@ public class TiffReadTest {
 	 * Test the stripped TIFF file vs the same data as tiled planar
 	 * 
 	 * @throws IOException
+	 *             upon error
 	 */
 	@Test
 	public void testStrippedVsTiledPlanar() throws IOException {
@@ -190,6 +201,34 @@ public class TiffReadTest {
 		TIFFImage tiledPlanarTiff = TiffReader.readTiff(tiledPlanarFile);
 
 		TiffTestUtils.compareTIFFImages(strippedTiff, tiledPlanarTiff);
+
+	}
+
+	/**
+	 * Test the JPEG file header
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testJPEGHeader() throws IOException {
+
+		File jpegFile = TiffTestUtils.getTestFile(TiffTestConstants.FILE_JPEG);
+		TIFFImage jpegTiff = TiffReader.readTiff(jpegFile);
+
+		TestCase.assertNotNull(jpegTiff);
+		TestCase.assertTrue(jpegTiff.getFileDirectories().size() > 0);
+		for (int i = 0; i < jpegTiff.getFileDirectories().size(); i++) {
+			FileDirectory fileDirectory = jpegTiff.getFileDirectory(i);
+			TestCase.assertNotNull(fileDirectory);
+			try {
+				fileDirectory.readRasters();
+				TestCase.fail("JPEG compression was not expected to be implemented");
+			} catch (Exception e) {
+				// expected
+			}
+
+		}
 
 	}
 

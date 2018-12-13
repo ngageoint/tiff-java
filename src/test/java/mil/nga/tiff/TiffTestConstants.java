@@ -57,4 +57,9 @@ public class TiffTestConstants {
 	 */
 	public static final String FILE_TILED_PLANAR = "tiledplanar.tiff";
 
+	/**
+	 * JPEG TIFF test file
+	 */
+	public static final String FILE_JPEG = "quad-jpeg.tif";
+	
 }
