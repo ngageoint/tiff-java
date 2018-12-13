@@ -143,6 +143,7 @@ public class FileDirectory {
 		case TiffConstants.COMPRESSION_T4:
 			decoder = new UnsupportedCompression("T4-encoding compression not supported: "
 					+ compression);
+			break;
 		case TiffConstants.COMPRESSION_T6:
 			decoder = new UnsupportedCompression("T6-encoding compression not supported: "
 					+ compression);
