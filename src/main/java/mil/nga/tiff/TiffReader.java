@@ -204,7 +204,8 @@ public class TiffReader {
 				int fieldTypeValue = reader.readUnsignedShort();
 				FieldType fieldType = FieldType.getFieldType(fieldTypeValue);
 				if (fieldType == null) {
-					throw new TiffException("Unknown field type value " + fieldTypeValue);
+					throw new TiffException("Unknown field type value "
+							+ fieldTypeValue);
 				}
 
 				long typeCount = reader.readUnsignedInt();
@@ -217,10 +218,10 @@ public class TiffReader {
 						typeCount);
 
 				// Create and add a file directory if the tag is recognized.
-				if (fieldTag != null ) {
-   				FileDirectoryEntry entry = new FileDirectoryEntry(fieldTag,
-   						fieldType, typeCount, values);
-   				entries.add(entry);
+				if (fieldTag != null) {
+					FileDirectoryEntry entry = new FileDirectoryEntry(fieldTag,
+							fieldType, typeCount, values);
+					entries.add(entry);
 				}
 
 				// Restore the next byte to read location
@@ -267,7 +268,7 @@ public class TiffReader {
 		// Get the single or array values
 		Object values = null;
 		if (typeCount == 1
-		      && fieldTag != null
+				&& fieldTag != null
 				&& !fieldTag.isArray()
 				&& !(fieldType == FieldType.RATIONAL || fieldType == FieldType.SRATIONAL)) {
 			values = valuesList.get(0);
