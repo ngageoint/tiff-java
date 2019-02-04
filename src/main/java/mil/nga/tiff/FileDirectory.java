@@ -137,24 +137,24 @@ public class FileDirectory {
 			decoder = new RawCompression();
 			break;
 		case TiffConstants.COMPRESSION_CCITT_HUFFMAN:
-			decoder = new UnsupportedCompression("CCITT Huffman compression not supported: "
-					+ compression);
+			decoder = new UnsupportedCompression(
+					"CCITT Huffman compression not supported: " + compression);
 			break;
 		case TiffConstants.COMPRESSION_T4:
-			decoder = new UnsupportedCompression("T4-encoding compression not supported: "
-					+ compression);
+			decoder = new UnsupportedCompression(
+					"T4-encoding compression not supported: " + compression);
 			break;
 		case TiffConstants.COMPRESSION_T6:
-			decoder = new UnsupportedCompression("T6-encoding compression not supported: "
-					+ compression);
+			decoder = new UnsupportedCompression(
+					"T6-encoding compression not supported: " + compression);
 			break;
 		case TiffConstants.COMPRESSION_LZW:
 			decoder = new LZWCompression();
 			break;
 		case TiffConstants.COMPRESSION_JPEG_OLD:
 		case TiffConstants.COMPRESSION_JPEG_NEW:
-			decoder = new UnsupportedCompression("JPEG compression not supported: "
-					+ compression);
+			decoder = new UnsupportedCompression(
+					"JPEG compression not supported: " + compression);
 			break;
 		case TiffConstants.COMPRESSION_DEFLATE:
 		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
@@ -164,8 +164,8 @@ public class FileDirectory {
 			decoder = new PackbitsCompression();
 			break;
 		default:
-			decoder = new UnsupportedCompression("Unknown compression method identifier: "
-					+ compression);
+			decoder = new UnsupportedCompression(
+					"Unknown compression method identifier: " + compression);
 		}
 	}
 
@@ -605,7 +605,7 @@ public class FileDirectory {
 	 *            x resolution
 	 */
 	public void setXResolution(List<Long> xResolution) {
-		setUnsignedLongListEntryValue(FieldTagType.XResolution, xResolution);
+		setRationalEntryValue(FieldTagType.XResolution, xResolution);
 	}
 
 	/**
@@ -615,7 +615,7 @@ public class FileDirectory {
 	 *            x resolution
 	 */
 	public void setXResolution(long xResolution) {
-		setXResolution(createSingleLongList(xResolution));
+		setXResolution(createRationalValue(xResolution));
 	}
 
 	/**
@@ -634,7 +634,7 @@ public class FileDirectory {
 	 *            y resolution
 	 */
 	public void setYResolution(List<Long> yResolution) {
-		setUnsignedLongListEntryValue(FieldTagType.YResolution, yResolution);
+		setRationalEntryValue(FieldTagType.YResolution, yResolution);
 	}
 
 	/**
@@ -644,7 +644,7 @@ public class FileDirectory {
 	 *            y resolution
 	 */
 	public void setYResolution(long yResolution) {
-		setYResolution(createSingleLongList(yResolution));
+		setYResolution(createRationalValue(yResolution));
 	}
 
 	/**
@@ -1584,6 +1584,25 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set rational value for the field tag type
+	 * 
+	 * @param fieldTagType
+	 *            field tag type
+	 * @param value
+	 *            long list value
+	 * @since 2.0.1
+	 */
+	public void setRationalEntryValue(FieldTagType fieldTagType,
+			List<Long> value) {
+		if (value == null || value.size() != 2) {
+			throw new TiffException(
+					"Invalid rational value, must be two longs. Size: "
+							+ value.size());
+		}
+		setEntryValue(fieldTagType, FieldType.RATIONAL, 1, value);
+	}
+
+	/**
 	 * Get an entry value
 	 * 
 	 * @param fieldTagType
@@ -1662,6 +1681,19 @@ public class FileDirectory {
 		List<Long> valueList = new ArrayList<>();
 		valueList.add(value);
 		return valueList;
+	}
+
+	/**
+	 * Create a rational value (list of two longs) from a numerator value
+	 * 
+	 * @param numerator
+	 *            long numerator value
+	 * @return rational list of two longs
+	 */
+	private List<Long> createRationalValue(long numerator) {
+		List<Long> rational = createSingleLongList(numerator);
+		rational.add(1l);
+		return rational;
 	}
 
 	/**
