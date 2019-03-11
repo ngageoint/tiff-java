@@ -6,6 +6,11 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.0.1 (TBD)
 
+* xResolution and yResolution write fix
+* Skip unknown tags while reading
+* Allow headers to be read for unsupported compression types
+* JPEG field tags
+* Eclipse project cleanup
 * Dropping "geopackage" from library name
 
 ## [2.0.0](https://github.com/ngageoint/tiff-java/releases/tag/2.0.0) (11-20-2017)
