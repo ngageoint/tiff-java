@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 2.0.1 (TBD)
+## [2.0.1](https://github.com/ngageoint/tiff-java/releases/tag/2.0.1) (04-01-2019)
 
 * xResolution and yResolution write fix
 * Skip unknown tags while reading
