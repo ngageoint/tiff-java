@@ -102,6 +102,7 @@ public class ByteWriter {
 	 *            string value
 	 * @return bytes written
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public int writeString(String value) throws IOException {
 		byte[] valueBytes = value.getBytes();
@@ -135,6 +136,7 @@ public class ByteWriter {
 	 * @param value
 	 *            bytes
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeBytes(byte[] value) throws IOException {
 		os.write(value);
@@ -146,6 +148,7 @@ public class ByteWriter {
 	 * @param value
 	 *            short
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeShort(short value) throws IOException {
 		byte[] valueBytes = new byte[2];
@@ -162,6 +165,7 @@ public class ByteWriter {
 	 * @param value
 	 *            unsigned short as an int
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeUnsignedShort(int value) throws IOException {
 		byte[] valueBytes = new byte[2];
@@ -178,6 +182,7 @@ public class ByteWriter {
 	 * @param value
 	 *            int
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeInt(int value) throws IOException {
 		byte[] valueBytes = new byte[4];
@@ -194,6 +199,7 @@ public class ByteWriter {
 	 * @param value
 	 *            unsigned int as long
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeUnsignedInt(long value) throws IOException {
 		byte[] valueBytes = new byte[4];
@@ -210,6 +216,7 @@ public class ByteWriter {
 	 * @param value
 	 *            float
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeFloat(float value) throws IOException {
 		byte[] valueBytes = new byte[4];
@@ -226,6 +233,7 @@ public class ByteWriter {
 	 * @param value
 	 *            double
 	 * @throws IOException
+	 *             upon failure to write
 	 */
 	public void writeDouble(double value) throws IOException {
 		byte[] valueBytes = new byte[8];

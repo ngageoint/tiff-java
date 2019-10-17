@@ -23,6 +23,7 @@ public class TiffException extends RuntimeException {
 	 * Constructor
 	 * 
 	 * @param message
+	 *            error message
 	 */
 	public TiffException(String message) {
 		super(message);
@@ -32,7 +33,9 @@ public class TiffException extends RuntimeException {
 	 * Constructor
 	 * 
 	 * @param message
+	 *            error message
 	 * @param throwable
+	 *            cause
 	 */
 	public TiffException(String message, Throwable throwable) {
 		super(message, throwable);
@@ -42,6 +45,7 @@ public class TiffException extends RuntimeException {
 	 * Constructor
 	 * 
 	 * @param throwable
+	 *            cause
 	 */
 	public TiffException(Throwable throwable) {
 		super(throwable);

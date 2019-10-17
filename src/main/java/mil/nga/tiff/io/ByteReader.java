@@ -140,6 +140,7 @@ public class ByteReader {
 	 *            number of bytes
 	 * @return String
 	 * @throws UnsupportedEncodingException
+	 *             upon string encoding error
 	 */
 	public String readString(int num) throws UnsupportedEncodingException {
 		String value = readString(nextByte, num);
@@ -156,6 +157,7 @@ public class ByteReader {
 	 *            number of bytes
 	 * @return String
 	 * @throws UnsupportedEncodingException
+	 *             upon string encoding error
 	 */
 	public String readString(int offset, int num)
 			throws UnsupportedEncodingException {

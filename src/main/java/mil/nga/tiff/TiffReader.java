@@ -29,6 +29,7 @@ public class TiffReader {
 	 *            TIFF file
 	 * @return TIFF image
 	 * @throws IOException
+	 *             upon failure to read
 	 */
 	public static TIFFImage readTiff(File file) throws IOException {
 		return readTiff(file, false);
@@ -43,6 +44,7 @@ public class TiffReader {
 	 *            true to cache tiles and strips
 	 * @return TIFF image
 	 * @throws IOException
+	 *             upon failure to read
 	 */
 	public static TIFFImage readTiff(File file, boolean cache)
 			throws IOException {
@@ -58,6 +60,7 @@ public class TiffReader {
 	 *            TIFF input stream
 	 * @return TIFF image
 	 * @throws IOException
+	 *             upon failure to read
 	 */
 	public static TIFFImage readTiff(InputStream stream) throws IOException {
 		return readTiff(stream, false);
@@ -72,6 +75,7 @@ public class TiffReader {
 	 *            true to cache tiles and strips
 	 * @return TIFF image
 	 * @throws IOException
+	 *             upon failure to read
 	 */
 	public static TIFFImage readTiff(InputStream stream, boolean cache)
 			throws IOException {
@@ -204,8 +208,8 @@ public class TiffReader {
 				int fieldTypeValue = reader.readUnsignedShort();
 				FieldType fieldType = FieldType.getFieldType(fieldTypeValue);
 				if (fieldType == null) {
-					throw new TiffException("Unknown field type value "
-							+ fieldTypeValue);
+					throw new TiffException(
+							"Unknown field type value " + fieldTypeValue);
 				}
 
 				long typeCount = reader.readUnsignedInt();
@@ -267,10 +271,9 @@ public class TiffReader {
 
 		// Get the single or array values
 		Object values = null;
-		if (typeCount == 1
-				&& fieldTag != null
-				&& !fieldTag.isArray()
-				&& !(fieldType == FieldType.RATIONAL || fieldType == FieldType.SRATIONAL)) {
+		if (typeCount == 1 && fieldTag != null && !fieldTag.isArray()
+				&& !(fieldType == FieldType.RATIONAL
+						|| fieldType == FieldType.SRATIONAL)) {
 			values = valuesList.get(0);
 		} else {
 			values = valuesList;
@@ -302,7 +305,8 @@ public class TiffReader {
 				try {
 					values.add(reader.readString(1));
 				} catch (UnsupportedEncodingException e) {
-					throw new TiffException("Failed to read ASCII character", e);
+					throw new TiffException("Failed to read ASCII character",
+							e);
 				}
 				break;
 			case BYTE:

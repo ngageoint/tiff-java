@@ -578,9 +578,9 @@ public class Rasters {
 	 * Get the pixel sample values
 	 * 
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @return pixel sample values
 	 */
 	public Number[] getPixel(int x, int y) {
@@ -614,9 +614,9 @@ public class Rasters {
 	 * Set the pixel sample values
 	 * 
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @param values
 	 *            pixel values
 	 */
@@ -723,11 +723,11 @@ public class Rasters {
 	 * Get a pixel sample value
 	 * 
 	 * @param sample
-	 *            sample index (>= 0 && < {@link #getSamplesPerPixel()})
+	 *            sample index (&gt;= 0 &amp;&amp; &lt; {@link #getSamplesPerPixel()})
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @return pixel sample
 	 */
 	public Number getPixelSample(int sample, int x, int y) {
@@ -761,11 +761,11 @@ public class Rasters {
 	 * Set a pixel sample value
 	 * 
 	 * @param sample
-	 *            sample index (>= 0 && < {@link #getSamplesPerPixel()})
+	 *            sample index (&gt;= 0 &amp;&amp; &lt; {@link #getSamplesPerPixel()})
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @param value
 	 *            pixel value
 	 */
@@ -796,9 +796,9 @@ public class Rasters {
 	 * (grayscale)
 	 * 
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @return first pixel sample
 	 */
 	public Number getFirstPixelSample(int x, int y) {
@@ -810,9 +810,9 @@ public class Rasters {
 	 * (grayscale)
 	 * 
 	 * @param x
-	 *            x coordinate (>= 0 && < {@link #getWidth()})
+	 *            x coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getWidth()})
 	 * @param y
-	 *            y coordinate (>= 0 && < {@link #getHeight()})
+	 *            y coordinate (&gt;= 0 &amp;&amp; &lt; {@link #getHeight()})
 	 * @param value
 	 *            pixel value
 	 */

@@ -19,8 +19,11 @@ public class IOUtils {
 	 * Copy a file to a file location
 	 * 
 	 * @param copyFrom
+	 *            file to copy
 	 * @param copyTo
+	 *            file to copy to
 	 * @throws IOException
+	 *             upon failure to copy file
 	 */
 	public static void copyFile(File copyFrom, File copyTo) throws IOException {
 
@@ -34,8 +37,11 @@ public class IOUtils {
 	 * Copy an input stream to a file location
 	 * 
 	 * @param copyFrom
+	 *            stream to copy
 	 * @param copyTo
+	 *            file to copy to
 	 * @throws IOException
+	 *             upon failure to copy the stream
 	 */
 	public static void copyStream(InputStream copyFrom, File copyTo)
 			throws IOException {
@@ -49,7 +55,10 @@ public class IOUtils {
 	 * Get the file bytes
 	 * 
 	 * @param file
+	 *            file
+	 * @return bytes
 	 * @throws IOException
+	 *             upon failure to read the file
 	 */
 	public static byte[] fileBytes(File file) throws IOException {
 
@@ -62,7 +71,10 @@ public class IOUtils {
 	 * Get the stream bytes
 	 * 
 	 * @param stream
+	 *            input stream
 	 * @throws IOException
+	 *             upon failure to read stream bytes
+	 * @return bytes
 	 */
 	public static byte[] streamBytes(InputStream stream) throws IOException {
 
@@ -77,8 +89,11 @@ public class IOUtils {
 	 * Copy an input stream to an output stream
 	 * 
 	 * @param copyFrom
+	 *            stream to copy
 	 * @param copyTo
+	 *            stream to copy to
 	 * @throws IOException
+	 *             upon failure to copy stream
 	 */
 	public static void copyStream(InputStream copyFrom, OutputStream copyTo)
 			throws IOException {
