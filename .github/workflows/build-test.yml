@@ -1,0 +1,32 @@
+name: Build & Test
+
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build & Test
+      run: mvn clean package
+    - name: Copy Release Artifacts
+      run: |
+        mkdir target/release
+        cp pom.xml target/*.jar target/release/
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: tiff-java
+        path: target/release
