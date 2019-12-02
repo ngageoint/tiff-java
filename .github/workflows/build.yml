@@ -20,12 +20,3 @@ jobs:
         java-version: 1.8
     - name: Build
       run: mvn clean package -DskipTests
-    - name: Copy Release Artifacts
-      run: |
-        mkdir target/release
-        cp pom.xml target/*.jar target/release/
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: tiff-java
-        path: target/release
