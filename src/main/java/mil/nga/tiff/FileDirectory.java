@@ -688,6 +688,24 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Get the model pixel scale
+	 *
+	 * @return model pixel scale
+	 */
+	public List<Double> getModelPixelScale() {
+		return getDoubleListEntryValue(FieldTagType.ModelPixelScale);
+	}
+
+	/**
+	 * Get the model tiepoint
+	 *
+	 * @return model tiepoint
+	 */
+	public List<Double> getModelTiepoint() {
+		return getDoubleListEntryValue(FieldTagType.ModelTiepoint);
+	}
+
+	/**
 	 * Get the color map
 	 * 
 	 * @return color map
@@ -1120,8 +1138,16 @@ public class FileDirectory {
 		if (sampleValues) {
 			sample = new ByteBuffer[samplesPerPixel];
 			for (int i = 0; i < sample.length; ++i) {
-				sample[i] = ByteBuffer.allocateDirect(numPixels
-						* bitsPerSample.get(i) / 8);
+				double numberOfBytes = (double) numPixels
+						* Double.valueOf(bitsPerSample.get(i)) / 8;
+
+				if (numberOfBytes > Integer.MAX_VALUE) {
+					throw new TiffException("To allocate the sample result buffer array is "
+							+ "needed more than " + (Integer.MAX_VALUE / 1024 / 1024) + " "
+							+ "megaBytes.");
+				}
+
+				sample[i] = ByteBuffer.allocateDirect((int) numberOfBytes);
 				sample[i].order(reader.getByteOrder());
 			}
 		}
@@ -1513,6 +1539,19 @@ public class FileDirectory {
 	public List<Integer> getIntegerListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
+
+	/**
+	 * Get a double list entry value
+	 *
+	 * @param fieldTagType
+	 *            field tag type
+	 * @return integer list value
+	 * @since 2.0.2
+	 */
+	public List<Double> getDoubleListEntryValue(FieldTagType fieldTagType) {
+		return getEntryValue(fieldTagType);
+	}
+
 
 	/**
 	 * Set an unsigned integer list of values for the field tag type
