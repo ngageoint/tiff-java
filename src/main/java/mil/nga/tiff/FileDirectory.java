@@ -123,8 +123,8 @@ public class FileDirectory {
 				: TiffConstants.PLANAR_CONFIGURATION_CHUNKY;
 		if (planarConfiguration != TiffConstants.PLANAR_CONFIGURATION_CHUNKY
 				&& planarConfiguration != TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
-			throw new TiffException("Invalid planar configuration: "
-					+ planarConfiguration);
+			throw new TiffException(
+					"Invalid planar configuration: " + planarConfiguration);
 		}
 
 		// Determine the decoder based upon the compression
@@ -194,7 +194,8 @@ public class FileDirectory {
 	 * @param rasters
 	 *            image rasters to write
 	 */
-	public FileDirectory(SortedSet<FileDirectoryEntry> entries, Rasters rasters) {
+	public FileDirectory(SortedSet<FileDirectoryEntry> entries,
+			Rasters rasters) {
 		this.entries = entries;
 		for (FileDirectoryEntry entry : entries) {
 			fieldTagTypeMapping.put(entry.getFieldTag(), entry);
@@ -489,7 +490,8 @@ public class FileDirectory {
 	 * @since 2.0.0
 	 */
 	public int getSamplesPerPixel() {
-		Integer samplesPerPixel = getIntegerEntryValue(FieldTagType.SamplesPerPixel);
+		Integer samplesPerPixel = getIntegerEntryValue(
+				FieldTagType.SamplesPerPixel);
 		if (samplesPerPixel == null) {
 			// if SamplesPerPixel tag is missing, use default value defined by
 			// TIFF standard
@@ -691,6 +693,7 @@ public class FileDirectory {
 	 * Get the model pixel scale
 	 *
 	 * @return model pixel scale
+	 * @since 2.0.2
 	 */
 	public List<Double> getModelPixelScale() {
 		return getDoubleListEntryValue(FieldTagType.ModelPixelScale);
@@ -700,6 +703,7 @@ public class FileDirectory {
 	 * Get the model tiepoint
 	 *
 	 * @return model tiepoint
+	 * @since 2.0.2
 	 */
 	public List<Double> getModelTiepoint() {
 		return getDoubleListEntryValue(FieldTagType.ModelTiepoint);
@@ -1093,9 +1097,8 @@ public class FileDirectory {
 		// Validate the image window
 		if (window.getMinX() < 0 || window.getMinY() < 0
 				|| window.getMaxX() > width || window.getMaxY() > height) {
-			throw new TiffException(
-					"Window is out of the image bounds. Width: " + width
-							+ ", Height: " + height + ", Window: " + window);
+			throw new TiffException("Window is out of the image bounds. Width: "
+					+ width + ", Height: " + height + ", Window: " + window);
 		} else if (window.getMinX() > window.getMaxX()
 				|| window.getMinY() > window.getMaxY()) {
 			throw new TiffException("Invalid window range: " + window);
@@ -1115,8 +1118,8 @@ public class FileDirectory {
 		} else {
 			for (int i = 0; i < samples.length; i++) {
 				if (samples[i] >= samplesPerPixel) {
-					throw new TiffException("Invalid sample index: "
-							+ samples[i]);
+					throw new TiffException(
+							"Invalid sample index: " + samples[i]);
 				}
 			}
 		}
@@ -1142,9 +1145,9 @@ public class FileDirectory {
 						* Double.valueOf(bitsPerSample.get(i)) / 8;
 
 				if (numberOfBytes > Integer.MAX_VALUE) {
-					throw new TiffException("To allocate the sample result buffer array is "
-							+ "needed more than " + (Integer.MAX_VALUE / 1024 / 1024) + " "
-							+ "megaBytes.");
+					throw new TiffException(
+							"Number of sample value bytes is above max byte buffer capacity: "
+									+ numberOfBytes);
 				}
 
 				sample[i] = ByteBuffer.allocateDirect((int) numberOfBytes);
@@ -1177,7 +1180,8 @@ public class FileDirectory {
 	 * @param rasters
 	 *            rasters to populate
 	 */
-	private void readRaster(ImageWindow window, int[] samples, Rasters rasters) {
+	private void readRaster(ImageWindow window, int[] samples,
+			Rasters rasters) {
 
 		int tileWidth = getTileWidth().intValue();
 		int tileHeight = getTileHeight().intValue();
@@ -1220,14 +1224,13 @@ public class FileDirectory {
 					ByteReader blockReader = new ByteReader(block,
 							reader.getByteOrder());
 
-					for (int y = Math.max(0, window.getMinY() - firstLine); y < Math
-							.min(tileHeight,
-									tileHeight - (lastLine - window.getMaxY())); y++) {
+					for (int y = Math.max(0, window.getMinY()
+							- firstLine); y < Math.min(tileHeight, tileHeight
+									- (lastLine - window.getMaxY())); y++) {
 
-						for (int x = Math.max(0, window.getMinX() - firstCol); x < Math
-								.min(tileWidth,
-										tileWidth
-												- (lastCol - window.getMaxX())); x++) {
+						for (int x = Math.max(0, window.getMinX()
+								- firstCol); x < Math.min(tileWidth, tileWidth
+										- (lastCol - window.getMaxX())); x++) {
 
 							int pixelOffset = (y * tileWidth + x)
 									* bytesPerPixel;
@@ -1240,19 +1243,16 @@ public class FileDirectory {
 									sampleFieldTypes[sampleIndex]);
 
 							if (rasters.hasInterleaveValues()) {
-								int windowCoordinate = (y + firstLine - window
-										.getMinY())
-										* windowWidth
+								int windowCoordinate = (y + firstLine
+										- window.getMinY()) * windowWidth
 										+ (x + firstCol - window.getMinX());
 								rasters.addToInterleave(sampleIndex,
 										windowCoordinate, value);
 							}
 
 							if (rasters.hasSampleValues()) {
-								int windowCoordinate = (y + firstLine - window
-										.getMinY())
-										* windowWidth
-										+ x
+								int windowCoordinate = (y + firstLine
+										- window.getMinY()) * windowWidth + x
 										+ firstCol - window.getMinX();
 								rasters.addToSample(sampleIndex,
 										windowCoordinate, value);
@@ -1304,8 +1304,8 @@ public class FileDirectory {
 			value = reader.readDouble();
 			break;
 		default:
-			throw new TiffException("Unsupported raster field type: "
-					+ fieldType);
+			throw new TiffException(
+					"Unsupported raster field type: " + fieldType);
 		}
 
 		return value;
@@ -1321,7 +1321,8 @@ public class FileDirectory {
 	public FieldType getFieldTypeForSample(int sampleIndex) {
 
 		List<Integer> sampleFormatList = getSampleFormat();
-		int sampleFormat = sampleFormatList == null ? TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT
+		int sampleFormat = sampleFormatList == null
+				? TiffConstants.SAMPLE_FORMAT_UNSIGNED_INT
 				: sampleFormatList
 						.get(sampleIndex < sampleFormatList.size() ? sampleIndex
 								: 0);
@@ -1359,8 +1360,8 @@ public class FileDirectory {
 		if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_CHUNKY) {
 			index = y * numTilesPerRow + x;
 		} else if (planarConfiguration == TiffConstants.PLANAR_CONFIGURATION_PLANAR) {
-			index = sample * numTilesPerRow * numTilesPerCol + y
-					* numTilesPerRow + x;
+			index = sample * numTilesPerRow * numTilesPerCol
+					+ y * numTilesPerRow + x;
 		}
 
 		// Attempt to pull from the cache
@@ -1408,13 +1409,13 @@ public class FileDirectory {
 	private int getSampleByteSize(int sampleIndex) {
 		List<Integer> bitsPerSample = getBitsPerSample();
 		if (sampleIndex >= bitsPerSample.size()) {
-			throw new TiffException("Sample index " + sampleIndex
-					+ " is out of range");
+			throw new TiffException(
+					"Sample index " + sampleIndex + " is out of range");
 		}
 		int bits = bitsPerSample.get(sampleIndex);
 		if ((bits % 8) != 0) {
-			throw new TiffException("Sample bit-width of " + bits
-					+ " is not supported");
+			throw new TiffException(
+					"Sample bit-width of " + bits + " is not supported");
 		}
 		return (bits / 8);
 	}
@@ -1432,8 +1433,8 @@ public class FileDirectory {
 		for (int i = 0; i < bitsPerSamples.size(); i++) {
 			int bits = bitsPerSamples.get(i);
 			if ((bits % 8) != 0) {
-				throw new TiffException("Sample bit-width of " + bits
-						+ " is not supported");
+				throw new TiffException(
+						"Sample bit-width of " + bits + " is not supported");
 			} else if (bits != bitsPerSamples.get(0)) {
 				throw new TiffException(
 						"Differing size of samples in a pixel are not supported. sample 0 = "
@@ -1492,7 +1493,8 @@ public class FileDirectory {
 	 *            unsigned long value (32 bit)
 	 * @since 2.0.0
 	 */
-	public void setUnsignedLongEntryValue(FieldTagType fieldTagType, long value) {
+	public void setUnsignedLongEntryValue(FieldTagType fieldTagType,
+			long value) {
 		setEntryValue(fieldTagType, FieldType.LONG, 1, value);
 	}
 
@@ -1525,7 +1527,8 @@ public class FileDirectory {
 	public void setStringEntryValue(FieldTagType fieldTagType, String value) {
 		List<String> values = new ArrayList<>();
 		values.add(value);
-		setEntryValue(fieldTagType, FieldType.ASCII, value.length() + 1, values);
+		setEntryValue(fieldTagType, FieldType.ASCII, value.length() + 1,
+				values);
 	}
 
 	/**
@@ -1551,7 +1554,6 @@ public class FileDirectory {
 	public List<Double> getDoubleListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
-
 
 	/**
 	 * Set an unsigned integer list of values for the field tag type

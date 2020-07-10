@@ -4,9 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 2.0.2 (TBD)
+## [2.0.2](https://github.com/ngageoint/tiff-java/releases/tag/2.0.2) (07-10-2020)
 
-* TBD
+* Model pixel scale and model tiepoint retrieval methods
+* Sample values byte buffer max capacity allocation check
 
 ## [2.0.1](https://github.com/ngageoint/tiff-java/releases/tag/2.0.1) (04-01-2019)
 
