@@ -91,7 +91,7 @@ Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetail
 
 ### Build ###
 
-[![Build & Test](https://github.com/ngageoint/tiff-java/workflows/Build%20&%20Test/badge.svg)](https://github.com/ngageoint/tiff-java/actions?query=workflow%3A%22Build+%26+Test%22)
+[![Build & Test](https://github.com/ngageoint/tiff-java/workflows/Build%20&%20Test/badge.svg)](https://github.com/ngageoint/tiff-java/actions/workflows/build-test.yml)
 
 Build this repository using Eclipse and/or Maven:
 
