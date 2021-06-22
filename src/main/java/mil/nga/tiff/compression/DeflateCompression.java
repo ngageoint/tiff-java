@@ -7,6 +7,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import mil.nga.tiff.io.IOUtils;
 import mil.nga.tiff.util.TiffException;
 
 /**
@@ -26,7 +27,7 @@ public class DeflateCompression implements CompressionDecoder,
 			Inflater inflater = new Inflater();
 			inflater.setInput(bytes);  
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
-			byte[] buffer = new byte[1024];  
+			byte[] buffer = new byte[IOUtils.COPY_BUFFER_SIZE];
 			while (!inflater.finished()) {
 				int count = inflater.inflate(buffer);
 				outputStream.write(buffer, 0, count);
@@ -60,7 +61,7 @@ public class DeflateCompression implements CompressionDecoder,
 			deflater.setInput(bytes);
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream(bytes.length);
 			deflater.finish();
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[IOUtils.COPY_BUFFER_SIZE];
 			while (!deflater.finished()) {
 				int count = deflater.deflate(buffer); // returns the generated code... index
 				outputStream.write(buffer, 0, count);

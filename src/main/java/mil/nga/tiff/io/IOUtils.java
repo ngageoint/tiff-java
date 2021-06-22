@@ -16,6 +16,13 @@ import java.io.OutputStream;
 public class IOUtils {
 
 	/**
+	 * Copy stream buffer chunk size in bytes
+	 * 
+	 * @since 2.0.3
+	 */
+	public static int COPY_BUFFER_SIZE = 8192;
+
+	/**
 	 * Copy a file to a file location
 	 * 
 	 * @param copyFrom
@@ -98,7 +105,7 @@ public class IOUtils {
 	public static void copyStream(InputStream copyFrom, OutputStream copyTo)
 			throws IOException {
 
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[COPY_BUFFER_SIZE];
 		int length;
 		while ((length = copyFrom.read(buffer)) > 0) {
 			copyTo.write(buffer, 0, length);
