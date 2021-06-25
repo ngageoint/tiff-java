@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 2.0.4 (TBD)
+
+* TBD
+
 ## [2.0.3](https://github.com/ngageoint/tiff-java/releases/tag/2.0.3) (06-25-2021)
 
 * Modifiable IOUtils copy buffer, defaulted at 8k byte chunks
