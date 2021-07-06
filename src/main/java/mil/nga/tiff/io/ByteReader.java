@@ -6,6 +6,8 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import mil.nga.tiff.util.TiffException;
+
 /**
  * Read through a byte array
  * 
@@ -66,8 +68,12 @@ public class ByteReader {
 	 * @param nextByte
 	 *            next byte
 	 */
-	public void setNextByte(int nextByte) {
-		this.nextByte = nextByte;
+	public void setNextByte(long nextByte) {
+		if (nextByte >= bytes.length) {
+			throw new TiffException("Byte offset out of range. Total Bytes: "
+					+ bytes.length + ", Byte offset: " + nextByte);
+		}
+		this.nextByte = (int) nextByte;
 	}
 
 	/**
@@ -406,7 +412,7 @@ public class ByteReader {
 	 */
 	private void verifyRemainingBytes(int offset, int bytesToRead) {
 		if (offset + bytesToRead > bytes.length) {
-			throw new IllegalStateException(
+			throw new TiffException(
 					"No more remaining bytes to read. Total Bytes: "
 							+ bytes.length + ", Byte offset: " + offset
 							+ ", Attempted to read: " + bytesToRead);

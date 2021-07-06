@@ -1,11 +1,14 @@
 package mil.nga.tiff;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
+
+import junit.framework.TestCase;
+import mil.nga.tiff.util.TiffException;
 
 /**
  * TIFF Read tests
@@ -94,8 +97,8 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_FLOAT32);
 		TIFFImage float32Tiff = TiffReader.readTiff(float32File);
 
-		TiffTestUtils
-				.compareTIFFImages(strippedTiff, float32Tiff, false, false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, float32Tiff, false,
+				false);
 
 	}
 
@@ -116,8 +119,8 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_FLOAT64);
 		TIFFImage float64Tiff = TiffReader.readTiff(float64File);
 
-		TiffTestUtils
-				.compareTIFFImages(strippedTiff, float64Tiff, false, false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, float64Tiff, false,
+				false);
 
 	}
 
@@ -223,11 +226,29 @@ public class TiffReadTest {
 			TestCase.assertNotNull(fileDirectory);
 			try {
 				fileDirectory.readRasters();
-				TestCase.fail("JPEG compression was not expected to be implemented");
+				TestCase.fail(
+						"JPEG compression was not expected to be implemented");
 			} catch (Exception e) {
 				// expected
 			}
 
+		}
+
+	}
+
+	/**
+	 * Test an invalid offset value
+	 */
+	@Test
+	public void testInvalidOffset() {
+
+		String base64Bytes = "TU0AKoAAAAAAAAAAAAAAAQAAKgAAGABNAA==";
+		byte[] bytes = java.util.Base64.getDecoder().decode(base64Bytes);
+		try {
+			TiffReader.readTiff(bytes);
+			fail("Unexpected success");
+		} catch (TiffException e) {
+			// expected
 		}
 
 	}

@@ -1373,13 +1373,13 @@ public class FileDirectory {
 
 			// Read and decode the block
 
-			int offset = 0;
+			long offset = 0;
 			int byteCount = 0;
 			if (tiled) {
-				offset = getTileOffsets().get(index).intValue();
+				offset = getTileOffsets().get(index).longValue();
 				byteCount = getTileByteCounts().get(index).intValue();
 			} else {
-				offset = getStripOffsets().get(index).intValue();
+				offset = getStripOffsets().get(index).longValue();
 				byteCount = getStripByteCounts().get(index).intValue();
 			}
 

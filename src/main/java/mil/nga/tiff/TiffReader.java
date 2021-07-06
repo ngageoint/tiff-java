@@ -161,7 +161,7 @@ public class TiffReader {
 		}
 
 		// Get the offset in bytes of the first image file directory (IFD)
-		int byteOffset = (int) reader.readUnsignedInt();
+		long byteOffset = reader.readUnsignedInt();
 
 		// Get the TIFF Image
 		TIFFImage tiffImage = parseTIFFImage(reader, byteOffset, cache);
@@ -180,7 +180,7 @@ public class TiffReader {
 	 *            true to cache tiles and strips
 	 * @return TIFF image
 	 */
-	private static TIFFImage parseTIFFImage(ByteReader reader, int byteOffset,
+	private static TIFFImage parseTIFFImage(ByteReader reader, long byteOffset,
 			boolean cache) {
 
 		TIFFImage tiffImage = new TIFFImage();
@@ -238,7 +238,7 @@ public class TiffReader {
 			tiffImage.add(fileDirectory);
 
 			// Read the next byte offset location
-			byteOffset = (int) reader.readUnsignedInt();
+			byteOffset = reader.readUnsignedInt();
 		}
 
 		return tiffImage;
@@ -262,7 +262,7 @@ public class TiffReader {
 
 		// If the value is larger and not stored inline, determine the offset
 		if (fieldType.getBytes() * typeCount > 4) {
-			int valueOffset = (int) reader.readUnsignedInt();
+			long valueOffset = reader.readUnsignedInt();
 			reader.setNextByte(valueOffset);
 		}
 
