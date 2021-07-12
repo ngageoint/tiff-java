@@ -4,6 +4,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
+## 2.0.5 (TBD)
+
+* TBD
+
 ## [2.0.4](https://github.com/ngageoint/tiff-java/releases/tag/2.0.4) (07-12-2021)
 
 * Improved error for byte offsets out of range or above max integer
