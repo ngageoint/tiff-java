@@ -81,12 +81,12 @@ byte[] bytes = TiffWriter.writeTiffToBytes(tiffImage);
 
 ### Installation ###
 
-Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga|tiff|2.0.3|jar) (JAR, POM, Source, Javadoc)
+Pull from the [Maven Central Repository](http://search.maven.org/#artifactdetails|mil.nga|tiff|2.0.4|jar) (JAR, POM, Source, Javadoc)
 
     <dependency>
         <groupId>mil.nga</groupId>
         <artifactId>tiff</artifactId>
-        <version>2.0.3</version>
+        <version>2.0.4</version>
     </dependency>
 
 ### Build ###
