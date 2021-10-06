@@ -700,6 +700,16 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Set the model pixel scale
+	 *
+	 * @param modelPixelScale pixel scale
+	 * @since 2.0.5
+	 */
+	public void setModelPixelScale(List<Double> modelPixelScale) {
+        setDoubleListEntryValue(FieldTagType.ModelPixelScale, modelPixelScale);
+    }
+
+	/**
 	 * Get the model tiepoint
 	 *
 	 * @return model tiepoint
@@ -708,6 +718,16 @@ public class FileDirectory {
 	public List<Double> getModelTiepoint() {
 		return getDoubleListEntryValue(FieldTagType.ModelTiepoint);
 	}
+
+	/**
+	 * Set the model tiepoint
+	 *
+	 * @return model tiepoint
+	 * @since 2.0.5
+	 */
+	public void setModelTiePoint(List<Double> modelTiePoint) {
+        setDoubleListEntryValue(FieldTagType.ModelTiepoint, modelTiePoint);
+    }
 
 	/**
 	 * Get the color map
@@ -1548,12 +1568,24 @@ public class FileDirectory {
 	 *
 	 * @param fieldTagType
 	 *            field tag type
-	 * @return integer list value
+	 * @return double list value
 	 * @since 2.0.2
 	 */
 	public List<Double> getDoubleListEntryValue(FieldTagType fieldTagType) {
 		return getEntryValue(fieldTagType);
 	}
+
+	/**
+	* Set a double list entry value
+	*
+	* @param fieldTagType
+	*            field tag type
+	* @param double list value
+	* @since 2.0.5
+	*/
+	public void setDoubleListEntryValue(FieldTagType fieldTagType, List<Double> value) {
+        setEntryValue(fieldTagType, FieldType.DOUBLE, value.size(), value);
+    }
 
 	/**
 	 * Set an unsigned integer list of values for the field tag type
