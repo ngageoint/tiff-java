@@ -4,7 +4,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 2.0.5 (TBD)
+## [2.0.5](https://github.com/ngageoint/tiff-java/releases/tag/2.0.5) (10-11-2021)
 
 * FileDirectory setModelPixelScale and setModelTiepoint methods
 
