@@ -723,12 +723,12 @@ public class FileDirectory {
 	/**
 	 * Set the model tiepoint
 	 *
-	 * @param modelTiePoint
+	 * @param modelTiepoint
 	 *            model tiepoint
 	 * @since 2.0.5
 	 */
-	public void setModelTiepoint(List<Double> modelTiePoint) {
-		setDoubleListEntryValue(FieldTagType.ModelTiepoint, modelTiePoint);
+	public void setModelTiepoint(List<Double> modelTiepoint) {
+		setDoubleListEntryValue(FieldTagType.ModelTiepoint, modelTiepoint);
 	}
 
 	/**
