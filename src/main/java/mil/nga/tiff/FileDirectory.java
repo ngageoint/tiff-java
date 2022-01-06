@@ -14,6 +14,7 @@ import mil.nga.tiff.compression.CompressionDecoder;
 import mil.nga.tiff.compression.DeflateCompression;
 import mil.nga.tiff.compression.LZWCompression;
 import mil.nga.tiff.compression.PackbitsCompression;
+import mil.nga.tiff.compression.Predictor;
 import mil.nga.tiff.compression.RawCompression;
 import mil.nga.tiff.compression.UnsupportedCompression;
 import mil.nga.tiff.io.ByteReader;
@@ -52,6 +53,11 @@ public class FileDirectory {
 	 * Planar configuration
 	 */
 	private int planarConfiguration;
+
+	/**
+	 * Differencing Predictor
+	 */
+	private Integer predictor;
 
 	/**
 	 * Compression decoder
@@ -167,6 +173,9 @@ public class FileDirectory {
 			decoder = new UnsupportedCompression(
 					"Unknown compression method identifier: " + compression);
 		}
+
+		// Determine the differencing predictor
+		predictor = getPredictor();
 	}
 
 	/**
@@ -940,6 +949,27 @@ public class FileDirectory {
 	}
 
 	/**
+	 * Get the predictor
+	 * 
+	 * @return predictor
+	 * @since 3.0.0
+	 */
+	public Integer getPredictor() {
+		return getIntegerEntryValue(FieldTagType.Predictor);
+	}
+
+	/**
+	 * Set the predictor
+	 * 
+	 * @param predictor
+	 *            predictor
+	 * @since 3.0.0
+	 */
+	public void setPredictor(int predictor) {
+		setUnsignedIntegerEntryValue(FieldTagType.Predictor, predictor);
+	}
+
+	/**
 	 * Get the rasters for writing a TIFF file
 	 * 
 	 * @return rasters image rasters
@@ -1408,6 +1438,12 @@ public class FileDirectory {
 			reader.setNextByte(offset);
 			byte[] bytes = reader.readBytes(byteCount);
 			tileOrStrip = decoder.decode(bytes, reader.getByteOrder());
+
+			if (predictor != null) {
+				tileOrStrip = Predictor.decode(tileOrStrip, predictor,
+						tileWidth, tileHeight, getBitsPerSample(),
+						planarConfiguration);
+			}
 
 			// Cache the data
 			if (cache != null) {

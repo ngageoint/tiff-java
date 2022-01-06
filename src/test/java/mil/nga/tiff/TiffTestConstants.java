@@ -61,5 +61,35 @@ public class TiffTestConstants {
 	 * JPEG TIFF test file
 	 */
 	public static final String FILE_JPEG = "quad-jpeg.tif";
-	
+
+	/**
+	 * Deflate Predictor TIFF test file
+	 */
+	public static final String FILE_DEFLATE_PREDICTOR = "deflate_predictor.tiff";
+
+	/**
+	 * Deflate Predictor Big Strips TIFF test file
+	 */
+	public static final String FILE_DEFLATE_PREDICTOR_BIG_STRIPS = "deflate_predictor_big_strips.tiff";
+
+	/**
+	 * Deflate Predictor Tiled TIFF test file
+	 */
+	public static final String FILE_DEFLATE_PREDICTOR_TILED = "deflate_predictor_tiled.tiff";
+
+	/**
+	 * LZW Predictor TIFF test file
+	 */
+	public static final String FILE_LZW_PREDICTOR = "lzw_predictor.tiff";
+
+	/**
+	 * Tiled Planar LZW TIFF test file
+	 */
+	public static final String FILE_TILED_PLANAR_LZW = "tiledplanarlzw.tiff";
+
+	/**
+	 * LZW Predictor Floating Point TIFF test file
+	 */
+	public static final String FILE_LZW_PREDICTOR_FLOATING = "lzw_predictor_floating.tiff";
+
 }

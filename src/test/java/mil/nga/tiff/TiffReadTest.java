@@ -30,11 +30,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File tiledFile = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_TILED);
-		TIFFImage tiledTiff = TiffReader.readTiff(tiledFile);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_TILED);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, tiledTiff);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
 
 	}
 
@@ -51,11 +50,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File int32File = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_INT32);
-		TIFFImage int32Tiff = TiffReader.readTiff(int32File);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_INT32);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, int32Tiff, true, false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff, true, false);
 
 	}
 
@@ -72,11 +70,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File uint32File = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_UINT32);
-		TIFFImage uint32Tiff = TiffReader.readTiff(uint32File);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_UINT32);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, uint32Tiff, false, false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff, false, false);
 
 	}
 
@@ -93,12 +90,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File float32File = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_FLOAT32);
-		TIFFImage float32Tiff = TiffReader.readTiff(float32File);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_FLOAT32);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, float32Tiff, false,
-				false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff, false, false);
 
 	}
 
@@ -115,12 +110,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File float64File = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_FLOAT64);
-		TIFFImage float64Tiff = TiffReader.readTiff(float64File);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_FLOAT64);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, float64Tiff, false,
-				false);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff, false, false);
 
 	}
 
@@ -137,10 +130,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File lzwFile = TiffTestUtils.getTestFile(TiffTestConstants.FILE_LZW);
-		TIFFImage lzwTiff = TiffReader.readTiff(lzwFile);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_LZW);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, lzwTiff);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
 
 	}
 
@@ -157,11 +150,10 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File packbitsFile = TiffTestUtils
-				.getTestFile(TiffTestConstants.FILE_PACKBITS);
-		TIFFImage packbitsTiff = TiffReader.readTiff(packbitsFile);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_PACKBITS);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, packbitsTiff);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
 
 	}
 
@@ -178,11 +170,11 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File interleaveFile = TiffTestUtils
+		File file = TiffTestUtils
 				.getTestFile(TiffTestConstants.FILE_INTERLEAVE);
-		TIFFImage interleaveTiff = TiffReader.readTiff(interleaveFile);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, interleaveTiff);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
 
 	}
 
@@ -199,11 +191,11 @@ public class TiffReadTest {
 				.getTestFile(TiffTestConstants.FILE_STRIPPED);
 		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
 
-		File tiledPlanarFile = TiffTestUtils
+		File file = TiffTestUtils
 				.getTestFile(TiffTestConstants.FILE_TILED_PLANAR);
-		TIFFImage tiledPlanarTiff = TiffReader.readTiff(tiledPlanarFile);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TiffTestUtils.compareTIFFImages(strippedTiff, tiledPlanarTiff);
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
 
 	}
 
@@ -216,13 +208,13 @@ public class TiffReadTest {
 	@Test
 	public void testJPEGHeader() throws IOException {
 
-		File jpegFile = TiffTestUtils.getTestFile(TiffTestConstants.FILE_JPEG);
-		TIFFImage jpegTiff = TiffReader.readTiff(jpegFile);
+		File file = TiffTestUtils.getTestFile(TiffTestConstants.FILE_JPEG);
+		TIFFImage tiff = TiffReader.readTiff(file);
 
-		TestCase.assertNotNull(jpegTiff);
-		TestCase.assertTrue(jpegTiff.getFileDirectories().size() > 0);
-		for (int i = 0; i < jpegTiff.getFileDirectories().size(); i++) {
-			FileDirectory fileDirectory = jpegTiff.getFileDirectory(i);
+		TestCase.assertNotNull(tiff);
+		TestCase.assertTrue(tiff.getFileDirectories().size() > 0);
+		for (int i = 0; i < tiff.getFileDirectories().size(); i++) {
+			FileDirectory fileDirectory = tiff.getFileDirectory(i);
 			TestCase.assertNotNull(fileDirectory);
 			try {
 				fileDirectory.readRasters();
@@ -250,6 +242,134 @@ public class TiffReadTest {
 		} catch (TiffException e) {
 			// expected
 		}
+
+	}
+
+	/**
+	 * Test the stripped TIFF file vs the same data as deflate predictor
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testStrippedVsDeflatePredictor() throws IOException {
+
+		File strippedFile = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_STRIPPED);
+		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
+
+		File file = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_DEFLATE_PREDICTOR);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
+
+	}
+
+	/**
+	 * Test the stripped TIFF file vs the same data as deflate predictor big
+	 * strips
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testStrippedVsDeflatePredictorBigStrips() throws IOException {
+
+		File strippedFile = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_STRIPPED);
+		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
+
+		File file = TiffTestUtils.getTestFile(
+				TiffTestConstants.FILE_DEFLATE_PREDICTOR_BIG_STRIPS);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
+
+	}
+
+	/**
+	 * Test the stripped TIFF file vs the same data as deflate predictor tiled
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testStrippedVsDeflatePredictorTiled() throws IOException {
+
+		File strippedFile = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_STRIPPED);
+		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
+
+		File file = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_DEFLATE_PREDICTOR_TILED);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
+
+	}
+
+	/**
+	 * Test the stripped TIFF file vs the same data as LZW predictor
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testStrippedVsLZWPredictor() throws IOException {
+
+		File strippedFile = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_STRIPPED);
+		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
+
+		File file = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_LZW_PREDICTOR);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
+
+	}
+
+	/**
+	 * Test the stripped TIFF file vs the same data as tiled planar LZW
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testStrippedVsTiledPlanarLZW() throws IOException {
+
+		File strippedFile = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_STRIPPED);
+		TIFFImage strippedTiff = TiffReader.readTiff(strippedFile);
+
+		File file = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_TILED_PLANAR_LZW);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(strippedTiff, tiff);
+
+	}
+
+	/**
+	 * Test the float 32 TIFF file vs the same data as LZW predictor floating
+	 * point
+	 * 
+	 * @throws IOException
+	 *             upon error
+	 */
+	@Test
+	public void testFloat32VsLZWPredictorFloatingPoint() throws IOException {
+
+		File float32File = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_FLOAT32);
+		TIFFImage float32Tiff = TiffReader.readTiff(float32File);
+
+		File file = TiffTestUtils
+				.getTestFile(TiffTestConstants.FILE_LZW_PREDICTOR_FLOATING);
+		TIFFImage tiff = TiffReader.readTiff(file);
+
+		TiffTestUtils.compareTIFFImages(float32Tiff, tiff);
 
 	}
 

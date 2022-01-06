@@ -118,4 +118,9 @@ public class TiffConstants {
 	public static final int THRESHHOLDING_ORDERED = 2;
 	public static final int THRESHHOLDING_RANDOM = 3;
 
+	// Differencing Predictor constants
+	public static final int PREDICTOR_NO = 1;
+	public static final int PREDICTOR_HORIZONTAL = 2;
+	public static final int PREDICTOR_FLOATINGPOINT = 3;
+
 }

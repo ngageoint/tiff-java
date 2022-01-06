@@ -4,8 +4,9 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
 
-## 2.0.6 (TBD)
+## 3.0.0 (TBD)
 
+* Differencing Predictor decoding implementation
 * Java 11
 
 ## [2.0.5](https://github.com/ngageoint/tiff-java/releases/tag/2.0.5) (10-11-2021)
