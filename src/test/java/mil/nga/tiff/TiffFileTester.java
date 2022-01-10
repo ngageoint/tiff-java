@@ -15,7 +15,9 @@ public class TiffFileTester {
 	 * Main method, provide a single file path argument
 	 * 
 	 * @param args
+	 *            arguments
 	 * @throws IOException
+	 *             upon error
 	 */
 	public static void main(String[] args) throws IOException {
 
@@ -26,8 +28,8 @@ public class TiffFileTester {
 
 		File file = new File(args[0]);
 		if (!file.exists()) {
-			throw new IllegalArgumentException("TIFF file does not exist: "
-					+ file.getAbsolutePath());
+			throw new IllegalArgumentException(
+					"TIFF file does not exist: " + file.getAbsolutePath());
 		}
 
 		TIFFImage tiffImage = TiffReader.readTiff(file);
@@ -63,8 +65,8 @@ public class TiffFileTester {
 			System.out.println("Width: " + rasters.getWidth());
 			System.out.println("Height: " + rasters.getHeight());
 			System.out.println("Number of Pixels: " + rasters.getNumPixels());
-			System.out.println("Samples Per Pixel: "
-					+ rasters.getSamplesPerPixel());
+			System.out.println(
+					"Samples Per Pixel: " + rasters.getSamplesPerPixel());
 			System.out
 					.println("Bits Per Sample: " + rasters.getBitsPerSample());
 
@@ -72,7 +74,8 @@ public class TiffFileTester {
 			printPixel(rasters, 0, 0);
 			printPixel(rasters, (int) (rasters.getWidth() / 2.0),
 					(int) (rasters.getHeight() / 2.0));
-			printPixel(rasters, rasters.getWidth() - 1, rasters.getHeight() - 1);
+			printPixel(rasters, rasters.getWidth() - 1,
+					rasters.getHeight() - 1);
 
 			System.out.println();
 		}
