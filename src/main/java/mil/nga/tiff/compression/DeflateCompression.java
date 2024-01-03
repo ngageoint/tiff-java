@@ -11,12 +11,17 @@ import mil.nga.tiff.io.IOUtils;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Deflate Compression
+ * Deflate Compression.
  * 
  * @author osbornb
  */
 public class DeflateCompression implements CompressionDecoder,
 		CompressionEncoder {
+
+        /**
+         * Constructor.
+         */
+        public DeflateCompression() {}
 
 	/**
 	 * {@inheritDoc}

@@ -10,7 +10,7 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Raster image values
+ * Raster image values.
  * 
  * @author osbornb
  */

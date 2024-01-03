@@ -3,11 +3,16 @@ package mil.nga.tiff.compression;
 import java.nio.ByteOrder;
 
 /**
- * Raw / no compression
+ * Raw / no compression.
  * 
  * @author osbornb
  */
 public class RawCompression implements CompressionDecoder, CompressionEncoder {
+
+        /**
+         * Constructor.
+         */
+        public RawCompression() {}
 
 	/**
 	 * {@inheritDoc}

@@ -1,7 +1,7 @@
 package mil.nga.tiff.util;
 
 /**
- * TIFF exception
+ * TIFF exception.
  * 
  * @author osbornb
  */

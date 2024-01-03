@@ -9,12 +9,15 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Differencing Predictor decoder
+ * Differencing Predictor decoder.
  * 
  * @author osbornb
  * @since 3.0.0
  */
 public class Predictor {
+
+        // This class is not meant to be instantiated.
+        private Predictor() {}
 
 	/**
 	 * Decode the predictor encoded bytes

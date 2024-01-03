@@ -5,7 +5,7 @@ import java.nio.ByteOrder;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Unsupported compression
+ * Unsupported compression.
  * 
  * @author michaelknigge
  */
