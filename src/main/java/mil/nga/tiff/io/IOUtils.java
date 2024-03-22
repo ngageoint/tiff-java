@@ -15,6 +15,9 @@ import java.io.OutputStream;
  */
 public class IOUtils {
 
+        // This class is not meant to be instantiated.
+        private IOUtils() {}
+
 	/**
 	 * Copy stream buffer chunk size in bytes
 	 * 

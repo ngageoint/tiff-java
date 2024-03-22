@@ -22,9 +22,11 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * File Directory, represents all directory entries and can be used to read the
- * image raster
- * 
+ * File Directory.
+ *
+ * A file directory represents all directory entries and can be used to read the
+ * image raster(s).
+ *
  * @author osbornb
  */
 public class FileDirectory {
@@ -86,7 +88,7 @@ public class FileDirectory {
 
 	/**
 	 * Constructor, for reading TIFF files
-	 * 
+	 *
 	 * @param entries
 	 *            file directory entries
 	 * @param reader
@@ -99,7 +101,7 @@ public class FileDirectory {
 
 	/**
 	 * Constructor, for reading TIFF files
-	 * 
+	 *
 	 * @param entries
 	 *            file directory entries
 	 * @param reader
@@ -187,7 +189,7 @@ public class FileDirectory {
 
 	/**
 	 * Constructor, for writing TIFF files
-	 * 
+	 *
 	 * @param rasters
 	 *            image rasters to write
 	 */
@@ -197,7 +199,7 @@ public class FileDirectory {
 
 	/**
 	 * Constructor, for writing TIFF files
-	 * 
+	 *
 	 * @param entries
 	 *            file directory entries
 	 * @param rasters
@@ -214,7 +216,7 @@ public class FileDirectory {
 
 	/**
 	 * Add an entry
-	 * 
+	 *
 	 * @param entry
 	 *            file directory entry
 	 */
@@ -227,7 +229,7 @@ public class FileDirectory {
 	/**
 	 * Set whether to cache tiles. Does nothing is already caching tiles, clears
 	 * the existing cache if set to false.
-	 * 
+	 *
 	 * @param cacheData
 	 *            true to cache tiles and strips
 	 */
@@ -243,7 +245,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the byte reader
-	 * 
+	 *
 	 * @return byte reader
 	 */
 	public ByteReader getReader() {
@@ -252,7 +254,7 @@ public class FileDirectory {
 
 	/**
 	 * Is this a tiled image
-	 * 
+	 *
 	 * @return true if tiled
 	 */
 	public boolean isTiled() {
@@ -261,7 +263,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the compression decoder
-	 * 
+	 *
 	 * @return compression decoder
 	 */
 	public CompressionDecoder getDecoder() {
@@ -270,7 +272,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the number of entries
-	 * 
+	 *
 	 * @return entry count
 	 */
 	public int numEntries() {
@@ -279,7 +281,7 @@ public class FileDirectory {
 
 	/**
 	 * Get a file directory entry from the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return file directory entry
@@ -290,7 +292,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the file directory entries
-	 * 
+	 *
 	 * @return file directory entries
 	 */
 	public Set<FileDirectoryEntry> getEntries() {
@@ -299,7 +301,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the field tag type to file directory entry mapping
-	 * 
+	 *
 	 * @return field tag type mapping
 	 */
 	public Map<FieldTagType, FileDirectoryEntry> getFieldTagTypeMapping() {
@@ -308,7 +310,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the image width
-	 * 
+	 *
 	 * @return image width
 	 */
 	public Number getImageWidth() {
@@ -317,7 +319,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the image width
-	 * 
+	 *
 	 * @param width
 	 *            image width
 	 */
@@ -327,7 +329,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the image width
-	 * 
+	 *
 	 * @param width
 	 *            image width
 	 */
@@ -337,7 +339,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the image height
-	 * 
+	 *
 	 * @return image height
 	 */
 	public Number getImageHeight() {
@@ -346,7 +348,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the image height
-	 * 
+	 *
 	 * @param height
 	 *            image height
 	 */
@@ -356,7 +358,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the image height
-	 * 
+	 *
 	 * @param height
 	 *            image height
 	 */
@@ -366,7 +368,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the bits per sample
-	 * 
+	 *
 	 * @return bits per sample
 	 */
 	public List<Integer> getBitsPerSample() {
@@ -375,7 +377,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the bits per sample
-	 * 
+	 *
 	 * @param bitsPerSample
 	 *            bits per sample
 	 */
@@ -386,7 +388,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value bits per sample
-	 * 
+	 *
 	 * @param bitsPerSample
 	 *            bits per sample
 	 */
@@ -396,7 +398,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the max bits per sample
-	 * 
+	 *
 	 * @return max bits per sample
 	 */
 	public Integer getMaxBitsPerSample() {
@@ -405,7 +407,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the compression
-	 * 
+	 *
 	 * @return compression
 	 */
 	public Integer getCompression() {
@@ -414,7 +416,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the compression
-	 * 
+	 *
 	 * @param compression
 	 *            compression
 	 */
@@ -424,7 +426,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the photometric interpretation
-	 * 
+	 *
 	 * @return photometric interpretation
 	 */
 	public Integer getPhotometricInterpretation() {
@@ -433,7 +435,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the photometric interpretation
-	 * 
+	 *
 	 * @param photometricInterpretation
 	 *            photometric interpretation
 	 */
@@ -444,7 +446,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the strip offsets
-	 * 
+	 *
 	 * @return strip offsets
 	 */
 	public List<Number> getStripOffsets() {
@@ -453,7 +455,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the strip offsets
-	 * 
+	 *
 	 * @param stripOffsets
 	 *            strip offsets
 	 */
@@ -464,7 +466,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the strip offsets
-	 * 
+	 *
 	 * @param stripOffsets
 	 *            strip offsets
 	 */
@@ -474,7 +476,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value strip offset
-	 * 
+	 *
 	 * @param stripOffset
 	 *            strip offset
 	 */
@@ -484,7 +486,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value strip offset
-	 * 
+	 *
 	 * @param stripOffset
 	 *            strip offset
 	 */
@@ -494,7 +496,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the samples per pixel
-	 * 
+	 *
 	 * @return samples per pixel
 	 * @since 2.0.0
 	 */
@@ -511,7 +513,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the samples per pixel
-	 * 
+	 *
 	 * @param samplesPerPixel
 	 *            samples per pixel
 	 */
@@ -522,7 +524,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the rows per strip
-	 * 
+	 *
 	 * @return rows per strip
 	 */
 	public Number getRowsPerStrip() {
@@ -531,7 +533,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the rows per strip
-	 * 
+	 *
 	 * @param rowsPerStrip
 	 *            rows per strip
 	 */
@@ -541,7 +543,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the rows per strip
-	 * 
+	 *
 	 * @param rowsPerStrip
 	 *            rows per strip
 	 */
@@ -551,7 +553,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the strip byte counts
-	 * 
+	 *
 	 * @return strip byte counts
 	 */
 	public List<Number> getStripByteCounts() {
@@ -560,7 +562,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the strip byte counts
-	 * 
+	 *
 	 * @param stripByteCounts
 	 *            strip byte counts
 	 */
@@ -571,7 +573,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the strip byte counts
-	 * 
+	 *
 	 * @param stripByteCounts
 	 *            strip byte counts
 	 */
@@ -582,7 +584,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value strip byte count
-	 * 
+	 *
 	 * @param stripByteCount
 	 *            strip byte count
 	 */
@@ -592,7 +594,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value strip byte count
-	 * 
+	 *
 	 * @param stripByteCount
 	 *            strip byte count
 	 */
@@ -602,7 +604,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the x resolution
-	 * 
+	 *
 	 * @return x resolution
 	 */
 	public List<Long> getXResolution() {
@@ -611,7 +613,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the x resolution
-	 * 
+	 *
 	 * @param xResolution
 	 *            x resolution
 	 */
@@ -621,7 +623,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value x resolution
-	 * 
+	 *
 	 * @param xResolution
 	 *            x resolution
 	 */
@@ -631,7 +633,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the y resolution
-	 * 
+	 *
 	 * @return y resolution
 	 */
 	public List<Long> getYResolution() {
@@ -640,7 +642,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the y resolution
-	 * 
+	 *
 	 * @param yResolution
 	 *            y resolution
 	 */
@@ -650,7 +652,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value y resolution
-	 * 
+	 *
 	 * @param yResolution
 	 *            y resolution
 	 */
@@ -660,7 +662,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the planar configuration
-	 * 
+	 *
 	 * @return planar configuration
 	 */
 	public Integer getPlanarConfiguration() {
@@ -669,7 +671,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the planar configuration
-	 * 
+	 *
 	 * @param planarConfiguration
 	 *            planar configuration
 	 */
@@ -680,7 +682,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the resolution unit
-	 * 
+	 *
 	 * @return resolution unit
 	 */
 	public Integer getResolutionUnit() {
@@ -689,7 +691,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the resolution unit
-	 * 
+	 *
 	 * @param resolutionUnit
 	 *            resolution unit
 	 */
@@ -742,7 +744,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the color map
-	 * 
+	 *
 	 * @return color map
 	 */
 	public List<Integer> getColorMap() {
@@ -751,7 +753,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the color map
-	 * 
+	 *
 	 * @param colorMap
 	 *            color map
 	 */
@@ -761,7 +763,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value color map
-	 * 
+	 *
 	 * @param colorMap
 	 *            color map
 	 */
@@ -771,7 +773,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the tile width
-	 * 
+	 *
 	 * @return tile width
 	 */
 	public Number getTileWidth() {
@@ -781,7 +783,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile width
-	 * 
+	 *
 	 * @param tileWidth
 	 *            tile width
 	 */
@@ -791,7 +793,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile width
-	 * 
+	 *
 	 * @param tileWidth
 	 *            tile width
 	 */
@@ -801,7 +803,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the tile height
-	 * 
+	 *
 	 * @return tile height
 	 */
 	public Number getTileHeight() {
@@ -811,7 +813,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile height
-	 * 
+	 *
 	 * @param tileHeight
 	 *            tile height
 	 */
@@ -821,7 +823,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile height
-	 * 
+	 *
 	 * @param tileHeight
 	 *            tile height
 	 */
@@ -831,7 +833,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the tile offsets
-	 * 
+	 *
 	 * @return tile offsets
 	 */
 	public List<Long> getTileOffsets() {
@@ -840,7 +842,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile offsets
-	 * 
+	 *
 	 * @param tileOffsets
 	 *            tile offsets
 	 */
@@ -850,7 +852,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value tile offset
-	 * 
+	 *
 	 * @param tileOffset
 	 *            tile offset
 	 */
@@ -860,7 +862,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the tile byte counts
-	 * 
+	 *
 	 * @return tile byte counts
 	 */
 	public List<Number> getTileByteCounts() {
@@ -869,7 +871,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile byte counts
-	 * 
+	 *
 	 * @param tileByteCounts
 	 *            tile byte counts
 	 */
@@ -880,7 +882,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the tile byte counts
-	 * 
+	 *
 	 * @param tileByteCounts
 	 *            tile byte counts
 	 */
@@ -891,7 +893,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value tile byte count
-	 * 
+	 *
 	 * @param tileByteCount
 	 *            tile byte count
 	 */
@@ -901,7 +903,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value tile byte count
-	 * 
+	 *
 	 * @param tileByteCount
 	 *            tile byte count
 	 */
@@ -911,7 +913,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the sample format
-	 * 
+	 *
 	 * @return sample format
 	 */
 	public List<Integer> getSampleFormat() {
@@ -920,7 +922,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the sample format
-	 * 
+	 *
 	 * @param sampleFormat
 	 *            sample format
 	 */
@@ -931,7 +933,7 @@ public class FileDirectory {
 
 	/**
 	 * Set a single value sample format
-	 * 
+	 *
 	 * @param sampleFormat
 	 *            sample format
 	 */
@@ -941,7 +943,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the max sample format
-	 * 
+	 *
 	 * @return max sample format
 	 */
 	public Integer getMaxSampleFormat() {
@@ -950,7 +952,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the predictor
-	 * 
+	 *
 	 * @return predictor
 	 * @since 3.0.0
 	 */
@@ -960,7 +962,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the predictor
-	 * 
+	 *
 	 * @param predictor
 	 *            predictor
 	 * @since 3.0.0
@@ -971,7 +973,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the rasters for writing a TIFF file
-	 * 
+	 *
 	 * @return rasters image rasters
 	 */
 	public Rasters getWriteRasters() {
@@ -980,7 +982,7 @@ public class FileDirectory {
 
 	/**
 	 * Set the rasters for writing a TIFF file
-	 * 
+	 *
 	 * @param rasters
 	 *            image rasters
 	 */
@@ -990,7 +992,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @return rasters
 	 */
 	public Rasters readRasters() {
@@ -1000,7 +1002,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters as interleaved
-	 * 
+	 *
 	 * @return rasters
 	 */
 	public Rasters readInterleavedRasters() {
@@ -1010,7 +1012,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @return rasters
@@ -1021,7 +1023,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters as interleaved
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @return rasters
@@ -1032,7 +1034,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param samples
 	 *            pixel samples to read
 	 * @return rasters
@@ -1044,7 +1046,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters as interleaved
-	 * 
+	 *
 	 * @param samples
 	 *            pixel samples to read
 	 * @return rasters
@@ -1056,7 +1058,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @param samples
@@ -1069,7 +1071,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters as interleaved
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @param samples
@@ -1082,7 +1084,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param sampleValues
 	 *            true to read results per sample
 	 * @param interleaveValues
@@ -1096,7 +1098,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @param sampleValues
@@ -1112,7 +1114,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param samples
 	 *            pixel samples to read
 	 * @param sampleValues
@@ -1129,7 +1131,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the rasters
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @param samples
@@ -1224,7 +1226,7 @@ public class FileDirectory {
 
 	/**
 	 * Read and populate the rasters
-	 * 
+	 *
 	 * @param window
 	 *            image window
 	 * @param samples
@@ -1319,7 +1321,7 @@ public class FileDirectory {
 
 	/**
 	 * Read the value from the reader according to the field type
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @param fieldType
@@ -1388,7 +1390,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the tile or strip for the sample coordinate
-	 * 
+	 *
 	 * @param x
 	 *            x coordinate
 	 * @param y
@@ -1459,7 +1461,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the sample byte size
-	 * 
+	 *
 	 * @param sampleIndex
 	 *            sample index
 	 * @return byte size
@@ -1482,7 +1484,7 @@ public class FileDirectory {
 	 * Calculates the number of bytes for each pixel across all samples. Only
 	 * full bytes are supported, an exception is thrown when this is not the
 	 * case.
-	 * 
+	 *
 	 * @return the bytes per pixel
 	 */
 	private int getBytesPerPixel() {
@@ -1506,7 +1508,7 @@ public class FileDirectory {
 
 	/**
 	 * Get an integer entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return integer value
@@ -1518,7 +1520,7 @@ public class FileDirectory {
 
 	/**
 	 * Set an unsigned integer entry value for the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param value
@@ -1532,7 +1534,7 @@ public class FileDirectory {
 
 	/**
 	 * Get an number entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return number value
@@ -1544,7 +1546,7 @@ public class FileDirectory {
 
 	/**
 	 * Set an unsigned long entry value for the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param value
@@ -1591,7 +1593,7 @@ public class FileDirectory {
 
 	/**
 	 * Get an integer list entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return integer list value
@@ -1629,7 +1631,7 @@ public class FileDirectory {
 
 	/**
 	 * Set an unsigned integer list of values for the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param value
@@ -1643,7 +1645,7 @@ public class FileDirectory {
 
 	/**
 	 * Get the max integer from integer list entry values
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return max integer value
@@ -1660,7 +1662,7 @@ public class FileDirectory {
 
 	/**
 	 * Get a number list entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return long list value
@@ -1672,7 +1674,7 @@ public class FileDirectory {
 
 	/**
 	 * Get a long list entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return long list value
@@ -1684,7 +1686,7 @@ public class FileDirectory {
 
 	/**
 	 * Set an unsigned long list of values for the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param value
@@ -1698,7 +1700,7 @@ public class FileDirectory {
 
 	/**
 	 * Set rational value for the field tag type
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param value
@@ -1717,7 +1719,7 @@ public class FileDirectory {
 
 	/**
 	 * Get an entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @return value
@@ -1734,7 +1736,7 @@ public class FileDirectory {
 
 	/**
 	 * Create and set the entry value
-	 * 
+	 *
 	 * @param fieldTagType
 	 *            field tag type
 	 * @param fieldType
@@ -1753,7 +1755,7 @@ public class FileDirectory {
 
 	/**
 	 * Sum the list integer values in the provided range
-	 * 
+	 *
 	 * @param values
 	 *            integer values
 	 * @param start
@@ -1772,7 +1774,7 @@ public class FileDirectory {
 
 	/**
 	 * Create a single integer list with the value
-	 * 
+	 *
 	 * @param value
 	 *            int value
 	 * @return single value list
@@ -1785,7 +1787,7 @@ public class FileDirectory {
 
 	/**
 	 * Create a single long list with the value
-	 * 
+	 *
 	 * @param value
 	 *            long value
 	 * @return single value list
@@ -1798,7 +1800,7 @@ public class FileDirectory {
 
 	/**
 	 * Create a rational value (list of two longs) from a numerator value
-	 * 
+	 *
 	 * @param numerator
 	 *            long numerator value
 	 * @return rational list of two longs
@@ -1811,7 +1813,7 @@ public class FileDirectory {
 
 	/**
 	 * Size in bytes of the Image File Directory (all contiguous)
-	 * 
+	 *
 	 * @return size in bytes
 	 */
 	public long size() {
@@ -1823,7 +1825,7 @@ public class FileDirectory {
 	/**
 	 * Size in bytes of the image file directory including entry values (not
 	 * contiguous bytes)
-	 * 
+	 *
 	 * @return size in bytes
 	 */
 	public long sizeWithValues() {

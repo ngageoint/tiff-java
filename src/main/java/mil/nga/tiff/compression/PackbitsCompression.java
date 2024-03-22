@@ -7,12 +7,17 @@ import mil.nga.tiff.io.ByteReader;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Packbits Compression
- * 
+ * Packbits Compression.
+ *
  * @author osbornb
  */
 public class PackbitsCompression implements CompressionDecoder,
 		CompressionEncoder {
+
+        /**
+         * Constructor.
+         */
+        public PackbitsCompression() {}
 
 	/**
 	 * {@inheritDoc}

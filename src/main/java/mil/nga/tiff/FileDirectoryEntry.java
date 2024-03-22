@@ -3,7 +3,7 @@ package mil.nga.tiff;
 import mil.nga.tiff.util.TiffConstants;
 
 /**
- * TIFF File Directory Entry
+ * TIFF File Directory Entry.
  * 
  * @author osbornb
  */
