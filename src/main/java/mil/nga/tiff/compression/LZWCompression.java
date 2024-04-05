@@ -11,7 +11,7 @@ import mil.nga.tiff.io.ByteReader;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * LZW Compression
+ * LZW Compression.
  * 
  * @author osbornb
  */
@@ -22,6 +22,11 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 */
 	private static final Logger logger = Logger.getLogger(LZWCompression.class
 			.getName());
+
+        /**
+         * Constructor.
+         */
+        public LZWCompression() {}
 
 	/**
 	 * Clear code

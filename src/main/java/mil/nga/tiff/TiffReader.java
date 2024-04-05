@@ -16,15 +16,18 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * TIFF reader
- * 
+ * TIFF reader.
+ *
  * @author osbornb
  */
 public class TiffReader {
 
+        // This class is not meant to be instantiated.
+        private TiffReader() {}
+
 	/**
 	 * Read a TIFF from a file
-	 * 
+	 *
 	 * @param file
 	 *            TIFF file
 	 * @return TIFF image
@@ -37,7 +40,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from a file
-	 * 
+	 *
 	 * @param file
 	 *            TIFF file
 	 * @param cache
@@ -55,7 +58,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from an input stream
-	 * 
+	 *
 	 * @param stream
 	 *            TIFF input stream
 	 * @return TIFF image
@@ -68,7 +71,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from an input stream
-	 * 
+	 *
 	 * @param stream
 	 *            TIFF input stream
 	 * @param cache
@@ -86,7 +89,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from the bytes
-	 * 
+	 *
 	 * @param bytes
 	 *            TIFF bytes
 	 * @return TIFF image
@@ -97,7 +100,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from the bytes
-	 * 
+	 *
 	 * @param bytes
 	 *            TIFF bytes
 	 * @param cache
@@ -112,7 +115,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from the byte reader
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @return TIFF image
@@ -123,7 +126,7 @@ public class TiffReader {
 
 	/**
 	 * Read a TIFF from the byte reader
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @param cache
@@ -171,7 +174,7 @@ public class TiffReader {
 
 	/**
 	 * Parse the TIFF Image with file directories
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @param byteOffset
@@ -246,7 +249,7 @@ public class TiffReader {
 
 	/**
 	 * Read the field values
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @param fieldTag
@@ -284,7 +287,7 @@ public class TiffReader {
 
 	/**
 	 * Get the directory entry values
-	 * 
+	 *
 	 * @param reader
 	 *            byte reader
 	 * @param fieldType

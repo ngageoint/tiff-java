@@ -3,7 +3,7 @@ package mil.nga.tiff.compression;
 import java.nio.ByteOrder;
 
 /**
- * Compression decoder interface
+ * Compression decoder interface.
  * 
  * @author osbornb
  */

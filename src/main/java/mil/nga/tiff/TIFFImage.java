@@ -7,7 +7,7 @@ import java.util.List;
 import mil.nga.tiff.util.TiffConstants;
 
 /**
- * TIFF Image containing the File Directories
+ * TIFF Image containing the File Directories.
  * 
  * @author osbornb
  */

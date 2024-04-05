@@ -19,7 +19,7 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * TIFF Writer.
+ * TIFF writer.
  * 
  * For a striped TIFF, the {@link FileDirectory#setStripOffsets(List)} and
  * {@link FileDirectory#setStripByteCounts(List)} methods are automatically set
@@ -36,6 +36,9 @@ import mil.nga.tiff.util.TiffException;
  * @author osbornb
  */
 public class TiffWriter {
+
+        // This class is not meant to be instantiated.
+        private TiffWriter() {}
 
 	/**
 	 * Write a TIFF to a file

@@ -4,7 +4,7 @@ import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Field Types
+ * Field Types.
  * 
  * @author osbornb
  */

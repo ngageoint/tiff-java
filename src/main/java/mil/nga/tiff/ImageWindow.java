@@ -1,8 +1,10 @@
 package mil.nga.tiff;
 
 /**
- * Coordinates of a window over a portion or the entire image coordinates
- * 
+ * Image window.
+ *
+ * <p>Coordinates of a window over a portion or the entire image coordinates.
+ *
  * @author osbornb
  */
 public class ImageWindow {
@@ -29,7 +31,7 @@ public class ImageWindow {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param minX
 	 *            min x (inclusive)
 	 * @param minY
@@ -48,7 +50,7 @@ public class ImageWindow {
 
 	/**
 	 * Constructor for a single coordinate
-	 * 
+	 *
 	 * @param x
 	 *            x coordinate
 	 * @param y
@@ -60,7 +62,7 @@ public class ImageWindow {
 
 	/**
 	 * Constructor, full image size
-	 * 
+	 *
 	 * @param fileDirectory
 	 *            file directory
 	 */
@@ -73,7 +75,7 @@ public class ImageWindow {
 
 	/**
 	 * Get the min x
-	 * 
+	 *
 	 * @return min x
 	 */
 	public int getMinX() {
@@ -82,7 +84,7 @@ public class ImageWindow {
 
 	/**
 	 * Set the min x
-	 * 
+	 *
 	 * @param minX
 	 *            min x
 	 */
@@ -92,7 +94,7 @@ public class ImageWindow {
 
 	/**
 	 * Get the min y
-	 * 
+	 *
 	 * @return min y
 	 */
 	public int getMinY() {
@@ -101,7 +103,7 @@ public class ImageWindow {
 
 	/**
 	 * Set the min y
-	 * 
+	 *
 	 * @param minY
 	 *            min y
 	 */
@@ -111,7 +113,7 @@ public class ImageWindow {
 
 	/**
 	 * Get the max x
-	 * 
+	 *
 	 * @return max x
 	 */
 	public int getMaxX() {
@@ -120,7 +122,7 @@ public class ImageWindow {
 
 	/**
 	 * Set the max x
-	 * 
+	 *
 	 * @param maxX
 	 *            max x
 	 */
@@ -130,7 +132,7 @@ public class ImageWindow {
 
 	/**
 	 * Get the max y
-	 * 
+	 *
 	 * @return max y
 	 */
 	public int getMaxY() {
@@ -139,7 +141,7 @@ public class ImageWindow {
 
 	/**
 	 * Set the max y
-	 * 
+	 *
 	 * @param maxY
 	 *            max y
 	 */
