@@ -92,4 +92,9 @@ public class TiffTestConstants {
 	 */
 	public static final String FILE_LZW_PREDICTOR_FLOATING = "lzw_predictor_floating.tiff";
 
+    /**
+     * LZW 12 bit max TIFF test file
+     */
+    public static final String FILE_LZW_12_BIT_MAX = "lzw12bitmax.tiff";
+
 }

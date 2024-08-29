@@ -2,10 +2,6 @@ package mil.nga.tiff.compression;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteOrder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import mil.nga.tiff.io.ByteReader;
 import mil.nga.tiff.util.TiffException;
@@ -16,12 +12,6 @@ import mil.nga.tiff.util.TiffException;
  * @author osbornb
  */
 public class LZWCompression implements CompressionDecoder, CompressionEncoder {
-
-	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(LZWCompression.class
-			.getName());
 
 	/**
 	 * Clear code
@@ -39,9 +29,14 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	private static final int MIN_BITS = 9;
 
 	/**
+	 * Max bits
+	 */
+	private static final int MAX_BITS = 12;
+
+	/**
 	 * Table entries
 	 */
-	private Map<Integer, Integer[]> table = new HashMap<>();
+	private byte[][] table;
 
 	/**
 	 * Current max table code
@@ -52,11 +47,21 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * Current byte length
 	 */
 	private int byteLength;
+	
+	/**
+	 * The next code to cause a bit size increase
+	 */
+	private int nextBitSizeIncrease;
+	
+	/**
+	 * Any remaining code info from previous code reads.
+	 */
+	private int codeRemainder;
 
 	/**
-	 * Current byte compression position
+	 * The number of bits stored in codeRemainder
 	 */
-	private int position;
+	private int numBitsInCodeRemainer;
 
 	/**
 	 * {@inheritDoc}
@@ -70,8 +75,9 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 
 		// Initialize the table, starting position, and old code
 		initializeTable();
-		position = 0;
-		int oldCode = 0;
+		codeRemainder = 0;
+		numBitsInCodeRemainer = 0;
+		byte[] oldValue = null;
 
 		// Read codes until end of input
 		int code = getNextCode(reader);
@@ -97,35 +103,33 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 				}
 
 				// Write the code value
-				Integer[] value = table.get(code);
-				writeValue(decodedStream, value);
-				oldCode = code;
+				byte[] value = table[code];
+				decodedStream.writeBytes(value);
+				oldValue = value;
 
 			} else {
 
 				// If already in the table
-				Integer[] value = table.get(code);
+			    byte[] value = table[code];
 				if (value != null) {
 
 					// Write the code value
-					writeValue(decodedStream, value);
+				    decodedStream.writeBytes(value);
 
 					// Create new value and add to table
-					Integer[] newValue = concat(table.get(oldCode),
-							table.get(code)[0]);
+				    byte[] newValue = combine(oldValue, value);
 					addToTable(newValue);
-					oldCode = code;
+					oldValue = value;
 
 				} else {
 
 					// Create and write new value from old value
-					Integer[] oldValue = table.get(oldCode);
-					Integer[] newValue = concat(oldValue, oldValue[0]);
-					writeValue(decodedStream, newValue);
+					byte[] newValue = combine(oldValue, oldValue);
+					decodedStream.writeBytes(newValue);
 
 					// Write value to the table
-					addToTable(code, newValue);
-					oldCode = code;
+					addToTable(newValue);
+					oldValue = newValue;
 				}
 			}
 
@@ -142,11 +146,12 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * Initialize the table and byte length
 	 */
 	private void initializeTable() {
-		table.clear();
-		for (int i = 0; i <= 257; i++) {
-			table.put(i, new Integer[] { i });
+        table = new byte[ 2<<(MAX_BITS-1) ][];//size is 4096
+		for (int i = 0; i < 256; i++) {
+			table[i] = new byte[]{ (byte)i };
 		}
 		maxCode = 257;
+		nextBitSizeIncrease = (2<<(MIN_BITS-1)) - 2;//510
 		byteLength = MIN_BITS;
 	}
 
@@ -154,9 +159,14 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * Check the byte length and increase if needed
 	 */
 	private void checkByteLength() {
-		if (maxCode >= Math.pow(2, byteLength) - 2) {
-			byteLength++;
-		}
+        if( maxCode == nextBitSizeIncrease )
+        {
+            nextBitSizeIncrease = nextBitSizeIncrease*2 + 2;
+            if( byteLength < MAX_BITS )
+            {
+                byteLength++;
+            }
+        }
 	}
 
 	/**
@@ -165,26 +175,13 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * @param value
 	 *            value
 	 */
-	private void addToTable(Integer[] value) {
-		addToTable(maxCode + 1, value);
-	}
-
-	/**
-	 * Add the code and value to the table
-	 * 
-	 * @param code
-	 *            code
-	 * @param value
-	 *            value
-	 */
-	private void addToTable(int code, Integer[] value) {
-		table.put(code, value);
-		maxCode = Math.max(maxCode, code);
+	private void addToTable(byte[] value) {
+	    table[++maxCode] = value;
 		checkByteLength();
 	}
 
 	/**
-	 * Concatenate the two values
+	 * Combines the two values such that the result is the concatenation of the first value and the first element in the second value.
 	 * 
 	 * @param first
 	 *            first value
@@ -192,38 +189,11 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 *            second value
 	 * @return concatenated value
 	 */
-	private Integer[] concat(Integer[] first, Integer second) {
-		return concat(first, new Integer[] { second });
-	}
-
-	/**
-	 * Concatenate the two values
-	 * 
-	 * @param first
-	 *            first value
-	 * @param second
-	 *            second value
-	 * @return concatenated value
-	 */
-	private Integer[] concat(Integer[] first, Integer[] second) {
-		Integer[] combined = new Integer[first.length + second.length];
+	private byte[] combine(byte[] first, byte[] second) {
+	    byte[] combined = new byte[first.length + 1];
 		System.arraycopy(first, 0, combined, 0, first.length);
-		System.arraycopy(second, 0, combined, first.length, second.length);
+		combined[first.length] = second[0];
 		return combined;
-	}
-
-	/**
-	 * Write the value to the decoded stream
-	 * 
-	 * @param decodedStream
-	 *            decoded byte stream
-	 * @param value
-	 *            value
-	 */
-	private void writeValue(ByteArrayOutputStream decodedStream, Integer[] value) {
-		for (int i = 0; i < value.length; i++) {
-			decodedStream.write(value[i]);
-		}
 	}
 
 	/**
@@ -234,47 +204,19 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * @return code
 	 */
 	private int getNextCode(ByteReader reader) {
-		int nextByte = getByte(reader);
-		position += byteLength;
-		return nextByte;
-	}
+        while( numBitsInCodeRemainer < byteLength ) {
+            if( !reader.hasByte() ) {
+                return EOI_CODE;
+            }
+            codeRemainder = (codeRemainder<<8) | reader.readUnsignedByte();
+            numBitsInCodeRemainer += 8;
+        }
 
-	/**
-	 * Get the next byte
-	 * 
-	 * @param reader
-	 *            byte reader
-	 * @return byte
-	 */
-	private int getByte(ByteReader reader) {
+        numBitsInCodeRemainer -= byteLength;
+        int code = codeRemainder >>> numBitsInCodeRemainer;
+        codeRemainder ^= code << numBitsInCodeRemainer;
 
-		int d = position % 8;
-		int a = (int) Math.floor(position / 8.0);
-		int de = 8 - d;
-		int ef = (position + byteLength) - ((a + 1) * 8);
-		int fg = 8 * (a + 2) - (position + byteLength);
-		int dg = (a + 2) * 8 - position;
-		fg = Math.max(0, fg);
-		if (a >= reader.byteLength()) {
-			logger.log(Level.WARNING,
-					"End of data reached without an end of input code");
-			return EOI_CODE;
-		}
-		int chunk1 = ((int) reader.readUnsignedByte(a))
-				& ((int) (Math.pow(2, 8 - d) - 1));
-		chunk1 = chunk1 << (byteLength - de);
-		int chunks = chunk1;
-		if (a + 1 < reader.byteLength()) {
-			int chunk2 = reader.readUnsignedByte(a + 1) >>> fg;
-			chunk2 = chunk2 << Math.max(0, byteLength - dg);
-			chunks += chunk2;
-		}
-		if (ef > 8 && a + 2 < reader.byteLength()) {
-			int hi = (a + 3) * 8 - (position + byteLength);
-			int chunk3 = reader.readUnsignedByte(a + 2) >>> hi;
-			chunks += chunk3;
-		}
-		return chunks;
+        return code;
 	}
 
 	/**

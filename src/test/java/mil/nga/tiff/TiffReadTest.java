@@ -1,5 +1,6 @@
 package mil.nga.tiff;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import junit.framework.TestCase;
+import mil.nga.tiff.util.TiffConstants;
 import mil.nga.tiff.util.TiffException;
 
 /**
@@ -372,5 +374,26 @@ public class TiffReadTest {
 		TiffTestUtils.compareTIFFImages(float32Tiff, tiff);
 
 	}
+
+    /**
+     * Test the TIFF file where the LZW bit size requires the cap of 12.
+     *
+     * @throws IOException
+     *             upon error
+     */
+    @Test
+    public void testLzw12BitMax() throws IOException {
+
+        File lzw12BitMaxFile = TiffTestUtils
+                .getTestFile(TiffTestConstants.FILE_LZW_12_BIT_MAX);
+        TIFFImage image = TiffReader.readTiff(lzw12BitMaxFile);
+        assertEquals( 1, image.getFileDirectories().size() );
+        FileDirectory dir = image.getFileDirectory();
+        assertEquals( TiffConstants.COMPRESSION_LZW, dir.getCompression().intValue() );
+        assertEquals( 555, dir.getImageWidth().intValue() );
+        assertEquals( 555, dir.getImageHeight().intValue() );
+
+        dir.readRasters();//this will throw a parsing exception if invalid
+    }
 
 }
