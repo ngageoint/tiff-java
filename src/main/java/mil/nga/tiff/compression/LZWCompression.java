@@ -39,6 +39,11 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	private static final int MIN_BITS = 9;
 
 	/**
+	 * Max bits
+	 */
+	private static final int MAX_BITS = 12;
+
+	/**
 	 * Table entries
 	 */
 	private Map<Integer, Integer[]> table = new HashMap<>();
@@ -154,7 +159,7 @@ public class LZWCompression implements CompressionDecoder, CompressionEncoder {
 	 * Check the byte length and increase if needed
 	 */
 	private void checkByteLength() {
-		if (maxCode >= Math.pow(2, byteLength) - 2) {
+		if (byteLength < MAX_BITS && maxCode >= Math.pow(2, byteLength) - 2) {
 			byteLength++;
 		}
 	}
