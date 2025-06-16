@@ -273,7 +273,8 @@ public class TiffReader {
 		Object values = null;
 		if (typeCount == 1 && fieldTag != null && !fieldTag.isArray()
 				&& !(fieldType == FieldType.RATIONAL
-						|| fieldType == FieldType.SRATIONAL)) {
+						|| fieldType == FieldType.SRATIONAL)
+                && !valuesList.isEmpty()) {
 			values = valuesList.get(0);
 		} else {
 			values = valuesList;
