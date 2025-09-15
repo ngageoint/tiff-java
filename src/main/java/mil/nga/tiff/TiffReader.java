@@ -48,9 +48,32 @@ public class TiffReader {
 	 */
 	public static TIFFImage readTiff(File file, boolean cache)
 			throws IOException {
-		byte[] bytes = IOUtils.fileBytes(file);
-		TIFFImage tiffImage = readTiff(bytes, cache);
-		return tiffImage;
+		// Auto-detect streaming for large files (>100MB)
+		if (file.length() > 100 * 1024 * 1024) {
+			return readTiffStreaming(file, cache);
+		} else {
+			byte[] bytes = IOUtils.fileBytes(file);
+			TIFFImage tiffImage = readTiff(bytes, cache);
+			return tiffImage;
+		}
+	}
+
+	/**
+	 * Read a TIFF from a file using streaming mode
+	 *
+	 * @param file
+	 *            TIFF file
+	 * @param cache
+	 *            true to cache tiles and strips
+	 * @return TIFF image
+	 * @throws IOException
+	 *             upon failure to read
+	 */
+	public static TIFFImage readTiffStreaming(File file, boolean cache)
+			throws IOException {
+		try (ByteReader reader = new ByteReader(file)) {
+			return readTiff(reader, cache);
+		}
 	}
 
 	/**
@@ -215,7 +238,7 @@ public class TiffReader {
 				long typeCount = reader.readUnsignedInt();
 
 				// Save off the next byte to read location
-				int nextByte = reader.getNextByte();
+				long nextByte = reader.getNextByte();
 
 				// Read the field values
 				Object values = readFieldValues(reader, fieldTag, fieldType,

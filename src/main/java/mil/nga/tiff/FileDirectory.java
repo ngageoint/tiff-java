@@ -163,7 +163,7 @@ public class FileDirectory {
 					"JPEG compression not supported: " + compression);
 			break;
 		case TiffConstants.COMPRESSION_DEFLATE:
-		case TiffConstants.COMPRESSION_PKZIP_DEFLATE:
+		case TiffConstants.COMPRESSION_PKZIP_DEFLATE: // Deprecated but supported for backward compatibility
 			decoder = new DeflateCompression();
 			break;
 		case TiffConstants.COMPRESSION_PACKBITS:

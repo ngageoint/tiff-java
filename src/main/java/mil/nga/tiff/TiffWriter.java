@@ -49,9 +49,32 @@ public class TiffWriter {
 	 */
 	public static void writeTiff(File file, TIFFImage tiffImage)
 			throws IOException {
-		ByteWriter writer = new ByteWriter();
-		writeTiff(file, writer, tiffImage);
-		writer.close();
+		// Auto-detect streaming for large images
+		long estimatedSize = estimateImageSize(tiffImage);
+		if (estimatedSize > 100 * 1024 * 1024) { // >100MB
+			writeTiffStreaming(file, tiffImage);
+		} else {
+			ByteWriter writer = new ByteWriter();
+			writeTiff(file, writer, tiffImage);
+			writer.close();
+		}
+	}
+
+	/**
+	 * Write a TIFF to a file using streaming mode
+	 *
+	 * @param file
+	 *            file to create
+	 * @param tiffImage
+	 *            TIFF image
+	 * @throws IOException
+	 *             upon failure to write
+	 */
+	public static void writeTiffStreaming(File file, TIFFImage tiffImage)
+			throws IOException {
+		try (ByteWriter writer = new ByteWriter(file)) {
+			writeTiff(writer, tiffImage);
+		}
 	}
 
 	/**
@@ -158,7 +181,7 @@ public class TiffWriter {
 			populateRasterEntries(fileDirectory);
 
 			// Track of the starting byte of this directory
-			int startOfDirectory = writer.size();
+			long startOfDirectory = writer.size();
 			long afterDirectory = startOfDirectory + fileDirectory.size();
 			long afterValues = startOfDirectory
 					+ fileDirectory.sizeWithValues();
@@ -429,7 +452,7 @@ public class TiffWriter {
 	 *            file directory
 	 * @return encoder
 	 */
-	@SuppressWarnings("deprecation")
+
 	private static CompressionEncoder getEncoder(FileDirectory fileDirectory) {
 
 		CompressionEncoder encoder = null;
@@ -477,15 +500,22 @@ public class TiffWriter {
 
 	/**
 	 * Write filler 0 bytes
-	 * 
+	 *
 	 * @param writer
 	 *            byte writer
 	 * @param count
 	 *            number of 0 bytes to write
+	 * @throws IOException
+	 *             upon failure to write
 	 */
-	private static void writeFillerBytes(ByteWriter writer, long count) {
-		for (long i = 0; i < count; i++) {
-			writer.writeUnsignedByte((short) 0);
+	private static void writeFillerBytes(ByteWriter writer, long count) throws IOException {
+		try {
+			for (long i = 0; i < count; i++) {
+				writer.writeUnsignedByte((short) 0);
+			}
+		} catch (TiffException e) {
+			// Re-throw TiffException as IOException for method signature compatibility
+			throw new IOException("Failed to write filler bytes", e);
 		}
 	}
 
@@ -576,6 +606,42 @@ public class TiffWriter {
 		}
 
 		return bytesWritten;
+	}
+
+	/**
+	 * Estimate the size of a TIFF image for auto-detection of streaming mode
+	 *
+	 * @param tiffImage
+	 *            TIFF image
+	 * @return estimated size in bytes
+	 */
+	private static long estimateImageSize(TIFFImage tiffImage) {
+		long totalSize = 0;
+
+		for (FileDirectory directory : tiffImage.getFileDirectories()) {
+			Number width = directory.getImageWidth();
+			Number height = directory.getImageHeight();
+			Integer samplesPerPixel = directory.getSamplesPerPixel();
+
+			if (width != null && height != null && samplesPerPixel != null) {
+				// Estimate based on uncompressed size
+				long pixels = width.longValue() * height.longValue();
+				int bytesPerSample = 1; // Default to 1 byte per sample
+
+				// Adjust based on bits per sample if available
+				List<Integer> bitsPerSample = directory.getBitsPerSample();
+				if (bitsPerSample != null && !bitsPerSample.isEmpty()) {
+					bytesPerSample = Math.max(1, bitsPerSample.get(0) / 8);
+				}
+
+				totalSize += pixels * samplesPerPixel * bytesPerSample;
+			}
+		}
+
+		// Add overhead for headers, IFDs, etc. (conservative estimate)
+		totalSize += 64 * 1024; // 64KB overhead
+
+		return totalSize;
 	}
 
 }

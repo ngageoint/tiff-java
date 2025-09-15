@@ -1,21 +1,26 @@
 package mil.nga.tiff.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
+
+import mil.nga.tiff.util.TiffException;
 
 /**
- * Write a byte array
- * 
+ * Write a byte array or file with streaming support
+ *
  * @author osbornb
  */
-public class ByteWriter {
+public class ByteWriter implements AutoCloseable {
 
 	/**
-	 * Output stream to write bytes to
+	 * Output stream to write bytes to (for memory mode)
 	 */
-	private final ByteArrayOutputStream os = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream os;
 
 	/**
 	 * Byte order
@@ -23,28 +28,78 @@ public class ByteWriter {
 	private ByteOrder byteOrder = null;
 
 	/**
-	 * Constructor
+	 * Streaming mode fields
+	 */
+	private final boolean isStreaming;
+	private final RandomAccessFile randomAccessFile;
+	private final FileChannel channel;
+
+	/**
+	 * Constructor for memory mode
 	 */
 	public ByteWriter() {
 		this(ByteOrder.nativeOrder());
 	}
 
 	/**
-	 * Constructor
-	 * 
+	 * Constructor for memory mode
+	 *
 	 * @param byteOrder
 	 *            byte order
 	 */
 	public ByteWriter(ByteOrder byteOrder) {
 		this.byteOrder = byteOrder;
+		this.isStreaming = false;
+		this.os = new ByteArrayOutputStream();
+		this.randomAccessFile = null;
+		this.channel = null;
+	}
+
+	/**
+	 * Constructor for streaming mode
+	 *
+	 * @param file
+	 *             file to write
+	 * @throws IOException
+	 *                     upon file access error
+	 */
+	public ByteWriter(File file) throws IOException {
+		this(file, ByteOrder.nativeOrder());
+	}
+
+	/**
+	 * Constructor for streaming mode
+	 *
+	 * @param file
+	 *                  file to write
+	 * @param byteOrder
+	 *                  byte order
+	 * @throws IOException
+	 *                     upon file access error
+	 */
+	public ByteWriter(File file, ByteOrder byteOrder) throws IOException {
+		this.byteOrder = byteOrder;
+		this.isStreaming = true;
+		this.os = null;
+		this.randomAccessFile = new RandomAccessFile(file, "rw");
+		this.channel = randomAccessFile.getChannel();
 	}
 
 	/**
 	 * Close the byte writer
 	 */
+	@Override
 	public void close() {
 		try {
-			os.close();
+			if (isStreaming) {
+				if (randomAccessFile != null) {
+					randomAccessFile.close();
+				}
+			} else {
+				if (os != null) {
+					os.close();
+				}
+			}
 		} catch (IOException e) {
 		}
 	}
@@ -55,6 +110,9 @@ public class ByteWriter {
 	 * @return byte array output stream
 	 */
 	public ByteArrayOutputStream getOutputStream() {
+		if (isStreaming) {
+			throw new UnsupportedOperationException("OutputStream not available in streaming mode");
+		}
 		return os;
 	}
 
@@ -82,7 +140,10 @@ public class ByteWriter {
 	 * 
 	 * @return written bytes
 	 */
-	public byte[] getBytes() {
+	public byte[] getBytes() throws IOException {
+		if (isStreaming) {
+			throw new UnsupportedOperationException("getBytes() not supported in streaming mode");
+		}
 		return os.toByteArray();
 	}
 
@@ -91,8 +152,35 @@ public class ByteWriter {
 	 * 
 	 * @return bytes written
 	 */
-	public int size() {
-		return os.size();
+	public long size() throws IOException {
+		if (isStreaming) {
+			return channel.position();
+		} else {
+			return os.size();
+		}
+	}
+
+	/**
+	 * Internal method to write bytes to file or memory
+	 *
+	 * @param value
+	 *              bytes to write
+	 * @throws IOException
+	 *                     upon failure to write
+	 */
+	private void writeBytesInternal(byte[] value) {
+		try {
+			if (isStreaming) {
+				ByteBuffer buffer = ByteBuffer.wrap(value);
+				while (buffer.hasRemaining()) {
+					channel.write(buffer);
+				}
+			} else {
+				os.write(value);
+			}
+		} catch (IOException e) {
+			throw new TiffException("Failed to write bytes", e);
+		}
 	}
 
 	/**
@@ -104,9 +192,9 @@ public class ByteWriter {
 	 * @throws IOException
 	 *             upon failure to write
 	 */
-	public int writeString(String value) throws IOException {
+	public int writeString(String value) {
 		byte[] valueBytes = value.getBytes();
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 		return valueBytes.length;
 	}
 
@@ -117,7 +205,7 @@ public class ByteWriter {
 	 *            byte
 	 */
 	public void writeByte(byte value) {
-		os.write(value);
+		writeBytesInternal(new byte[] { value });
 	}
 
 	/**
@@ -127,7 +215,7 @@ public class ByteWriter {
 	 *            unsigned byte as a short
 	 */
 	public void writeUnsignedByte(short value) {
-		os.write((byte) (value & 0xff));
+		writeBytesInternal(new byte[] { (byte) (value & 0xff) });
 	}
 
 	/**
@@ -139,7 +227,7 @@ public class ByteWriter {
 	 *             upon failure to write
 	 */
 	public void writeBytes(byte[] value) throws IOException {
-		os.write(value);
+		writeBytesInternal(value);
 	}
 
 	/**
@@ -156,7 +244,7 @@ public class ByteWriter {
 				.putShort(value);
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 	/**
@@ -173,7 +261,7 @@ public class ByteWriter {
 				.putShort((short) (value & 0xffff));
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 	/**
@@ -190,7 +278,7 @@ public class ByteWriter {
 				.putInt(value);
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 	/**
@@ -207,7 +295,7 @@ public class ByteWriter {
 				.putInt((int) (value & 0xffffffffL));
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 	/**
@@ -224,7 +312,7 @@ public class ByteWriter {
 				.putFloat(value);
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 	/**
@@ -241,7 +329,7 @@ public class ByteWriter {
 				.putDouble(value);
 		byteBuffer.flip();
 		byteBuffer.get(valueBytes);
-		os.write(valueBytes);
+		writeBytesInternal(valueBytes);
 	}
 
 }

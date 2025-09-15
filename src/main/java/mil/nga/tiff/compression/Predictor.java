@@ -81,6 +81,8 @@ public class Predictor {
 
 				bytes = writer.getBytes();
 
+			} catch (IOException e) {
+				e.printStackTrace();
 			} finally {
 				writer.close();
 			}

@@ -24,26 +24,34 @@ public class PackbitsCompression implements CompressionDecoder,
 
 		ByteArrayOutputStream decodedStream = new ByteArrayOutputStream();
 
-		while (reader.hasByte()) {
-			int header = reader.readByte();
-			if (header != -128) {
-				if (header < 0) {
-					int next = reader.readUnsignedByte();
-					header = -header;
-					for (int i = 0; i <= header; i++) {
-						decodedStream.write(next);
-					}
-				} else {
-					for (int i = 0; i <= header; i++) {
-						decodedStream.write(reader.readUnsignedByte());
+		try {
+			while (reader.hasByte()) {
+				int header = reader.readByte();
+				if (header != -128) {
+					if (header < 0) {
+						int next = reader.readUnsignedByte();
+						header = -header;
+						for (int i = 0; i <= header; i++) {
+							decodedStream.write(next);
+						}
+					} else {
+						for (int i = 0; i <= header; i++) {
+							decodedStream.write(reader.readUnsignedByte());
+						}
 					}
 				}
 			}
+
+			byte[] decoded = decodedStream.toByteArray();
+
+			return decoded;
+		} finally {
+			try {
+				reader.close();
+			} catch (Exception e) {
+				// Ignore close exception
+			}
 		}
-
-		byte[] decoded = decodedStream.toByteArray();
-
-		return decoded;
 	}
 
 	/**

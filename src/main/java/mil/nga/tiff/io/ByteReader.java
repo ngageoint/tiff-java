@@ -1,27 +1,31 @@
 package mil.nga.tiff.io;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import mil.nga.tiff.util.TiffException;
 
 /**
- * Read through a byte array
- * 
+ * Read through a byte array or file with streaming support
+ *
  * @author osbornb
  */
-public class ByteReader {
+public class ByteReader implements AutoCloseable {
 
 	/**
 	 * Next byte index to read
 	 */
-	private int nextByte = 0;
+	private long nextByte = 0;
 
 	/**
-	 * Bytes to read
+	 * Bytes to read (for memory mode)
 	 */
 	private final byte[] bytes;
 
@@ -31,8 +35,16 @@ public class ByteReader {
 	private ByteOrder byteOrder = null;
 
 	/**
-	 * Constructor
-	 * 
+	 * Streaming mode fields
+	 */
+	private final boolean isStreaming;
+	private final RandomAccessFile randomAccessFile;
+	private final FileChannel channel;
+	private final long fileSize;
+
+	/**
+	 * Constructor for memory mode
+	 *
 	 * @param bytes
 	 *            bytes
 	 */
@@ -41,8 +53,8 @@ public class ByteReader {
 	}
 
 	/**
-	 * Constructor
-	 * 
+	 * Constructor for memory mode
+	 *
 	 * @param bytes
 	 *            bytes
 	 * @param byteOrder
@@ -51,29 +63,71 @@ public class ByteReader {
 	public ByteReader(byte[] bytes, ByteOrder byteOrder) {
 		this.bytes = bytes;
 		this.byteOrder = byteOrder;
+		this.isStreaming = false;
+		this.randomAccessFile = null;
+		this.channel = null;
+		this.fileSize = bytes != null ? bytes.length : 0;
+	}
+
+	/**
+	 * Constructor for streaming mode
+	 *
+	 * @param file
+	 *            file to read
+	 * @throws IOException
+	 *             upon file access error
+	 */
+	public ByteReader(File file) throws IOException {
+		this(file, ByteOrder.nativeOrder());
+	}
+
+	/**
+	 * Constructor for streaming mode
+	 *
+	 * @param file
+	 *            file to read
+	 * @param byteOrder
+	 *            byte order
+	 * @throws IOException
+	 *             upon file access error
+	 */
+	public ByteReader(File file, ByteOrder byteOrder) throws IOException {
+		this.bytes = null;
+		this.byteOrder = byteOrder;
+		this.isStreaming = true;
+		this.randomAccessFile = new RandomAccessFile(file, "r");
+		this.channel = randomAccessFile.getChannel();
+		this.fileSize = channel.size();
 	}
 
 	/**
 	 * Get the next byte to be read
-	 * 
+	 *
 	 * @return next byte to be read
 	 */
-	public int getNextByte() {
+	public long getNextByte() {
 		return nextByte;
 	}
 
 	/**
 	 * Set the next byte to be read
-	 * 
+	 *
 	 * @param nextByte
 	 *            next byte
 	 */
 	public void setNextByte(long nextByte) {
-		if (nextByte >= bytes.length) {
+		if (nextByte >= fileSize) {
 			throw new TiffException("Byte offset out of range. Total Bytes: "
-					+ bytes.length + ", Byte offset: " + nextByte);
+					+ fileSize + ", Byte offset: " + nextByte);
 		}
-		this.nextByte = (int) nextByte;
+		this.nextByte = nextByte;
+		if (isStreaming) {
+			try {
+				channel.position(nextByte);
+			} catch (IOException e) {
+				throw new TiffException("Failed to set position: " + nextByte, e);
+			}
+		}
 	}
 
 	/**
@@ -111,7 +165,7 @@ public class ByteReader {
 	 *            byte offset
 	 * @return true more bytes left to read
 	 */
-	public boolean hasByte(int offset) {
+	public boolean hasByte(long offset) {
 		return hasBytes(offset, 1);
 	}
 
@@ -135,8 +189,8 @@ public class ByteReader {
 	 *            number of bytes
 	 * @return true if has at least the number of bytes left
 	 */
-	public boolean hasBytes(int offset, int count) {
-		return offset + count <= bytes.length;
+	public boolean hasBytes(long offset, int count) {
+		return offset + count <= fileSize;
 	}
 
 	/**
@@ -165,12 +219,19 @@ public class ByteReader {
 	 * @throws UnsupportedEncodingException
 	 *             upon string encoding error
 	 */
-	public String readString(int offset, int num)
+	public String readString(long offset, int num)
 			throws UnsupportedEncodingException {
 		verifyRemainingBytes(offset, num);
 		String value = null;
-		if (num != 1 || bytes[offset] != 0) {
-			value = new String(bytes, offset, num, StandardCharsets.US_ASCII);
+		if (isStreaming) {
+			byte[] stringBytes = readBytesInternal(offset, num);
+			if (num != 1 || stringBytes[0] != 0) {
+				value = new String(stringBytes, 0, num, StandardCharsets.US_ASCII);
+			}
+		} else {
+			if (num != 1 || bytes[(int)offset] != 0) {
+				value = new String(bytes, (int)offset, num, StandardCharsets.US_ASCII);
+			}
 		}
 		return value;
 	}
@@ -193,10 +254,13 @@ public class ByteReader {
 	 *            byte offset
 	 * @return byte
 	 */
-	public byte readByte(int offset) {
+	public byte readByte(long offset) {
 		verifyRemainingBytes(offset, 1);
-		byte value = bytes[offset];
-		return value;
+		if (isStreaming) {
+			return readBytesInternal(offset, 1)[0];
+		} else {
+			return bytes[(int)offset];
+		}
 	}
 
 	/**
@@ -217,7 +281,7 @@ public class ByteReader {
 	 *            byte offset
 	 * @return unsigned byte as short
 	 */
-	public short readUnsignedByte(int offset) {
+	public short readUnsignedByte(long offset) {
 		return ((short) (readByte(offset) & 0xff));
 	}
 
@@ -243,10 +307,9 @@ public class ByteReader {
 	 *            number of bytes
 	 * @return bytes
 	 */
-	public byte[] readBytes(int offset, int num) {
+	public byte[] readBytes(long offset, int num) {
 		verifyRemainingBytes(offset, num);
-		byte[] readBytes = Arrays.copyOfRange(bytes, offset, offset + num);
-		return readBytes;
+		return readBytesInternal(offset, num);
 	}
 
 	/**
@@ -267,10 +330,10 @@ public class ByteReader {
 	 *            byte offset
 	 * @return short
 	 */
-	public short readShort(int offset) {
+	public short readShort(long offset) {
 		verifyRemainingBytes(offset, 2);
-		short value = ByteBuffer.wrap(bytes, offset, 2).order(byteOrder)
-				.getShort();
+		byte[] shortBytes = readBytesInternal(offset, 2);
+		short value = ByteBuffer.wrap(shortBytes).order(byteOrder).getShort();
 		return value;
 	}
 
@@ -292,7 +355,7 @@ public class ByteReader {
 	 *            byte offset
 	 * @return unsigned short as int
 	 */
-	public int readUnsignedShort(int offset) {
+	public int readUnsignedShort(long offset) {
 		return (readShort(offset) & 0xffff);
 	}
 
@@ -314,9 +377,10 @@ public class ByteReader {
 	 *            byte offset
 	 * @return integer
 	 */
-	public int readInt(int offset) {
+	public int readInt(long offset) {
 		verifyRemainingBytes(offset, 4);
-		int value = ByteBuffer.wrap(bytes, offset, 4).order(byteOrder).getInt();
+		byte[] intBytes = readBytesInternal(offset, 4);
+		int value = ByteBuffer.wrap(intBytes).order(byteOrder).getInt();
 		return value;
 	}
 
@@ -338,7 +402,7 @@ public class ByteReader {
 	 *            byte offset
 	 * @return unsigned int as long
 	 */
-	public long readUnsignedInt(int offset) {
+	public long readUnsignedInt(long offset) {
 		return ((long) readInt(offset) & 0xffffffffL);
 	}
 
@@ -360,10 +424,10 @@ public class ByteReader {
 	 *            byte offset
 	 * @return float
 	 */
-	public float readFloat(int offset) {
+	public float readFloat(long offset) {
 		verifyRemainingBytes(offset, 4);
-		float value = ByteBuffer.wrap(bytes, offset, 4).order(byteOrder)
-				.getFloat();
+		byte[] floatBytes = readBytesInternal(offset, 4);
+		float value = ByteBuffer.wrap(floatBytes).order(byteOrder).getFloat();
 		return value;
 	}
 
@@ -385,10 +449,10 @@ public class ByteReader {
 	 *            byte offset
 	 * @return double
 	 */
-	public double readDouble(int offset) {
+	public double readDouble(long offset) {
 		verifyRemainingBytes(offset, 8);
-		double value = ByteBuffer.wrap(bytes, offset, 8).order(byteOrder)
-				.getDouble();
+		byte[] doubleBytes = readBytesInternal(offset, 8);
+		double value = ByteBuffer.wrap(doubleBytes).order(byteOrder).getDouble();
 		return value;
 	}
 
@@ -397,8 +461,41 @@ public class ByteReader {
 	 * 
 	 * @return byte length
 	 */
-	public int byteLength() {
-		return bytes.length;
+	public long byteLength() {
+		return fileSize;
+	}
+
+	/**
+	 * Close the reader and release resources
+	 */
+	@Override
+	public void close() throws IOException {
+		if (isStreaming && randomAccessFile != null) {
+			randomAccessFile.close();
+		}
+	}
+
+	/**
+	 * Internal method to read bytes from file or memory
+	 *
+	 * @param offset
+	 *            byte offset
+	 * @param num
+	 *            number of bytes
+	 * @return bytes
+	 */
+	private byte[] readBytesInternal(long offset, int num) {
+		if (isStreaming) {
+			try {
+				ByteBuffer buffer = ByteBuffer.allocate(num);
+				channel.read(buffer, offset);
+				return buffer.array();
+			} catch (IOException e) {
+				throw new TiffException("Failed to read bytes at offset " + offset, e);
+			}
+		} else {
+			return Arrays.copyOfRange(bytes, (int)offset, (int)offset + num);
+		}
 	}
 
 	/**
@@ -410,11 +507,11 @@ public class ByteReader {
 	 * @param bytesToRead
 	 *            number of bytes to read
 	 */
-	private void verifyRemainingBytes(int offset, int bytesToRead) {
-		if (offset + bytesToRead > bytes.length) {
+	private void verifyRemainingBytes(long offset, int bytesToRead) {
+		if (offset + bytesToRead > fileSize) {
 			throw new TiffException(
 					"No more remaining bytes to read. Total Bytes: "
-							+ bytes.length + ", Byte offset: " + offset
+							+ fileSize + ", Byte offset: " + offset
 							+ ", Attempted to read: " + bytesToRead);
 		}
 	}
