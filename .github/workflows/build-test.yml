@@ -27,7 +27,7 @@ jobs:
         mkdir target/release
         cp pom.xml target/*.jar target/release/
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: tiff
         path: target/release
